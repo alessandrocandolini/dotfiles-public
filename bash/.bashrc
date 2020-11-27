@@ -31,6 +31,11 @@ PS1="\h:\W \u\$ "
 # Remove sound 
 bind 'set bell-style none'
 
+# Set CLICOLOR if you want Ansi Colors in iTerm2
+export CLICOLOR=1
+
+# Set colors to match iTerm2 Terminal Colors
+export TERM=xterm-256color
 # =============================================================================
 # SAFE ALIAS
 # =============================================================================
@@ -197,9 +202,9 @@ HISTFILE=~/.bash_eternal_history
 export LOCAL=$HOME/local
 export PATH=$LOCAL:$LOCAL/bin:$LOCAL/install/bin:$LOCAL/lib/python/:$PATH
 
-# conscript 
-if [ -f $HOME/.conscript ]; then
-  export PATH:$HOME/.conscript/bin:$PATH
+# conscript (eg, used for g8, don't use homebrew for g8 http://www.foundweekends.org/giter8/setup.html )
+if [ -d $HOME/.conscript ]; then
+  export PATH=$HOME/.conscript/bin:$PATH
 fi
 
 # curl brew on macos (if it exists)
@@ -221,7 +226,7 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 # =============================================================================
 # ENVS (ruby, java) 
 # =============================================================================
-# Slow to load, comment to save time 
+# Slow to load, so i move these to functions
 
 initRbenv() {
   if [ -x "$(command -v rbenv)" ]; then
