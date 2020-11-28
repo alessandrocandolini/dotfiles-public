@@ -67,7 +67,7 @@ else
 fi
 
 # if $JAVA_HOME is NOT empty, add $JAVA_HOME/bin to $PATH
-if [ ! -z $JAVA_HOME ]; then
+if [[ ! -z $JAVA_HOME && -d $JAVA_HOME ]]; then
 	export PATH=$JAVA_HOME/bin:$PATH
 fi
 
@@ -80,13 +80,13 @@ fi
 # see https://developer.android.com/studio/command-line/variables
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
 
-# if ANDROID_SDK_ROOT is NOT empty, add its relevant subfolders to $PATH
-if [ ! -z $ANDROID_SDK_ROOT ]; then
-  export PATH=$ANDROID_HOME/tools:$PATH
-  export PATH=$ANDROID_HOME/platform-tools:$PATH
-  export PATH=$ANDROID_HOME/tools/bin:$PATH
-  export PATH=$ANDROID_HOME/platform-tools/systrace/catapult/systrace/bin:$PATH
-  export PATH=$ANDROID_HOME/tools/proguard/bin/:$PATH
+# if ANDROID_SDK_ROOT variable is NOT empty and the folder exist, add its relevant subfolders to $PATH
+if [[ ! -z $ANDROID_SDK_ROOT && -d $ANDROID_SDK_ROOT ]]; then
+  export PATH=$ANDROID_SDK_ROOT/tools:$PATH
+  export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+  export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH
+  export PATH=$ANDROID_SDK_ROOT/platform-tools/systrace/catapult/systrace/bin:$PATH
+  export PATH=$ANDROID_SDK_ROOT/tools/proguard/bin/:$PATH
 
   # additional variable pointing as well to android sdk home (deprecated) 
   export ANDROID_HOME=$ANDROID_SDK_ROOT
