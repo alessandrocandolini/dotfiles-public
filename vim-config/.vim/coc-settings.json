@@ -1,0 +1,20 @@
+{
+  "diagnostic.errorSign": "✘",
+  "diagnostic.infoSign": "ℹ",
+  "diagnostic.hintSign": "➤",
+  "diagnostic.enableHighlightLineNumber": true,
+  "codeLens.enable": true,
+  "signature.enable": true,
+  "coc.preferences.enableFloatHighlight": true,
+  "suggest.noselect": false,
+  "coc.preferences.jumpCommand": "drop",
+  "metals.showImplicitArguments": true,
+
+  "languageserver": {
+    "kotlin": {
+      "command": "$HOME/kotlin-language-server/server/build/install/server/bin/kotlin-language-server",
+      "filetypes": ["kotlin"]
+    }
+  }
+
+}
