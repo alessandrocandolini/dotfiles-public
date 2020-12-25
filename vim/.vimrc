@@ -4,6 +4,12 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+" Enable file detection, plugin and indentation
+filetype plugin indent on
+
+" Switch syntax highlighting on (requires filetype detection on)
+syntax on
+
 " Use UTF-8 without BOM
 set encoding=utf-8 nobomb
 
@@ -11,18 +17,17 @@ set encoding=utf-8 nobomb
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 set list
 set expandtab ts=2 sw=2 ai
-" set binary " not recommended 
 
 " Optimize for fast terminal connections
 set ttyfast
 
-" Set hidden so any buffer can be hidden (keeping its changes) without first writing the buffer to a file
-set hidden
-
-" show encoding in statusbar
+" show encoding in statusbar, if/when statusbar is enabled
 if has("statusline")
  set statusline=%<%f\ %h%m%r%=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%k\ %-14.(%l,%c%V%)\ %P
 endif
+
+" no statusbar by default (0 = never, 2 = always)
+set laststatus=0
 
 " Don’t add empty newlines at the end of files
 set noeol
@@ -34,57 +39,53 @@ set secure
 " set cursorline
 
 " Show the cursor position
-set ruler
-
-" Switch syntax highlighting on
-syntax on
-filetype plugin indent on
+set noruler
+set nonumber
 
 " Disable error bells
 set noerrorbells
 set belloff=all
 
 " Don’t reset cursor to start of line when moving around.
-set nostartofline
+" set nostartofline
 
-" milliseconds after stop typing before processing plugins (default 4000) 
+" milliseconds after stop typing before processing plugins (default 4000)
 set updatetime=300
 
 " allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+" set backspace=indent,eol,start
 
 " do not keep a backup file
-set nobackup		
+set nobackup
 set nowritebackup
 
 " display incomplete commands (partial command as it’s being typed)
-set showcmd		
+set showcmd
 
 " performance improvements when syntax on in vim 8+
 if v:version >= 800
-       	syntax sync minlines=256
-endif 
+    syntax sync minlines=256
+ endif
 
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v for opening a window
 nnoremap <C-w>v :vnew<CR>
 
-" tab settings
-set expandtab
-set softtabstop=2
-set shiftwidth=2
-set tabstop=2
-set smarttab
+" Do not highlight search results (default in vim but not in neovim) 
+set nohlsearch
+
+" Do not change cursor shape in insert mode (to fix neovim standard behaviour)
+set guicursor=
 
 " Default colorscheme (has to be installed, see vim-plug below)
 " You need ot generate a symb link in .vim/colors folder
 " ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
 try
-	colorscheme jellybeans
+  colorscheme jellybeans
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
 " ==========================
-" Vim-Plug 
+" Vim-Plug
 " ==========================
 " https://github.com/junegunn/vim-plug
 " Installation of vim-plug is described in the readme (curl command attow):
@@ -96,10 +97,9 @@ call plug#begin('~/.vim/bundle')
 Plug 'nanotech/jellybeans.vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'udalov/kotlin-vim' 
-
-"Plug 'neovimhaskell/haskell-vim'
-"Plug 'alx741/vim-hindent' " automatic indentation using hindent.
+Plug 'udalov/kotlin-vim'
+" Haskell formatter on save (assuming ormolu is installed in the system)
+Plug 'sdiehl/vim-ormolu'
 
 "Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 "Plug 'junegunn/fzf.vim' " needed for previews
@@ -113,9 +113,9 @@ call plug#end()
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " Help Vim recognize *.sbt and *.sc as Scala files
-au BufRead,BufNewFile *.sbt,*.sc set filetype=scala
+au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
 
 " ===== Load plugin specific configuration ====
-if !empty(glob("$HOME/.vim/plugins/coc-config.vim"))
-   source $HOME/.vim/plugins/coc-config.vim
+if filereadable(expand("~/.vim/plugins/coc-mappings.vim"))
+   source ~/.vim/plugins/coc-mappings.vim
 endif
