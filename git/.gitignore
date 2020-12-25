@@ -1,0 +1,9 @@
+# ~/.gitignore
+.metals/
+.bloop/
+.bsp/
+.vscode/
+.ammonite/
+metals.sbt
+*.swo
+*.swp
