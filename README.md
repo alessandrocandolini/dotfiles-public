@@ -28,7 +28,7 @@ and if you similarly run also `stow vim` it will generate
 $HOME/.vimrc@ -> $HOME/dotfiles/vim/.vim
 ```
 
-Warning: never place any file (readmes etc) in the subfolders, because stow will create symbolic links for every file in the subfolders. 
+Stow will install symbolic links for every file but those matching the patterns in the `$HOME/.stow-global-ignore` file. This repo contains also a version of it, that can be installed through stow. Notice: `.gitignore` is in the list of files that stow will ignore by default, so running `stow git` on this repo will not work, unless a custom `.stow-global-ignore` without `gitignore` is available (like the one provided by this repo).
 
 
 
