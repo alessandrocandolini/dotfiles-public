@@ -1,4 +1,3 @@
-# ~/.gitignore
 .metals/
 .bloop/
 .bsp/
@@ -7,3 +6,6 @@
 metals.sbt
 *.swo
 *.swp
+.idea
+*.iml
+.DS_Store
