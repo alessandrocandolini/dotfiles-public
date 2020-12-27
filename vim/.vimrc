@@ -21,6 +21,9 @@ set expandtab ts=2 sw=2 ai
 " Optimize for fast terminal connections
 set ttyfast
 
+" Recursive search in path (useful for file search)
+set path+=**
+
 " show encoding in statusbar, if/when statusbar is enabled
 if has("statusline")
  set statusline=%<%f\ %h%m%r%=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%k\ %-14.(%l,%c%V%)\ %P
@@ -35,19 +38,16 @@ set noeol
 "disable unsafe commands
 set secure
 
-" Highlight current line
-" set cursorline
-
-" Show the cursor position
+" Don't show the cursor position
 set noruler
+
+" Don't show line number. If you turn it on, consider relative numbers:
+" set number relativenumber
 set nonumber
 
 " Disable error bells
 set noerrorbells
 set belloff=all
-
-" Don’t reset cursor to start of line when moving around.
-" set nostartofline
 
 " milliseconds after stop typing before processing plugins (default 4000)
 set updatetime=300
@@ -62,6 +62,9 @@ set nowritebackup
 " display incomplete commands (partial command as it’s being typed)
 set showcmd
 
+" for preview tab autocompletion in command mode
+set wildmenu
+
 " performance improvements when syntax on in vim 8+
 if v:version >= 800
     syntax sync minlines=256
@@ -70,7 +73,7 @@ if v:version >= 800
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v for opening a window
 nnoremap <C-w>v :vnew<CR>
 
-" Do not highlight search results (default in vim but not in neovim) 
+" Do not highlight search results (default in vim but not in neovim)
 set nohlsearch
 
 " Do not change cursor shape in insert mode (to fix neovim standard behaviour)
@@ -79,6 +82,7 @@ set guicursor=
 " Default colorscheme (has to be installed, see vim-plug below)
 " You need ot generate a symb link in .vim/colors folder
 " ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
+set termguicolors     " enable true colors support
 try
   colorscheme jellybeans
 catch /^Vim\%((\a\+)\)\=:E185/
@@ -101,13 +105,13 @@ Plug 'udalov/kotlin-vim'
 " Haskell formatter on save (assuming ormolu is installed in the system)
 Plug 'sdiehl/vim-ormolu'
 
-"Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
-"Plug 'junegunn/fzf.vim' " needed for previews
+Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
+Plug 'junegunn/fzf.vim' " needed for previews
 "Plug 'antoinemadec/coc-fzf', {'branch': 'release'}
 call plug#end()
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
-" set rtp+=/usr/local/opt/fzf
+set rtp+=/usr/local/opt/fzf
 
 " Comments highlighting when using jsonc as configuration file format
 autocmd FileType json syntax match Comment +\/\/.\+$+
