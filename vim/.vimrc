@@ -55,7 +55,7 @@ set updatetime=300
 " allow backspacing over everything in insert mode
 " set backspace=indent,eol,start
 
-" do not keep a backup file
+" do not keep a backup file (some LSP don't work well in coc with backup files)
 set nobackup
 set nowritebackup
 
@@ -107,7 +107,9 @@ Plug 'sdiehl/vim-ormolu'
 
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
-"Plug 'antoinemadec/coc-fzf', {'branch': 'release'}
+
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 call plug#end()
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
