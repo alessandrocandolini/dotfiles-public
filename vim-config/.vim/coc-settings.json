@@ -17,6 +17,7 @@
   "metals.superMethodLensesEnabled":true,
   "suggest.enablePreview": true,
   "signature.target": "float",
+  "snippets.ultisnips.enable": false,
 
   "languageserver": {
     "kotlin": {

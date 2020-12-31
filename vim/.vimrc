@@ -110,6 +110,8 @@ Plug 'junegunn/fzf.vim' " needed for previews
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+
+Plug 'honza/vim-snippets'
 call plug#end()
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
@@ -125,3 +127,13 @@ au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
 if filereadable(expand("~/.vim/plugins/coc-mappings.vim"))
    source ~/.vim/plugins/coc-mappings.vim
 endif
+
+" Remove trailing spaces on save
+fun s:StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    keepp %s/\s\+$//e
+    call cursor(l, c)
+endfun
+autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+command StripTrailingWhitespaces call s:StripTrailingWhitespaces()
