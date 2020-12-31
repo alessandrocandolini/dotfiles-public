@@ -28,7 +28,7 @@ PROMPT_DIRTRIM=3
 # DO not export: https://unix.stackexchange.com/questions/247585/to-export-or-not-to-export-bash-ps1-variable
 PS1="\h:\W \u\$ "
 
-# Remove sound 
+# Remove sound
 bind 'set bell-style none'
 
 # Set CLICOLOR if you want Ansi Colors in iTerm2
@@ -39,7 +39,7 @@ export TERM=xterm-256color
 # =============================================================================
 # SAFE ALIAS
 # =============================================================================
- 
+
 alias rm='/bin/rm -i -v'
 alias cp='/bin/cp -i -v'
 alias mv='/bin/mv -i -v'
@@ -49,14 +49,19 @@ alias ls='/bin/ls -GFh'
 # use coreutils on MAC OS as date (to have unix compatibility)
 if [ -x "$(command -v gdate)" ]; then
   alias date='gdate'
-fi  
+fi
+
+# Make nvim default
+#if [ -x "$(command -v nvim)" ]; then
+#  alias vim='nvim'
+#fi
 
 # =============================================================================
 # JAVA
 # =============================================================================
 
-# set JDK installation dir 
-# on MAC, set it dynamically by relying on /usr/libexec/java_home 
+# set JDK installation dir
+# on MAC, set it dynamically by relying on /usr/libexec/java_home
 # otherwise (or for faster .bashrc load) provide a default location (if any)
 
 # export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home"
@@ -88,13 +93,13 @@ if [[ ! -z $ANDROID_SDK_ROOT && -d $ANDROID_SDK_ROOT ]]; then
   export PATH=$ANDROID_SDK_ROOT/platform-tools/systrace/catapult/systrace/bin:$PATH
   export PATH=$ANDROID_SDK_ROOT/tools/proguard/bin/:$PATH
 
-  # additional variable pointing as well to android sdk home (deprecated) 
+  # additional variable pointing as well to android sdk home (deprecated)
   export ANDROID_HOME=$ANDROID_SDK_ROOT
 fi
 # =============================================================================
 # NODE/NPM (local installation)
 # =============================================================================
-# TODO fix 
+# TODO fix / move to nix?
 export NPM_PACKAGES=$HOME/.npm-packages
 export NODE_PATH=$NPM_PACKAGES/lib/node_modules:$NODE_PATH
 export NODE_MODULES=$HOME/node-modules
@@ -103,10 +108,10 @@ export PATH=$NPM_PACKAGES/bin:$NODE_MODULES/.bin:$PATH
 # =============================================================================
 # GEM local folder (ruby)
 # =============================================================================
-if [ -d $HOME/Local/ruby ]; then 
+if [ -d $HOME/Local/ruby ]; then
   export GEM_HOME=$HOME/Local/ruby
   export PATH=$GEM_HOME/bin:$PATH
-fi  
+fi
 
 # =============================================================================
 # LaTeX 2e
@@ -114,10 +119,10 @@ fi
 # Rules:
 # * The // means that TeX programs will search recursively in that folder
 # * The : at the end appends the standard value of TEXINPUTS
-# For reference, 
-# http://tex.stackexchange.com/questions/93712/definition-of-the-texinputs-variable 
+# For reference,
+# http://tex.stackexchange.com/questions/93712/definition-of-the-texinputs-variable
 
-if [ -d $HOME/.bash-git-prompt ]; then
+if [ -d $HOME/canguro ]; then
   declare -x TEXINPUTS=.:$HOME/TeX/inputs:$HOME/canguro//:
   declare -x MFINPUTS=.:$HOME/TeX/inputs:$HOME/canguro//:
   declare -x MPINPUTS=.:$HOME/TeX/inputs:$HOME/canguro//:
@@ -127,7 +132,7 @@ fi
 export TEXMFLOCAL=/usr/local/texlive/texmf-local:$TEXMFLOCAL
 
 # Before 2015, MacTeX created symbolic link /usr/texbin.
-# This changed in 2015 because El Capitan does not allow users to write 
+# This changed in 2015 because El Capitan does not allow users to write
 # into the /usr
 
 file_old=/usr/texbin
@@ -140,8 +145,11 @@ fi
 unset file_old
 unset file_new
 
-export ASYMPTOTE_DIR=$HOME/.asy/node-4.0/modules/:$ASYMPTOTE_DIR
-export ASYMPTOTE_HOME=$ASYMPTOTE_DIR
+# add local asymotote modules (if any)
+if [ -d $HOME/.asy/node-4.0/modyles ]; then
+  export ASYMPTOTE_DIR=$HOME/.asy/node-4.0/modules/:$ASYMPTOTE_DIR
+  export ASYMPTOTE_HOME=$ASYMPTOTE_DIR
+fi
 
 # =============================================================================
 # CSV (in my old machine i'm still using csv instead of git for oldcprojects)
@@ -155,15 +163,15 @@ fi
 # =============================================================================
 # GIT
 # =============================================================================
-# !! This section is slow, particularly the bash-git-prompt 
+# !! This section is slow, particularly the bash-git-prompt
 
-# git autocompletion 
+# git autocompletion
 # Source: wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -O .git-completion.bash
 if [ -f $HOME/.git-completion.bash ]; then
    source $HOME/.git-completion.bash
 fi
 
-# Git-prompt-bash 
+# Git-prompt-bash
 # Source: https://github.com/magicmonty/bash-git-prompt
 # git clone https://github.com/magicmonty/bash-git-prompt.git .bash-git-prompt --depth=1
 
@@ -172,7 +180,7 @@ if [ -d $HOME/.bash-git-prompt ]; then
   GIT_PROMPT_SHOW_UPSTREAM=0
   GIT_PROMPT_FETCH_REMOTE_STATUS=0
   GIT_PROMPT_THEME=Default
-  source $HOME/.bash-git-prompt/gitprompt.sh 
+  source $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
 # =============================================================================
@@ -210,21 +218,21 @@ fi
 # curl brew on macos (if it exists)
 if [ -d /usr/local/opt/curl/bin ]; then
   export PATH=/usr/local/opt/curl/bin:$PATH
-fi 
+fi
 
 # add /usr/local/bin to path (used by brew system-wise installation)
-export PATH=/usr/local/bin:$PATH 
+export PATH=/usr/local/bin:$PATH
 
 # add $HOME/bin to path (for local-wise installation purposes)
-export PATH=$HOME/bin:$PATH 
+export PATH=$HOME/bin:$PATH
 
 # haskell stack local (TODO cleanup)
-export PATH=$HOME/.local/bin:$PATH 
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.ghcup/bin/:$PATH
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 # =============================================================================
-# ENVS (ruby, java) 
+# ENVS (ruby, java)
 # =============================================================================
 # Slow to load, so i move these to functions
 
@@ -237,13 +245,21 @@ initRbenv() {
 initJenv() {
   [[ -s "${HOME}/.jenv/bin/jenv-init.sh" ]] && source "${HOME}/.jenv/bin/jenv-init.sh" && source "${HOME}/.jenv/commands/completion.sh"
 }
+
+# =============================================================================
+# NIX added by Nix installer
+# =============================================================================
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then
+  source HOME/.nix-profile/etc/profile.d/nix.sh
+fi
+
 # =============================================================================
 # FZF (fuzzy search in history)
 # =============================================================================
 
 if [ -f ~/.fzf.bash ]; then
-        source ~/.fzf.bash
-	if [ -x "$(command -v rg)" ]; then
-		export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
-	fi
+  source ~/.fzf.bash
+  if [ -x "$(command -v rg)" ]; then
+    export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
+  fi
 fi
