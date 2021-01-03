@@ -62,9 +62,6 @@ set nowritebackup
 " display incomplete commands (partial command as it’s being typed)
 set showcmd
 
-" for preview tab autocompletion in command mode
-set wildmenu
-
 " performance improvements when syntax on in vim 8+
 if v:version >= 800
     syntax sync minlines=256
@@ -136,4 +133,22 @@ fun s:StripTrailingWhitespaces()
     call cursor(l, c)
 endfun
 autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
-command StripTrailingWhitespaces call s:StripTrailingWhitespaces()
+command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
+
+" If fzf with ripgrep is setup, this is a useful alias
+nnoremap <silent> <Leader>f :Rg<CR>
+nnoremap <silent> <Leader>g :GFiles<CR>
+
+" Mapping to comment lines
+" source: https://stackoverflow.com/questions/1676632/whats-a-quick-way-to-comment-uncomment-lines-in-vim
+augroup commenting_blocks_of_code
+  autocmd!
+  autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
+  autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+  autocmd FileType conf,fstab,yaml  let b:comment_leader = '# '
+  autocmd FileType tex              let b:comment_leader = '% '
+  autocmd FileType mail             let b:comment_leader = '> '
+  autocmd FileType vim              let b:comment_leader = '" '
+augroup END
+noremap <silent> <Leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> <Leader>cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>

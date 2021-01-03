@@ -32,6 +32,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+" Used to expand decorations in worksheets
+nmap <Leader>ws <Plug>(coc-metals-expand-decoration)
+
 " Use K to either doHover or show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
@@ -72,7 +75,7 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` to fold current buffer
-" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " Trigger for code actions
 " Make sure `"codeLens.enable": true` is set in your coc config
