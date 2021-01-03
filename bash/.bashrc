@@ -267,3 +267,10 @@ if [ -f ~/.fzf.bash ]; then
     export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
   fi
 fi
+
+# git diff using fzf with preview
+if [ -x "$(command -v fzf)"  ];  then
+  gd() {
+    git diff $@ --name-only | fzf -m --ansi --preview 'git diff $@ --color=always -- {-1}'
+  }
+fi
