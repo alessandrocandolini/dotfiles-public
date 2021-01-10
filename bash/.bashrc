@@ -207,6 +207,13 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 shopt -s histappend
 
 # =============================================================================
+# NVM
+# =============================================================================
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# =============================================================================
 # PATH
 # =============================================================================
 
@@ -261,10 +268,12 @@ fi
 # FZF (fuzzy search in history)
 # =============================================================================
 
-if [ -f ~/.fzf.bash ]; then
-  source ~/.fzf.bash
-  if [ -x "$(command -v rg)" ]; then
-    export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
+if [ -x "$(command -v fzf)"  ];  then
+  if [ -f ~/.fzf.bash ]; then
+    source ~/.fzf.bash
+    if [ -x "$(command -v rg)" ]; then
+      export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
+    fi
   fi
 fi
 
