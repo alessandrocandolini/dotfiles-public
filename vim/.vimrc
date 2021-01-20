@@ -139,6 +139,16 @@ command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 nnoremap <silent> <Leader>f :Rg<CR>
 nnoremap <silent> <Leader>g :GFiles<CR>
 
+" Persist undo
+if !isdirectory($HOME."/.vim")
+    call mkdir($HOME."/.vim", "", 0770)
+endif
+if !isdirectory($HOME."/.vim/undo-dir")
+    call mkdir($HOME."/.vim/undo-dir", "", 0700)
+endif
+set undodir=~/.vim/undo-dir
+set undofile
+
 " Mapping to comment lines
 " source: https://stackoverflow.com/questions/1676632/whats-a-quick-way-to-comment-uncomment-lines-in-vim
 augroup commenting_blocks_of_code
