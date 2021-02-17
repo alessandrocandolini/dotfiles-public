@@ -136,8 +136,12 @@ autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>St
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
 " If fzf with ripgrep is setup, this is a useful alias
-nnoremap <silent> <Leader>f :Rg<CR>
-nnoremap <silent> <Leader>g :GFiles<CR>
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+"command! -bang -nargs=* Rg call fzf#vim#grep(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+
+
+nnoremap <silent> <Leader>f :GFiles<CR>
+nnoremap <silent> <Leader>g :Rg<CR>
 
 " Persist undo
 if !isdirectory($HOME."/.vim")
