@@ -108,7 +108,6 @@ Plug 'junegunn/fzf.vim' " needed for previews
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 
-Plug 'honza/vim-snippets'
 call plug#end()
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
@@ -135,13 +134,9 @@ endfun
 autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
-" If fzf with ripgrep is setup, this is a useful alias
-command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
-"command! -bang -nargs=* Rg call fzf#vim#grep(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
-
-
-nnoremap <silent> <Leader>f :GFiles<CR>
+nnoremap <silent> <Leader>f :GFiles --cached --others --exclude-standard<CR>
 nnoremap <silent> <Leader>g :Rg<CR>
+nnoremap <silent> <Leader>b :Buffers<CR>
 
 " Persist undo
 if !isdirectory($HOME."/.vim")
