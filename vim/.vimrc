@@ -158,6 +158,7 @@ augroup commenting_blocks_of_code
   autocmd FileType tex              let b:comment_leader = '% '
   autocmd FileType mail             let b:comment_leader = '> '
   autocmd FileType vim              let b:comment_leader = '" '
+  autocmd FileType haskell          let b:comment_leader = '--'
 augroup END
 noremap <silent> <Leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
 noremap <silent> <Leader>cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
