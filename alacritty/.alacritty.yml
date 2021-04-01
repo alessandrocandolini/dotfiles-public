@@ -478,7 +478,9 @@ selection:
 #  - { mouse: Middle, action: PasteSelection }
 
 # Key bindings
-#
+key_bindings:
+  - { key: Left,  mods: Alt, chars: "\x1bb" } # Option + Left-Arrow: word backward
+  - { key: Right, mods: Alt, chars: "\x1bf" } # Option + Right-Arrow: word forward
 # Key bindings are specified as a list of objects. For example, this is the
 # default paste binding:
 #
