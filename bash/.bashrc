@@ -249,7 +249,9 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 initRbenv() {
   if [ -x "$(command -v rbenv)" ]; then
+    export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
     eval "$(rbenv init -)"
+    export PATH="$HOME/.rbenv/bin:$PATH"
   fi
 }
 
@@ -262,6 +264,9 @@ initJenv() {
 # =============================================================================
 if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then
   source $HOME/.nix-profile/etc/profile.d/nix.sh
+fi
+if [ -d $HOME/.result/bin ]; then
+    export PATH="$HOME/.result/bin:$PATH"
 fi
 
 # =============================================================================
