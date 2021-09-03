@@ -1,0 +1,34 @@
+# Stack
+.stack-work
+stack.yaml.lock
+.stack-work/
+.stack/
+*~
+*.swp
+*.swo
+.DS_Store
+# IDE
+.idea/
+# Aux files
+*.o
+*.hi
+*.hie
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+*.prof
+*.aux
+*.hp
+*.eventlog
+category-tree-cli.cabal
+hls.log
+cabal.project.local
+cabal.project.local~
+.ghc.environment.*
+hls.log
+*.metals
+.bsp/
+project/.bloop/
+project/metals.sbt
+project/project/
