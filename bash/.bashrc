@@ -242,6 +242,8 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.ghcup/bin/:$PATH
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
+export PATH="$PATH:$HOME/Library/Application Support/Coursier/bin"
+
 # =============================================================================
 # ENVS (ruby, java)
 # =============================================================================
