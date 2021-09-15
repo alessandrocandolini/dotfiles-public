@@ -28,6 +28,7 @@ cabal.project.local~
 .ghc.environment.*
 hls.log
 *.metals
+*.bloop
 .bsp/
 project/.bloop/
 project/metals.sbt
