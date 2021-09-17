@@ -36,6 +36,10 @@ export CLICOLOR=1
 
 # Set colors to match iTerm2 Terminal Colors
 export TERM=xterm-256color
+
+# Use bash as default on MACOS
+# https://support.apple.com/en-us/HT208050
+export BASH_SILENCE_DEPRECATION_WARNING=1
 # =============================================================================
 # SAFE ALIAS
 # =============================================================================
