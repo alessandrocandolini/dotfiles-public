@@ -26,7 +26,7 @@ To achieve this we will need to install two / three things
 
 ## Installation 
 
-### Install Nix
+### Install Nix
 
 I'll focus on MACOSX, because that's the platform that i usually use for my work and because it's a tricky one (in latest versions). 
 
