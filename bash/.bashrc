@@ -40,6 +40,20 @@ export TERM=xterm-256color
 # Use bash as default on MACOS
 # https://support.apple.com/en-us/HT208050
 export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# =============================================================================
+# UTILS
+# =============================================================================
+function sourceAllIfExist {
+  local -r arr=$1
+  for i in "${arr[@]}"; do
+    if [ -e $i ]; then
+      echo $i
+      source $i
+    fi
+  done
+}
+
 # =============================================================================
 # SAFE ALIAS
 # =============================================================================
@@ -268,12 +282,11 @@ initJenv() {
 # =============================================================================
 # NIX added by Nix installer
 # =============================================================================
-if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then
-  source $HOME/.nix-profile/etc/profile.d/nix.sh
-fi
-if [ -d $HOME/.result/bin ]; then
-    export PATH="$HOME/.result/bin:$PATH"
-fi
+nixfiles=(
+  "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+)
+sourceAllIfExist nixfiles
 
 # =============================================================================
 # FZF (fuzzy search in history)
