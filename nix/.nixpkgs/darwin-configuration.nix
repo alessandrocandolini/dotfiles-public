@@ -25,6 +25,7 @@
       pkgs.bash_5
       pkgs.bashCompletion
       pkgs.vegeta
+      pkgs.nodejs
 
     ];
 
