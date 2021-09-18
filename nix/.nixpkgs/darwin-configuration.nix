@@ -5,8 +5,27 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [ 
-      pkgs.vim
       pkgs.wget
+      pkgs.htop
+      pkgs.jq
+      pkgs.fzf
+      pkgs.ripgrep
+      pkgs.git
+      pkgs.awscli
+      pkgs.sbt
+      pkgs.vim
+      pkgs.stow
+      pkgs.terraform
+      pkgs.tmux
+      pkgs.tree
+      pkgs.unzip
+      pkgs.gradle
+      pkgs.curl
+      pkgs.neovim
+      pkgs.bash_5
+      pkgs.bashCompletion
+      pkgs.vegeta
+
     ];
 
   # Use a custom configuration.nix location.
