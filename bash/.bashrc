@@ -41,6 +41,9 @@ export TERM=xterm-256color
 # https://support.apple.com/en-us/HT208050
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
+# Git editor default to vim
+# https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
+export GIT_EDITOR=vim
 # =============================================================================
 # UTILS
 # =============================================================================
