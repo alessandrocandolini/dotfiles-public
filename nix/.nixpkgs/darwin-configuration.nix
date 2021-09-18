@@ -24,8 +24,9 @@
       pkgs.neovim
       pkgs.bash_5
       pkgs.bashCompletion
-      pkgs.vegeta
-      pkgs.nodejs
+      pkgs.nodejs_latest
+      pkgs.stack
+      pkgs.go
 
     ];
 
