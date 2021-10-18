@@ -27,6 +27,10 @@
       pkgs.nodejs_latest
       pkgs.stack
       pkgs.go
+      pkgs.glow
+      pkgs.terraform-lsp
+#      pkgs.texlab
+      pkgs.gradle
 
     ];
 
