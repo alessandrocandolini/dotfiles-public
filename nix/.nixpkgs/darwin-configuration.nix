@@ -3,34 +3,36 @@
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages =
+  environment.systemPackages = with pkgs;
     [ 
-      pkgs.wget
-      pkgs.htop
-      pkgs.jq
-      pkgs.fzf
-      pkgs.ripgrep
-      pkgs.git
-      pkgs.awscli
-      pkgs.sbt
-      pkgs.vim
-      pkgs.stow
-      pkgs.terraform
-      pkgs.tmux
-      pkgs.tree
-      pkgs.unzip
-      pkgs.gradle
-      pkgs.curl
-      pkgs.neovim
-      pkgs.bash_5
-      pkgs.bashCompletion
-      pkgs.nodejs_latest
-      pkgs.stack
-      pkgs.go
-      pkgs.glow
-      pkgs.terraform-lsp
-#      pkgs.texlab
-      pkgs.gradle
+      wget
+      htop
+      jq
+      fzf
+      ripgrep
+      git
+      awscli
+      (sbt.override { jre = pkgs.jdk11; })
+      vim
+      stow
+      terraform
+      tmux
+      tree
+      unzip
+      gradle
+      curl
+      neovim
+      bash_5
+      bashCompletion
+      nodejs_latest
+      stack
+      go
+      glow
+      terraform-lsp
+#     texlab
+      jdk11
+      gradle
+      apacheHttpd
 
     ];
 
