@@ -78,27 +78,6 @@ fi
 #fi
 
 # =============================================================================
-# JAVA
-# =============================================================================
-
-# set JDK installation dir
-# on MAC, set it dynamically by relying on /usr/libexec/java_home
-# otherwise (or for faster .bashrc load) provide a default location (if any)
-
-# export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home"
-if [ -f /usr/libexec/java_home ]; then
-	export JAVA_HOME=$(/usr/libexec/java_home)
-else
-	export JAVA_HOME=""
-fi
-
-# if $JAVA_HOME is NOT empty, add $JAVA_HOME/bin to $PATH
-if [[ ! -z $JAVA_HOME && -d $JAVA_HOME ]]; then
-	export PATH=$JAVA_HOME/bin:$PATH
-fi
-
-
-# =============================================================================
 # ANDROID
 # =============================================================================
 
@@ -276,10 +255,6 @@ initRbenv() {
     eval "$(rbenv init -)"
     export PATH="$HOME/.rbenv/bin:$PATH"
   fi
-}
-
-initJenv() {
-  [[ -s "${HOME}/.jenv/bin/jenv-init.sh" ]] && source "${HOME}/.jenv/bin/jenv-init.sh" && source "${HOME}/.jenv/commands/completion.sh"
 }
 
 # =============================================================================
