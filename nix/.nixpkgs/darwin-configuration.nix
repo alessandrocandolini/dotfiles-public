@@ -52,5 +52,5 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-  environment.variables.JAVA_HOME = "${pkgs.jdk11}/lib/openjdk";
+  environment.variables.JAVA_HOME = "${pkgs.jdk11}/";
 }
