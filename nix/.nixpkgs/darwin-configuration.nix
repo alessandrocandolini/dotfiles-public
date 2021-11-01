@@ -33,6 +33,7 @@
       jdk11
       gradle
       apacheHttpd
+      k9s
 
     ];
 
