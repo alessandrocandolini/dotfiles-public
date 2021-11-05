@@ -24,6 +24,12 @@
       "rootPatterns": ["settings.gradle"],
       "filetypes": ["kotlin"]
     },
+    "nix": {
+      "command": "rnix-lsp",
+      "filetypes": [
+        "nix"
+      ]
+    },
     "haskell": {
       "command": "haskell-language-server-wrapper",
       "args": ["--lsp", "--logfile=hls.log", "--debug"],

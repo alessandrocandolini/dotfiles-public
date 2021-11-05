@@ -34,6 +34,11 @@
       gradle
       apacheHttpd
       k9s
+      yq
+      rnix-lsp
+      bash-completion
+      postgresql
+      coreutils
 
     ];
 
