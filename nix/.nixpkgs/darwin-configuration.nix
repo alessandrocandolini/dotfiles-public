@@ -19,24 +19,21 @@
       tmux
       tree
       unzip
-      gradle
       curl
       neovim
       bash_5
-      bashCompletion
       nodejs_latest
       stack
-      go
+#     go
       glow
       terraform-lsp
 #     texlab
       jdk11
-      gradle
+#     gradle
       apacheHttpd
       k9s
       yq
       rnix-lsp
-      bash-completion
       postgresql
       coreutils
 

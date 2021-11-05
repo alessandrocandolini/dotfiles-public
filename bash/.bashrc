@@ -44,18 +44,6 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # Git editor default to vim
 # https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
 export GIT_EDITOR=vim
-# =============================================================================
-# UTILS
-# =============================================================================
-function sourceAllIfExist {
-  local -r arr=$1
-  for i in "${arr[@]}"; do
-    if [ -e $i ]; then
-      echo $i
-      source $i
-    fi
-  done
-}
 
 # =============================================================================
 # SAFE ALIAS
@@ -67,7 +55,7 @@ alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
 alias ls='/bin/ls -GFh'
 
-# use coreutils on MAC OS as date (to have unix compatibility)
+# use coreutils on MAC OS as date (to have unix compatibility, when installing with brew)
 if [ -x "$(command -v gdate)" ]; then
   alias date='gdate'
 fi
@@ -78,25 +66,6 @@ fi
 #fi
 
 # =============================================================================
-# ANDROID
-# =============================================================================
-
-# set Android SDK path (default android studio one when installing AS)
-# see https://developer.android.com/studio/command-line/variables
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
-
-# if ANDROID_SDK_ROOT variable is NOT empty and the folder exist, add its relevant subfolders to $PATH
-if [[ ! -z $ANDROID_SDK_ROOT && -d $ANDROID_SDK_ROOT ]]; then
-  export PATH=$ANDROID_SDK_ROOT/tools:$PATH
-  export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
-  export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH
-  export PATH=$ANDROID_SDK_ROOT/platform-tools/systrace/catapult/systrace/bin:$PATH
-  export PATH=$ANDROID_SDK_ROOT/tools/proguard/bin/:$PATH
-
-  # additional variable pointing as well to android sdk home (deprecated)
-  export ANDROID_HOME=$ANDROID_SDK_ROOT
-fi
-# =============================================================================
 # NODE/NPM (local installation)
 # =============================================================================
 # TODO fix / move to nix?
@@ -104,14 +73,6 @@ export NPM_PACKAGES=$HOME/.npm-packages
 export NODE_PATH=$NPM_PACKAGES/lib/node_modules:$NODE_PATH
 export NODE_MODULES=$HOME/node-modules
 export PATH=$NPM_PACKAGES/bin:$NODE_MODULES/.bin:$PATH
-
-# =============================================================================
-# GEM local folder (ruby)
-# =============================================================================
-if [ -d $HOME/Local/ruby ]; then
-  export GEM_HOME=$HOME/Local/ruby
-  export PATH=$GEM_HOME/bin:$PATH
-fi
 
 # =============================================================================
 # LaTeX 2e
@@ -217,18 +178,13 @@ export NVM_DIR="$HOME/.nvm"
 # PATH
 # =============================================================================
 
-# Local path (TODO: is this used at all?)
+# Local path (TODO: eventually remove, still used in my old machine)
 export LOCAL=$HOME/local
 export PATH=$LOCAL:$LOCAL/bin:$LOCAL/install/bin:$LOCAL/lib/python/:$PATH
 
 # conscript (eg, used for g8, don't use homebrew for g8 http://www.foundweekends.org/giter8/setup.html )
 if [ -d $HOME/.conscript ]; then
   export PATH=$HOME/.conscript/bin:$PATH
-fi
-
-# curl brew on macos (if it exists)
-if [ -d /usr/local/opt/curl/bin ]; then
-  export PATH=/usr/local/opt/curl/bin:$PATH
 fi
 
 # add /usr/local/bin to path (used by brew system-wise installation)
@@ -260,6 +216,16 @@ initRbenv() {
 # =============================================================================
 # NIX added by Nix installer
 # =============================================================================
+function sourceAllIfExist {
+  local -r arr=$1
+  for i in "${arr[@]}"; do
+    if [ -e $i ]; then
+      echo $i
+      source $i
+    fi
+  done
+}
+
 nixfiles=(
   "$HOME/.nix-profile/etc/profile.d/nix.sh"
   "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
