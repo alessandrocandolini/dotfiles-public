@@ -35,7 +35,9 @@ Latest guide should be available here: https://nixos.org/manual/nix/stable/#sect
 $  sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
 ```
 
-Nix by default pretends to create a folder under `/nix` which creates problems on latest versions of macosx. You might need to 
+When asking whether to use sudo, say yes. 
+
+Nix by default pretends to create a folder under `/nix`, which is not trivial in latest versions of macosx. The latest nix installers should automatically solve the problem by using a mounting utility. If not, an explicit mountpoint needs to be created manually: 
 ```
 sudo diskutil apfs addVolume diskXXX APFS 'Nix Store' -mountpoint /nix
 ```
