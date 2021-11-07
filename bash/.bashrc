@@ -236,17 +236,17 @@ sourceAllIfExist nixfiles
 # FZF (fuzzy search in history)
 # =============================================================================
 
-if [ -x "$(command -v fzf)"  ];  then
-  if [ -f ~/.fzf.bash ]; then
+if command -v fzf >/dev/null; then
+  if [ -f $HOME/.fzf.bash ]; then
     source ~/.fzf.bash
-    if [ -x "$(command -v rg)" ]; then
-      export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
-    fi
+  elif command -v fzf-share >/dev/null; then
+    source "$(fzf-share)/key-bindings.bash"
+    source "$(fzf-share)/completion.bash"
   fi
-fi
-
-# git diff using fzf with preview
-if [ -x "$(command -v fzf)"  ];  then
+  if command -v rg > /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
+  fi
+  # git diff using fzf with preview
   gd() {
     git diff $@ --name-only | fzf -m --ansi --preview 'git diff $@ --color=always -- {-1}'
   }
