@@ -36,6 +36,10 @@
       rnix-lsp
       postgresql
       coreutils
+      fd
+      # https://haskell4nix.readthedocs.io/nixpkgs-users-guide.html#how-to-install-haskell-language-server
+      (haskell-language-server.override { supportedGhcVersions = [ "8107" ]; })
+
 
     ];
 
