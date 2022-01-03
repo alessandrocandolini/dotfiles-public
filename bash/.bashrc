@@ -219,3 +219,6 @@ if command -v fzf >/dev/null; then
     git diff $@ --name-only | fzf -m --ansi --preview 'git diff $@ --color=always -- {-1}'
   }
 fi
+
+
+export PATH=$PATH:$HOME/.ghcup/bin/
