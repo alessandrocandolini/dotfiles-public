@@ -31,12 +31,6 @@ PS1="\h:\W \u\$ "
 # Remove sound
 bind 'set bell-style none'
 
-# Set CLICOLOR if you want Ansi Colors in iTerm2
-export CLICOLOR=1
-
-# Set colors to match iTerm2 Terminal Colors
-export TERM=xterm-256color
-
 # Use bash as default on MACOS
 # https://support.apple.com/en-us/HT208050
 export BASH_SILENCE_DEPRECATION_WARNING=1
@@ -54,11 +48,6 @@ alias cp='/bin/cp -i -v'
 alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
 alias ls='/bin/ls -GFh'
-
-# use coreutils on MAC OS as date (to have unix compatibility, when installing with brew)
-if [ -x "$(command -v gdate)" ]; then
-  alias date='gdate'
-fi
 
 # =============================================================================
 # NODE/NPM (local installation)
