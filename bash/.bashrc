@@ -60,11 +60,6 @@ if [ -x "$(command -v gdate)" ]; then
   alias date='gdate'
 fi
 
-# Make nvim default
-#if [ -x "$(command -v nvim)" ]; then
-#  alias vim='nvim'
-#fi
-
 # =============================================================================
 # NODE/NPM (local installation)
 # =============================================================================
@@ -168,24 +163,12 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 shopt -s histappend
 
 # =============================================================================
-# NVM
-# =============================================================================
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# =============================================================================
 # PATH
 # =============================================================================
 
 # Local path (TODO: eventually remove, still used in my old machine)
 export LOCAL=$HOME/local
 export PATH=$LOCAL:$LOCAL/bin:$LOCAL/install/bin:$LOCAL/lib/python/:$PATH
-
-# conscript (eg, used for g8, don't use homebrew for g8 http://www.foundweekends.org/giter8/setup.html )
-# if [ -d $HOME/.conscript ]; then
-#   export PATH=$HOME/.conscript/bin:$PATH
-# fi
 
 # add /usr/local/bin to path (used by brew system-wise installation)
 export PATH=/usr/local/bin:$PATH
@@ -195,7 +178,6 @@ export PATH=$HOME/bin:$PATH
 
 # haskell stack local (TODO cleanup)
 export PATH=$HOME/.local/bin:$PATH
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 # =============================================================================
 # ENVS (ruby, java)
