@@ -183,9 +183,9 @@ export LOCAL=$HOME/local
 export PATH=$LOCAL:$LOCAL/bin:$LOCAL/install/bin:$LOCAL/lib/python/:$PATH
 
 # conscript (eg, used for g8, don't use homebrew for g8 http://www.foundweekends.org/giter8/setup.html )
-if [ -d $HOME/.conscript ]; then
-  export PATH=$HOME/.conscript/bin:$PATH
-fi
+# if [ -d $HOME/.conscript ]; then
+#   export PATH=$HOME/.conscript/bin:$PATH
+# fi
 
 # add /usr/local/bin to path (used by brew system-wise installation)
 export PATH=/usr/local/bin:$PATH
