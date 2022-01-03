@@ -37,7 +37,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # Git editor default to vim
 # https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
-export GIT_EDITOR="vim --clean"
+export GIT_EDITOR="nvim --clean"
 
 # =============================================================================
 # SAFE ALIAS
