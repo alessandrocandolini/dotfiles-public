@@ -108,6 +108,8 @@ Plug 'junegunn/fzf.vim' " needed for previews
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 
+Plug 'preservim/nerdcommenter'
+
 call plug#end()
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
@@ -134,9 +136,9 @@ endfun
 autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
-nnoremap <silent> <Leader>f :GFiles --cached --others --exclude-standard<CR>
-nnoremap <silent> <Leader>g :Rg<CR>
-nnoremap <silent> <Leader>b :Buffers<CR>
+nnoremap <Leader>ff :GFiles --cached --others --exclude-standard<CR>
+nnoremap <Leader>fg :Rg<CR>
+nnoremap <Leader>fb :Buffers<CR>
 
 " Persist undo
 if !isdirectory($HOME."/.vim")
@@ -148,17 +150,6 @@ endif
 set undodir=~/.vim/undo-dir
 set undofile
 
-" Mapping to comment lines
-" source: https://stackoverflow.com/questions/1676632/whats-a-quick-way-to-comment-uncomment-lines-in-vim
-augroup commenting_blocks_of_code
-  autocmd!
-  autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
-  autocmd FileType sh,ruby,python   let b:comment_leader = '# '
-  autocmd FileType conf,fstab,yaml  let b:comment_leader = '# '
-  autocmd FileType tex              let b:comment_leader = '% '
-  autocmd FileType mail             let b:comment_leader = '> '
-  autocmd FileType vim              let b:comment_leader = '" '
-  autocmd FileType haskell          let b:comment_leader = '--'
-augroup END
-noremap <silent> <Leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
-noremap <silent> <Leader>cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+let g:NERDCreateDefaultMappings = 0
+nmap <silent> <Leader>cc <Plug>NERDCommenterToggle
+vmap <silent> <Leader>cc <Plug>NERDCommenterToggle
