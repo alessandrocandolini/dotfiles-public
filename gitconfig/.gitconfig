@@ -1,4 +1,2 @@
 [core]
   excludesfile = ~/.gitignore
-[pager]
-	branch = false
