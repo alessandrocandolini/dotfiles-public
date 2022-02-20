@@ -11,7 +11,7 @@
       fzf
       ripgrep
       git
-      awscli
+      awscli2
       (sbt.override { jre = pkgs.jdk11; })
       vim
       stow
@@ -29,7 +29,7 @@
       terraform-lsp
 #     texlab
       jdk11
-#     gradle
+#      gradle
       apacheHttpd
       k9s
       yq
