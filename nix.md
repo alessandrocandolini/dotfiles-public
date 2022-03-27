@@ -12,15 +12,10 @@ Ephemeral reproducible enviroments can be achieved alternatively through Dockeri
 In addition, nix can be used to generate smaller minimal Docker images. 
 
 Here however I want to focus on another interesting aspect of nix, namely using nix as a package manager (essentially, on MACOSX as an alternative to homebrew). 
-Why? 
-If you are familiar with infrastructure as code, the following should sound familiar. 
-Essentially, we want the possibility to declare programmatically which software is available in our local machine.
-the advantages are riproducibility, portability, and the fact that the configuration of your machine is defined in code and can be handled using a source management system. 
-This also opens the door the other possibilities, like rollbacks. 
 
 To achieve this we will need to install two / three things 
 * nix itself
-* nix-darwin
+* nix-darwin (to have a declarative configuration)
 
 
 ## Installation 
