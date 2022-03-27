@@ -20,8 +20,7 @@ This also opens the door the other possibilities, like rollbacks.
 
 To achieve this we will need to install two / three things 
 * nix itself
-* nix-darwing 
-* home-manager (optional, I don't use it) 
+* nix-darwin
 
 
 ## Installation 
@@ -33,7 +32,11 @@ Latest guide should be available here: https://nixos.org/manual/nix/stable/insta
 sh <(curl -L https://nixos.org/nix/install)
 ```
 
-Go for multi mode installation on MAC. 
+There were problems with MACOS in the past, due to the restrictions on creating `/nix` folder. Recent installers should take care of that automatically with 0 effort and no need to restart the machine. 
+
+* Go for multi mode installation on MAC. 
+* choose verbose mode
+* allow sudo commands
 
 ### Install nix darwin
 
