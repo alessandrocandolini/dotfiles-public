@@ -28,21 +28,12 @@ To achieve this we will need to install two / three things
 
 ### Install Nix
 
-I'll focus on MACOSX, because that's the platform that i usually use for my work and because it's a tricky one (in latest versions). 
-
-Latest guide should be available here: https://nixos.org/manual/nix/stable/#sect-macos-installation
+Latest guide should be available here: https://nixos.org/manual/nix/stable/installation/installing-binary.html
 ```
-$  sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+sh <(curl -L https://nixos.org/nix/install)
 ```
 
-When asking whether to use sudo, say yes. 
-
-Nix by default pretends to create a folder under `/nix`, which is not trivial in latest versions of macosx. The latest nix installers should automatically solve the problem by using a mounting utility. If not, an explicit mountpoint needs to be created manually: 
-```
-sudo diskutil apfs addVolume diskXXX APFS 'Nix Store' -mountpoint /nix
-```
-
-You need to source some nix files in your .bashrc file, see `.bashrc` file in this repo. 
+Go for multi mode installation on MAC. 
 
 ### Install nix darwin
 
