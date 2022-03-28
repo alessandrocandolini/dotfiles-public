@@ -12,37 +12,26 @@ Ephemeral reproducible enviroments can be achieved alternatively through Dockeri
 In addition, nix can be used to generate smaller minimal Docker images. 
 
 Here however I want to focus on another interesting aspect of nix, namely using nix as a package manager (essentially, on MACOSX as an alternative to homebrew). 
-Why? 
-If you are familiar with infrastructure as code, the following should sound familiar. 
-Essentially, we want the possibility to declare programmatically which software is available in our local machine.
-the advantages are riproducibility, portability, and the fact that the configuration of your machine is defined in code and can be handled using a source management system. 
-This also opens the door the other possibilities, like rollbacks. 
 
 To achieve this we will need to install two / three things 
 * nix itself
-* nix-darwing 
-* home-manager (optional, I don't use it) 
+* nix-darwin (to have a declarative configuration)
 
 
 ## Installation 
 
 ### Install Nix
 
-I'll focus on MACOSX, because that's the platform that i usually use for my work and because it's a tricky one (in latest versions). 
-
-Latest guide should be available here: https://nixos.org/manual/nix/stable/#sect-macos-installation
+Latest guide should be available here: https://nixos.org/manual/nix/stable/installation/installing-binary.html
 ```
-$  sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+sh <(curl -L https://nixos.org/nix/install)
 ```
 
-When asking whether to use sudo, say yes. 
+There were problems with MACOS in the past, due to the restrictions on creating `/nix` folder. Recent installers should take care of that automatically with 0 effort and no need to restart the machine. 
 
-Nix by default pretends to create a folder under `/nix`, which is not trivial in latest versions of macosx. The latest nix installers should automatically solve the problem by using a mounting utility. If not, an explicit mountpoint needs to be created manually: 
-```
-sudo diskutil apfs addVolume diskXXX APFS 'Nix Store' -mountpoint /nix
-```
-
-You need to source some nix files in your .bashrc file, see `.bashrc` file in this repo. 
+* Go for multi mode installation on MAC. 
+* choose verbose mode
+* allow sudo commands
 
 ### Install nix darwin
 
