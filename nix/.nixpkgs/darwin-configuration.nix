@@ -37,6 +37,7 @@
       postgresql
       coreutils
       fd
+      gh
       # (haskell-language-server.override { supportedGhcVersions = [ "8107" ]; version = 1.5.1; })
 
 
