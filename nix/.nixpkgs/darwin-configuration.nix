@@ -5,8 +5,6 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs;
     [ 
-#     wget
-#     htop
       jq
       fzf
       ripgrep
@@ -14,25 +12,18 @@
       awscli2
       (sbt.override { jre = pkgs.jdk11; })
       vim
-#     stow
-#     terraform
       tmux
-#     tree
       unzip
       curl
       neovim
       bash_5
       nodejs_latest
       stack
-#     go
       glow
       terraform-lsp
 #     texlab
       jdk11
-#      gradle
       apacheHttpd
-#     k9s
-#     yq
       rnix-lsp
       postgresql
       coreutils
