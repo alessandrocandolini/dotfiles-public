@@ -4,7 +4,7 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs;
-    [ 
+    [
       jq
       fzf
       ripgrep
@@ -30,6 +30,11 @@
       fd
       gh
       # (haskell-language-server.override { supportedGhcVersions = [ "8107" ]; version = 1.5.1; })
+      colima
+      docker
+      docker-compose
+      aws-iam-authenticator
+      amazon-ecr-credential-helper
 
 
     ];
