@@ -35,7 +35,7 @@
       docker-compose
       aws-iam-authenticator
       amazon-ecr-credential-helper
-
+      docker-credential-helpers
 
     ];
 
