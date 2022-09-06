@@ -1,16 +1,47 @@
 { config, pkgs, ... }:
 
+let
+  haskellStuff =
+    let
+
+      # things that cabal can't install on its own due to native dependencies
+      troublesomePackages = p: [ p.digest p.postgresql-libpq p.zlib ];
+
+      compilers =
+        [
+#          (pkgs.haskell.packages.ghc8107.ghcWithPackages troublesomePackages)
+          (pkgs.haskell.packages.ghc902.ghcWithPackages troublesomePackages)
+        ];
+
+      hls = pkgs.haskell-language-server.override {
+        supportedGhcVersions = [
+          # "8107" 
+          "902"
+       ];
+      };
+    in
+      compilers ++ [
+        hls
+        pkgs.cabal-install
+        pkgs.cabal2nix
+        pkgs.ghcid
+        pkgs.hlint
+        pkgs.hpack
+        pkgs.stack
+        pkgs.zlib
+      ];
+in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs;
+  environment.systemPackages = with pkgs; haskellStuff ++ 
     [
       jq
       fzf
       ripgrep
       git
       awscli2
-      (sbt.override { jre = pkgs.jdk11; })
+      (sbt.override { jre = pkgs.jdk17; })
       vim
       tmux
       unzip
@@ -18,12 +49,11 @@
       neovim
       bash_5
       nodejs_latest
-      stack
-      glow
-      terraform-lsp
+#     stack
+#     terraform-lsp
 #     texlab
       jdk11
-      apacheHttpd
+#     apacheHttpd
       rnix-lsp
       postgresql
       coreutils
@@ -55,5 +85,5 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-  environment.variables.JAVA_HOME = "${pkgs.jdk11}/";
+  environment.variables.JAVA_HOME = "${pkgs.jdk17}/";
 }
