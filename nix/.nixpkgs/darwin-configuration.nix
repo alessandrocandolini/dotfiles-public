@@ -52,7 +52,7 @@ in
 #     stack
 #     terraform-lsp
 #     texlab
-      jdk11
+      jdk17
 #     apacheHttpd
       rnix-lsp
       postgresql
