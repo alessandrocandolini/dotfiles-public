@@ -19,7 +19,7 @@ add_newline = false
 success_symbol = "\\$"
 
 [git_branch]
-format = "\\[[$branch]($style)|"
+format = "\\[[$branch]($style)\\] "
 
 [git_status]
 ahead      = "⇡${count}"
@@ -28,11 +28,11 @@ behind     = "⇣${count}"
 conflicted = "=${count}"
 untracked  = "?${count}"
 stashed    = "\\$${count}"
-modified   = " !${count} "
+modified   = "!${count}"
 staged     = "+${count}"
 renamed    = "»${count}"
 deleted    = "✘${count}"
-format = "[$all_status$ahead_behind]($style)\\] "
+format = "\\[[$all_status$ahead_behind]($style)\\] "
 
 [username]
 style_user = "bold green"
