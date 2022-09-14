@@ -26,7 +26,7 @@ PROMPT_DIRTRIM=3
 
 # Bash prompt
 # DO not export: https://unix.stackexchange.com/questions/247585/to-export-or-not-to-export-bash-ps1-variable
-PS1="\h:\W \u\$ "
+# PS1="\h:\W \u\$ "
 
 # Remove sound
 bind 'set bell-style none'
@@ -37,7 +37,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # Git editor default to vim
 # https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
-export GIT_EDITOR="nvim --clean"
+export GIT_EDITOR="vim -u NONE"
 
 # =============================================================================
 # SAFE ALIAS
@@ -97,15 +97,6 @@ if [ -d $HOME/.asy/node-4.0/modyles ]; then
 fi
 
 # =============================================================================
-# CSV (in my old machine i'm still using csv instead of git for oldcprojects)
-# =============================================================================
-
-# set CSV repository folder
-if [ -d $HOME/cvsroot ]; then
-  export CVSROOT=$HOME/cvsroot
-fi
-
-# =============================================================================
 # GIT
 # =============================================================================
 # !! This section is slow, particularly the bash-git-prompt
@@ -155,10 +146,6 @@ shopt -s histappend
 # PATH
 # =============================================================================
 
-# Local path (TODO: eventually remove, still used in my old machine)
-export LOCAL=$HOME/local
-export PATH=$LOCAL:$LOCAL/bin:$LOCAL/install/bin:$LOCAL/lib/python/:$PATH
-
 # add /usr/local/bin to path (used by brew system-wise installation)
 export PATH=/usr/local/bin:$PATH
 
@@ -167,19 +154,6 @@ export PATH=$HOME/bin:$PATH
 
 # haskell stack local (TODO cleanup)
 export PATH=$HOME/.local/bin:$PATH
-
-# =============================================================================
-# ENVS (ruby, java)
-# =============================================================================
-# Slow to load, so i move these to functions
-
-initRbenv() {
-  if [ -x "$(command -v rbenv)" ]; then
-    export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-    eval "$(rbenv init -)"
-    export PATH="$HOME/.rbenv/bin:$PATH"
-  fi
-}
 
 # =============================================================================
 # NIX added by Nix installer
@@ -205,9 +179,7 @@ sourceAllIfExist nixfiles
 # =============================================================================
 
 if command -v fzf >/dev/null; then
-  if [ -f $HOME/.fzf.bash ]; then
-    source ~/.fzf.bash
-  elif command -v fzf-share >/dev/null; then
+  if command -v fzf-share >/dev/null; then
     source "$(fzf-share)/key-bindings.bash"
     source "$(fzf-share)/completion.bash"
   fi
@@ -219,6 +191,3 @@ if command -v fzf >/dev/null; then
     git diff $@ --name-only | fzf -m --ansi --preview 'git diff $@ --color=always -- {-1}'
   }
 fi
-
-
-export PATH=$PATH:$HOME/.ghcup/bin/
