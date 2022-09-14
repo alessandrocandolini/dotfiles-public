@@ -50,6 +50,7 @@ in
       bash_5
       nodejs_latest
       starship
+      coursier 
 #     terraform-lsp
 #     texlab
       jdk17
