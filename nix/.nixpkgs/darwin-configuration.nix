@@ -1,6 +1,27 @@
 { config, pkgs, ... }:
 
 let
+
+  dockerStuff = with pkgs; [ 
+      colima
+      docker
+      docker-compose
+      aws-iam-authenticator
+      amazon-ecr-credential-helper
+      docker-credential-helpers
+  ];
+
+  scalaStuff = with pkgs; [ 
+      jdk17
+      (sbt.override { jre = pkgs.jdk17; })
+      coursier # for metals 
+  ];
+
+  vimStuff = with pkgs; [ 
+      vim
+      neovim
+  ];
+
   haskellStuff =
     let
 
@@ -34,40 +55,28 @@ in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; haskellStuff ++ 
+  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ haskellStuff ++ dockerStuff ++ 
     [
       jq
       fzf
       ripgrep
       git
       awscli2
-      (sbt.override { jre = pkgs.jdk17; })
       (gradle.override { java = pkgs.jdk17; })
-      vim
       tmux
       unzip
       curl
-      neovim
       bash_5
       nodejs_latest
       starship
-      coursier 
 #     terraform-lsp
 #     texlab
-      jdk17
 #     apacheHttpd
       rnix-lsp
       postgresql
       coreutils
       fd
       gh
-      # (haskell-language-server.override { supportedGhcVersions = [ "8107" ]; version = 1.5.1; })
-      colima
-      docker
-      docker-compose
-      aws-iam-authenticator
-      amazon-ecr-credential-helper
-      docker-credential-helpers
 
     ];
 
