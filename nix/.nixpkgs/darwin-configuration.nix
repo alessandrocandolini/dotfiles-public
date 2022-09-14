@@ -42,6 +42,7 @@ in
       git
       awscli2
       (sbt.override { jre = pkgs.jdk17; })
+      (gradle.override { java = pkgs.jdk17; })
       vim
       tmux
       unzip
