@@ -2,7 +2,7 @@
 
 let
 
-  dockerStuff = with pkgs; [ 
+  dockerStuff = with pkgs; [
       colima
       docker
       docker-compose
@@ -11,13 +11,13 @@ let
       docker-credential-helpers
   ];
 
-  scalaStuff = with pkgs; [ 
+  scalaStuff = with pkgs; [
       jdk17
       (sbt.override { jre = pkgs.jdk17; })
-      coursier # for metals 
+      coursier # for metals
   ];
 
-  vimStuff = with pkgs; [ 
+  vimStuff = with pkgs; [
       vim
       neovim
   ];
@@ -36,7 +36,7 @@ let
 
       hls = pkgs.haskell-language-server.override {
         supportedGhcVersions = [
-          # "8107" 
+          # "8107"
           "902"
        ];
       };
@@ -55,7 +55,7 @@ in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ haskellStuff ++ dockerStuff ++ 
+  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ haskellStuff ++ dockerStuff ++
     [
       jq
       fzf
@@ -89,8 +89,8 @@ in
   nix.package = pkgs.nix;
 
   # Create /etc/bashrc that loads the nix-darwin environment.
-  programs.zsh.enable = false;  # default shell on catalina
-  # programs.fish.enable = true;
+  programs.zsh.enable = false;
+  programs.bash.enable = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
