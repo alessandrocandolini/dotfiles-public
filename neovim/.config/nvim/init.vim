@@ -154,3 +154,6 @@ set undofile
 let g:NERDCreateDefaultMappings = 0
 nmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 vmap <silent> <Leader>cc <Plug>NERDCommenterToggle
+
+
+lua require('setup')
