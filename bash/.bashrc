@@ -25,7 +25,7 @@ fi
 PROMPT_DIRTRIM=3
 
 # Bash prompt
-# DO not export: https://unix.stackexchange.com/questions/247585/to-export-or-not-to-export-bash-ps1-variable
+# DO not export PS1 when defining it: https://unix.stackexchange.com/questions/247585/to-export-or-not-to-export-bash-ps1-variable
 # PS1="\h:\W \u\$ "
 
 # Remove sound
