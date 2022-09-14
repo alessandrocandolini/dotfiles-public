@@ -74,22 +74,6 @@ set nohlsearch
 " Do not change cursor shape in insert mode (to fix neovim standard behaviour)
 set guicursor=
 
-" Default colorscheme (has to be installed, see vim-plug below)
-" You need ot generate a symb link in .vim/colors folder
-" ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
-" ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.config/nvim/colors/jellybeans.vim
-" This is only necessary if you use "set termguicolors".
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-" fixes glitch? in colors when using vim with tmux
-set background=dark
-set t_Co=256
-set termguicolors     " enable true colors support
-try
-  colorscheme jellybeans
-catch /^Vim\%((\a\+)\)\=:E185/
-endtry
-
 " ==========================
 " Vim-Plug
 " ==========================
@@ -116,6 +100,23 @@ Plug 'junegunn/fzf.vim' " needed for previews
 Plug 'preservim/nerdcommenter'
 
 call plug#end()
+
+
+" Default colorscheme (has to be installed, see vim-plug above)
+" Either place this code AFTER the vim-plug section, or you might need to generate symb links in the .vim/colors folder
+" ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
+" ln -s ~/.config/nvim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.config/nvim/colors/jellybeans.vim
+" This is only necessary if you use "set termguicolors".
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" fixes glitch? in colors when using vim with tmux
+set background=dark
+set t_Co=256
+set termguicolors     " enable true colors support
+try
+  colorscheme jellybeans
+catch /^Vim\%((\a\+)\)\=:E185/
+endtry
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
 set rtp+=/usr/local/opt/fzf
