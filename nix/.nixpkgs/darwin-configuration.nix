@@ -49,7 +49,7 @@ in
       neovim
       bash_5
       nodejs_latest
-#     stack
+      starship
 #     terraform-lsp
 #     texlab
       jdk17

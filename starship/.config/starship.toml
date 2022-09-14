@@ -1,0 +1,45 @@
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$nix_shell\
+$status\
+$shell\
+$character"""
+
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+# Replace the "❯" symbol 
+[character]
+success_symbol = "\\$"
+
+[git_branch]
+format = "\\[[$branch]($style)|"
+
+[git_status]
+ahead      = "⇡${count}"
+diverged   = "⇕⇡${ahead_count}⇣${behind_count}"
+behind     = "⇣${count}"
+conflicted = "=${count}"
+untracked  = "?${count}"
+stashed    = "\\$${count}"
+modified   = " !${count} "
+staged     = "+${count}"
+renamed    = "»${count}"
+deleted    = "✘${count}"
+format = "[$all_status$ahead_behind]($style)\\] "
+
+[username]
+style_user = "bold green"
+show_always = false
+
+[nix_shell]
+disabled = false
+impure_msg = "impure"
+pure_msg = "pure"
+format = '[$state](bold blue) '
