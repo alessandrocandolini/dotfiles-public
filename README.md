@@ -12,7 +12,7 @@ Using `nix`
 ```bash
 nix-shell -p stow
 ```
-Using homebrew
+Alternatively, using `homebrew`
 ```bash
 brew install stow
 ```
