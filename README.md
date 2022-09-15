@@ -2,7 +2,7 @@
 
 Personal dotfiles managed via `git` and `stow`. 
 
-I use these files on MACOS, some of them are portable to linux, but not all. 
+I use these config files on MACOS, some of them might be portable to linux, but not all. 
 
 See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about those specific dotfiles.
 
