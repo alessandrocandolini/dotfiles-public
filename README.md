@@ -15,7 +15,7 @@ Uf homebrew is installed,
 brew install stow
 ```
 
-## How to use this repo
+## How to run it
 
 Clone this repo and from repo folder run
 ```bash
