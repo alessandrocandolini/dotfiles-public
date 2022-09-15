@@ -1,19 +1,23 @@
 # dotfiles
 
-Personal dotfiles managed via `git` and `stow`.
+Personal dotfiles managed via `git` and `stow`. 
+
+I use these files on MACOS, some of them are portable to linux, but not all. 
 
 See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about those specific dotfiles.
 
 ## Install GNU Stow
 
-If `nix` is installed,
+Using `nix`
 ```bash
 nix-shell -p stow
 ```
-Uf homebrew is installed,
+Using homebrew
 ```bash
 brew install stow
 ```
+
+More options here: https://www.gnu.org/software/stow/
 
 ## Run
 
