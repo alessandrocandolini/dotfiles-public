@@ -1,16 +1,16 @@
 # dotfiles
 
-Personal opinionated configuration dotfiles managed through `git` and `stow`.
+Personal dotfiles managed via `git` and `stow`.
 
-See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more specific details about the corresponding dotfiles.
+See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about those specific dotfiles.
 
 ## Install GNU stow
 
-Assuming `nix` is installed,
+If `nix` is installed,
 ```bash
 nix-shell -p stow
 ```
-Alternatively, assuming homebrew installed
+Uf homebrew is installed,
 ```bash
 brew install stow
 ```
@@ -27,21 +27,20 @@ If you want to run it in dry mode
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
 
+For some of the config files provided here, `--no-folding` is not strictly needed. 
+For some of the others instead, like for example those that will be created under `~/.config/`, it's important to run `stow` always using the `--no-folding` option, otherwise `stow` will create symbolic links to the entire folder if the folder does not exist, instead of creating the folder first and then generate the symbolic links. 
 
-For most of the config files provided here,
-```bash
-stow --verbose --target ~ bash
-```
-is enough, or even simpler (assuming the repo has been cloned in the `$HOME` folder, so that targets are not needed):
-```
-stow bash
-```
+To avoid the mistake of forgetting about `--no-folding`  and to avoid spending time copy pasting the command, a makefile has been created with specific phony tasks for each folder and also a `all` target to run them all: 
 
-For config files under `~/.config/` instead, remenmber to run `stow` always using the `--no-folding` option, otherwise `stow` will create symbolic links to the entire folder if the folder does not exist, instead of creating the folder first and then generate the symbolic links. For example,
 ```bash
-stow --simulate --no-folding --verbose --target ~ starship
-stow --simulate --no-folding --verbose --target ~ neovim
-stow --simulate --no-folding --verbose --target ~ alacritty
+make bash
+make alacritty 
+make neovim 
+...
+```
+or 
+```bash
+make all
 ```
 
 ## stow-global-ignore
