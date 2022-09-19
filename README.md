@@ -21,7 +21,23 @@ More options here: https://www.gnu.org/software/stow/
 
 ## Run
 
-Clone the repo and run
+Assuming `stow` and `make` are available, clone this repo and use the [makefile](Makefile):
+```bash
+make all
+```
+Phony targets are provided for each specific config
+```bash
+make bash
+``` 
+```
+make alacritty 
+```
+```
+make neovim 
+```
+etc. 
+
+Alternatively, invoke `stow` directly 
 ```bash
 stow --no-folding --verbose --target ~ <name of the folder>
 ```
@@ -31,19 +47,7 @@ If you want to run it in dry mode
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
 
-Alternatively, a [makefile](Makefile) is provided with phony targets for each specific config
-```bash
-make bash
-make alacritty 
-make neovim 
-...
-```
-and also a `all` target to run them all at once
-```bash
-make all
-```
-
-Notice: for some of the config files provided here, like bash or git, `--no-folding` is not strictly necessary and can be omitted when running stow manually. For some of the other configs, like for example those that will create links under `~/.config/`, it's important to always use `--no-folding` , otherwise `stow` will create symbolic links to the whole folder (if the folder does not exist) instead of creating the folder first and then generate the symbolic links. 
+Notice: for some of the config files provided (eg, bash or git) `--no-folding` can be omitted. For some of the other configs however (eg, those that will create links under `~/.config/`) always use `--no-folding` , otherwise `stow` will create symbolic links to the whole folder (if the folder does not exist) instead of creating the folder first and then generate the symbolic links. 
 
 
 ## stow-global-ignore
