@@ -202,3 +202,4 @@ if command -v starship >/dev/null; then
   eval "$(starship init bash)"
 fi
 
+export C_INCLUDE_PATH="`xcrun --show-sdk-path`/usr/include/ffi"
