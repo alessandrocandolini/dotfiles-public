@@ -1,22 +1,21 @@
 # Bashrc
 
 My `.bashrc` contains: 
-* bash configuration (prompt, history, etc)
+* bash configuration (prompt, history, some env variables, etc)
 * general purpose safe aliases (override standard bash commands with a safer version to ask for confirmation before eg deleting a file) 
 * export `PATH` variable (with `if` conditions that should make it quite portable to different machines with different settings) 
-* load some tools, if available (ie, git autocompletion, git prompt, fzf for fuzzy search) 
+* load some tools, if available (ie, git autocompletion) 
 
 Some sections (eg, latex, npm etc) require some cleanup
 
 ## Instructions to use
 
-The provided `.bashrc` file should behave correctly if some things (eg, android, latex, java, etc) are not available in a machine. 
-In fact, most of the instructions are wrapped into `if` statements to check the availability of the tools/folders/files before running any instruction.
+Tool-specific instructions are always wrapped into `if` statements, so that this bashrc should load correctly also on machines where the corresponding tools are not available. 
+
 However, in the happiest path, this `.bashrc` provides support for the following tools (that needs to be installed independently)
-* automatic set of JAVA_HOME, if java is installed
-* Android points to `%HOME/Library/Android`
-* bash git autocompletion and git bash prompt should be installed / cloned in $HOME (see instructions in the corresponding `.bashrc` section) 
-* fzf 
+* bash git autocompletion, which needs to be cloned in $HOME (see instructions in the corresponding `.bashrc` section) 
+* fzf (which is installed by nix-darwing separately, or can be installed independently) 
+* support for starship (which is installed by nix-darwind separately, and the config is provided via `stow`) 
 
 
 ## Naive "profiling"
