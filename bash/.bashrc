@@ -103,6 +103,7 @@ fi
 
 # git autocompletion
 # Source: wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -O .git-completion.bash
+# curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o .git-completion.bash
 if [ -f $HOME/.git-completion.bash ]; then
    source $HOME/.git-completion.bash
 fi
