@@ -76,6 +76,29 @@ set nohlsearch
 " Do not change cursor shape in insert mode (to fix neovim standard behaviour)
 set guicursor=
 
+
+" ==========================
+" Vim-Plug
+" ==========================
+" https://github.com/junegunn/vim-plug
+" Installation of vim-plug is described in the readme (curl command attow):
+" curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" Reload .vimrc and :PlugInstall to install plugins.
+" To uninstall, remove it from .vimrc and run :PlugClean
+
+call plug#begin('~/.vim/bundle')
+Plug 'nanotech/jellybeans.vim'
+
+Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
+Plug 'junegunn/fzf.vim' " needed for previews
+
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+
+Plug 'preservim/nerdcommenter'
+
+call plug#end()
+
 " Default colorscheme (has to be installed, see vim-plug below)
 " You need ot generate a symb link in .vim/colors folder
 " ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
@@ -91,33 +114,6 @@ try
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
-" ==========================
-" Vim-Plug
-" ==========================
-" https://github.com/junegunn/vim-plug
-" Installation of vim-plug is described in the readme (curl command attow):
-" curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-" Reload .vimrc and :PlugInstall to install plugins.
-" To uninstall, remove it from .vimrc and run :PlugClean
-
-call plug#begin('~/.vim/bundle')
-Plug 'nanotech/jellybeans.vim'
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'udalov/kotlin-vim'
-" Haskell formatter on save (assuming ormolu is installed in the system)
-Plug 'sdiehl/vim-ormolu'
-
-Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
-Plug 'junegunn/fzf.vim' " needed for previews
-
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-
-Plug 'preservim/nerdcommenter'
-
-call plug#end()
-
 " Setup fuzzy finder fzf bridge (requires fzf installed)
 set rtp+=/usr/local/opt/fzf
 
@@ -128,9 +124,9 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
 
 " ===== Load plugin specific configuration ====
-if filereadable(expand("~/.vim/plugins/coc-mappings.vim"))
-   source ~/.vim/plugins/coc-mappings.vim
-endif
+"if filereadable(expand("~/.vim/plugins/coc-mappings.vim"))
+   "source ~/.vim/plugins/coc-mappings.vim
+"endif
 
 " Remove trailing spaces on save
 fun s:StripTrailingWhitespaces()
