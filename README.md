@@ -42,7 +42,7 @@ Alternatively, invoke `stow` directly
 stow --no-folding --verbose --target ~ <name of the folder>
 ```
 
-If you want to run it in dry mode
+If you want to run it in dry mode, use the `--simulate` option: 
 ```bash
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
