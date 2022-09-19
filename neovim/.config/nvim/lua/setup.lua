@@ -1,9 +1,8 @@
-print('hello from lua')
-
 --https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 --https://github.com/scalameta/nvim-metals/discussions/39
 local api = vim.api
 local cmd = vim.cmd
+require'lspconfig'.hls.setup{}
 
 local function map(mode, lhs, rhs, opts)
   local options = { noremap = true }

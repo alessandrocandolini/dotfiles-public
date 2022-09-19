@@ -88,6 +88,7 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'scalameta/nvim-metals'
+"Plug 'autozimu/LanguageClient-neovim', {'branch': 'next','do': 'bash install.sh'}
 " Haskell formatter on save (assuming ormolu is installed in the system)
 " Plug 'sdiehl/vim-ormolu'
 
