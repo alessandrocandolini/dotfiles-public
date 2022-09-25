@@ -30,39 +30,34 @@ let
 
       compilers =
         [
-#          (pkgs.haskell.packages.ghc8107.ghcWithPackages troublesomePackages)
+          #(pkgs.haskell.packages.ghc8107.ghcWithPackages troublesomePackages)
           (pkgs.haskell.packages.ghc902.ghcWithPackages troublesomePackages)
         ];
 
       hls = pkgs.haskell-language-server.override {
         supportedGhcVersions = [
-          # "8107"
+           #"8107"
           "902"
        ];
       };
     in
       compilers ++ [
         hls
-        pkgs.cabal-install
-        pkgs.cabal2nix
-        pkgs.ghcid
-        pkgs.hlint
-        pkgs.hpack
         pkgs.stack
-        pkgs.zlib
+        pkgs.llvm_12
       ];
 in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ haskellStuff ++ dockerStuff ++
+  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ haskellStuff ++ 
     [
       jq
       fzf
       ripgrep
       git
       awscli2
-      (gradle.override { java = pkgs.jdk17; })
+      #(gradle.override { java = pkgs.jdk17; })
       tmux
       unzip
       curl
