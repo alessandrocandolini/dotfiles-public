@@ -99,25 +99,12 @@ fi
 # =============================================================================
 # GIT
 # =============================================================================
-# !! This section is slow, particularly the bash-git-prompt
 
 # git autocompletion
 # Source: wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -O .git-completion.bash
 # curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o .git-completion.bash
 if [ -f $HOME/.git-completion.bash ]; then
    source $HOME/.git-completion.bash
-fi
-
-# Git-prompt-bash
-# Source: https://github.com/magicmonty/bash-git-prompt
-# git clone https://github.com/magicmonty/bash-git-prompt.git .bash-git-prompt --depth=1
-
-if [ -d $HOME/.bash-git-prompt ]; then
-  GIT_PROMPT_ONLY_IN_REPO=1
-  GIT_PROMPT_SHOW_UPSTREAM=0
-  GIT_PROMPT_FETCH_REMOTE_STATUS=0
-  GIT_PROMPT_THEME=Default
-  source $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
 # =============================================================================
