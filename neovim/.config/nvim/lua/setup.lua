@@ -25,7 +25,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
 -- after the language server attaches to the current buffer
 -- ADVANTAGE: no mappings for other files
 -- DOWNSIDE: you need to pass the function to every new LSP
-local on_attach = function(client, bufnr)
+local default_on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -90,22 +90,74 @@ cmp.setup({
 -- LSP Setup
 ----------------------------------
 -- Haskell language server
-require'lspconfig'.hls.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-      haskell = {
-         hlintOn = true,
-         formattingProvider = "ormolu"
-      }
-  }
+--require'lspconfig'.hls.setup{
+  --on_attach = default_on_attach,
+  --capabilities = capabilities,
+  --settings = {
+      --haskell = {
+         --hlintOn = true,
+         --formattingProvider = "ormolu"
+      --}
+  --}
+--}
+
+local ht = require('haskell-tools')
+
+ht.setup {
+  tools = { -- haskell-tools options
+    codeLens = {
+      autoRefresh = true,
+    },
+    hoogle = {
+      -- 'auto': Choose a mode automatically, based on what is available.
+      -- 'telescope-local': Force use of a local installation.
+      -- 'telescope-web': The online version (depends on curl).
+      -- 'browser': Open hoogle search in the default browser.
+      mode = 'telescope-local',
+    },
+  },
+  hls = {
+    on_attach = function(client, bufnr)
+      local local_opts = vim.tbl_extend('keep', opts, { buffer = bufnr, })
+      vim.keymap.set('n', '<space>ca', vim.lsp.codelens.run, local_opts)
+      vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, local_opts)
+      default_on_attach(client, bufnr)
+    end,
+    haskell = {
+      formattingProvider = 'ormolu',
+      checkProject = false,
+      plugin = {
+       class = { -- missing class methods
+        codeLensOn = true,
+       },
+       importLens = { -- make import lists fully explicit
+         codeLensOn = true,
+       },
+       refineImports = { -- refine imports
+         codeLensOn = true,
+       },
+       tactics = { -- wingman
+         codeLensOn = false,
+       },
+       moduleName = { -- fix module names
+         globalOn = true,
+       },
+       eval = { -- evaluate code snippets
+         globalOn = false,
+       },
+       ['ghcide-type-lenses'] = { -- show/add missing type signatures
+         globalOn = true,
+       },
+     },
+    }
+  },
 }
 
 -- Metals (scala)
 local metals_config = require("metals").bare_config()
 
 metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
-metals_config.on_attach = on_attach
+metals_config.on_attach = default_on_attach
 metals_config.settings = {
   showImplicitArguments = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },

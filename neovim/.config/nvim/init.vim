@@ -80,7 +80,6 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'nanotech/jellybeans.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'glepnir/lspsaga.nvim'
 Plug 'scalameta/nvim-metals'
 
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
@@ -91,13 +90,13 @@ Plug 'junegunn/fzf.vim' " needed for previews
 
 Plug 'preservim/nerdcommenter'
 
-"advanced
+"more advanced (not sure i wanna keep them)
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
 Plug 'nvim-telescope/telescope.nvim'
-" Autocompletion plugin
+Plug 'glepnir/lspsaga.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'MrcJkb/haskell-tools.nvim'
 
 call plug#end()
 
@@ -133,6 +132,9 @@ fun s:StripTrailingWhitespaces()
 endfun
 autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
+
+""
+command! -bang -nargs=* Rg2 call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 nnoremap <Leader>ff :GFiles --cached --others --exclude-standard<CR>
 nnoremap <Leader>fg :Rg<CR>
