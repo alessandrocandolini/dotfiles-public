@@ -40,6 +40,7 @@ set secure
 set noruler
 
 " Don't show line number. If you turn it on, consider relative numbers:
+" set number
 " set number relativenumber
 set nonumber
 
@@ -50,20 +51,12 @@ set belloff=all
 " milliseconds after stop typing before processing plugins (default 4000)
 set updatetime=300
 
-" allow backspacing over everything in insert mode
-" set backspace=indent,eol,start
-
 " do not keep a backup file (some LSP don't work well in coc with backup files)
 set nobackup
 set nowritebackup
 
 " display incomplete commands (partial command as it’s being typed)
 set showcmd
-
-" performance improvements when syntax on in vim 8+
-if v:version >= 800
-    syntax sync minlines=256
- endif
 
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v for opening a window
 nnoremap <C-w>v :vnew<CR>
@@ -78,19 +71,17 @@ set guicursor=
 " Vim-Plug
 " ==========================
 " https://github.com/junegunn/vim-plug
-" Installation of vim-plug is described in the readme (curl command attow):
-" curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-" Reload .vimrc and :PlugInstall to install plugins.
-" To uninstall, remove it from .vimrc and run :PlugClean
+" Installation of vim-plug is described in the readme (curl command)
+" curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" Restart and run :PlugInstall to install plugins.
+" To uninstall, remove it from this file and run :PlugClean
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'nanotech/jellybeans.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim'
 Plug 'scalameta/nvim-metals'
-"Plug 'autozimu/LanguageClient-neovim', {'branch': 'next','do': 'bash install.sh'}
-" Haskell formatter on save (assuming ormolu is installed in the system)
-" Plug 'sdiehl/vim-ormolu'
 
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
@@ -100,6 +91,14 @@ Plug 'junegunn/fzf.vim' " needed for previews
 
 Plug 'preservim/nerdcommenter'
 
+"advanced
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'nvim-telescope/telescope.nvim'
+" Autocompletion plugin
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+
 call plug#end()
 
 
@@ -107,9 +106,9 @@ call plug#end()
 " Either place this code AFTER the vim-plug section, or you might need to generate symb links in the .vim/colors folder
 " ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
 " ln -s ~/.config/nvim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.config/nvim/colors/jellybeans.vim
-" This is only necessary if you use "set termguicolors".
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" This seems necessary if you use "set termguicolors".
+" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " fixes glitch? in colors when using vim with tmux
 set background=dark
 set t_Co=256
@@ -121,9 +120,6 @@ endtry
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
 set rtp+=/usr/local/opt/fzf
-
-" Comments highlighting when using jsonc as configuration file format
-autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " Help Vim recognize *.sbt and *.sc as Scala files
 au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
@@ -155,6 +151,5 @@ set undofile
 let g:NERDCreateDefaultMappings = 0
 nmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 vmap <silent> <Leader>cc <Plug>NERDCommenterToggle
-
 
 lua require('setup')

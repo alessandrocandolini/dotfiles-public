@@ -1,45 +1,111 @@
 --https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 --https://github.com/scalameta/nvim-metals/discussions/39
-local api = vim.api
-local cmd = vim.cmd
-require'lspconfig'.hls.setup{}
 
-local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  api.nvim_set_keymap(mode, lhs, rhs, options)
-end
+
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+
 vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
-vim.opt_global.shortmess:remove("F"):append("c")
 
--- LSP mappings
-map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
-map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
-map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
-map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
-map("n", "gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
-map("n", "gws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>")
-map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
-map("n", "<leader>sh", [[<cmd>lua vim.lsp.buf.signature_help()<CR>]])
-map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
-map("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>")
-map("n", "<leader>a", "<cmd>lua vim.lsp.buf.code_action()<CR>")
-map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>')
-map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
-map("n", "<leader>ae", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]]) -- all workspace errors
-map("n", "<leader>aw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]]) -- all workspace warnings
-map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>") -- buffer diagnostics only
-map("n", "[c", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>")
-map("n", "]c", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>")
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[c', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']c', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+-- ADVANTAGE: no mappings for other files
+-- DOWNSIDE: you need to pass the function to every new LSP
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.formatting { async = true } end, bufopts)
+  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<leader>sh', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', 'gds', vim.lsp.buf.document_symbol, bufopts)
+
+  vim.keymap.set('n', 'gws', vim.lsp.buf.workspace_symbol, bufopts)
+  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<leader>h', function()
+    print(vim.inspect(vim.lsp.buf_get_clients()))
+  end, bufopts)
+  vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, bufopts)
+
+end
 
 ----------------------------------
--- LSP Setup ---------------------
+-- Autocompletion
 ----------------------------------
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+local cmp = require("cmp")
+cmp.setup({
+  sources = {
+    { name = "nvim_lsp" }
+  },
+  mapping = cmp.mapping.preset.insert({
+    --["<CR>"] = cmp.mapping.confirm({ select = false }),
+    -- I use tabs... some say you should stick to ins-completion but this is just here as an example
+    ["<Tab>"] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end,
+    ["<S-Tab>"] = function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end,
+  })
+})
+
+----------------------------------
+-- LSP Setup
+----------------------------------
+-- Haskell language server
+require'lspconfig'.hls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+      haskell = {
+         hlintOn = true,
+         formattingProvider = "ormolu"
+      }
+  }
+}
+
+-- Metals (scala)
 local metals_config = require("metals").bare_config()
 
--- Example of settings
+metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
+metals_config.on_attach = on_attach
 metals_config.settings = {
   showImplicitArguments = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
@@ -47,8 +113,8 @@ metals_config.settings = {
 
 
 -- Autocmd that will actually be in charging of starting the whole thing
-local nvim_metals_group = api.nvim_create_augroup("nvim-metals", { clear = true })
-api.nvim_create_autocmd("FileType", {
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
   -- NOTE: You may or may not want java included here. You will need it if you
   -- want basic Java support but it may also conflict if you are using
   -- something like nvim-jdtls which also works on a java filetype autocmd.
@@ -58,3 +124,6 @@ api.nvim_create_autocmd("FileType", {
   end,
   group = nvim_metals_group,
 })
+
+
+
