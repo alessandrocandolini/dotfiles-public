@@ -190,3 +190,6 @@ if command -v starship >/dev/null; then
 fi
 
 export C_INCLUDE_PATH="`xcrun --show-sdk-path`/usr/include/ffi"
+export LDFLAGS="-L/usr/local/opt/zlib/lib"
+export CPPFLAGS="-I/usr/local/opt/zlib/include"
+export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
