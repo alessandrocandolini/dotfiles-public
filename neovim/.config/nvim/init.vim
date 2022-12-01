@@ -130,7 +130,7 @@ fun s:StripTrailingWhitespaces()
     keepp %s/\s\+$//e
     call cursor(l, c)
 endfun
-autocmd FileType sh,scala,kotlin,json autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
 ""
