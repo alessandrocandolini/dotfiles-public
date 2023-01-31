@@ -98,6 +98,9 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'MrcJkb/haskell-tools.nvim'
 
+Plug 'kana/vim-textobj-user'
+Plug 'neovimhaskell/nvim-hs.vim'
+Plug 'isovector/cornelis', { 'do': 'stack build' }
 call plug#end()
 
 
@@ -154,4 +157,22 @@ let g:NERDCreateDefaultMappings = 0
 nmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 vmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 
+au BufRead,BufNewFile *.agda call AgdaFiletype()
+function! AgdaFiletype()
+    nnoremap <buffer> <leader>l :CornelisLoad<CR>
+    nnoremap <buffer> <leader>r :CornelisRefine<CR>
+    nnoremap <buffer> <leader>d :CornelisMakeCase<CR>
+    nnoremap <buffer> <leader>, :CornelisTypeContext<CR>
+    nnoremap <buffer> <leader>. :CornelisTypeContextInfer<CR>
+    nnoremap <buffer> <leader>n :CornelisSolve<CR>
+    nnoremap <buffer> <leader>a :CornelisAuto<CR>
+    nnoremap <buffer> gd        :CornelisGoToDefinition<CR>
+    nnoremap <buffer> [/        :CornelisPrevGoal<CR>
+    nnoremap <buffer> ]/        :CornelisNextGoal<CR>
+    nnoremap <buffer> <C-A>     :CornelisInc<CR>
+    nnoremap <buffer> <C-X>     :CornelisDec<CR>
+endfunction
+
+
 lua require('setup')
+
