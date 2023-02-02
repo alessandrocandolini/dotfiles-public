@@ -2,8 +2,6 @@
 .stack-work
 stack.yaml.lock
 .stack-work/
-.stack/
-*~
 *.swp
 *.swo
 .DS_Store
@@ -21,7 +19,6 @@ stack.yaml.lock
 *.aux
 *.hp
 *.eventlog
-category-tree-cli.cabal
 hls.log
 cabal.project.local
 cabal.project.local~
