@@ -2,4 +2,3 @@ nix:
   enable: true
   packages:
   - libz
-system-ghc: true
