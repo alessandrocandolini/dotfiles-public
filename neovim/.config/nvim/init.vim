@@ -44,6 +44,9 @@ set noruler
 " set number relativenumber
 set nonumber
 
+" disable mouse by default in recent neovim
+set mouse=
+
 " Disable error bells
 set noerrorbells
 set belloff=all
