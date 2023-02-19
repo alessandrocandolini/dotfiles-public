@@ -37,7 +37,7 @@ local default_on_attach = function(client, bufnr)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.formatting { async = true } end, bufopts)
+  vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
   vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', '<leader>sh', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', 'gds', vim.lsp.buf.document_symbol, bufopts)
@@ -113,14 +113,15 @@ ht.setup {
       -- 'telescope-local': Force use of a local installation.
       -- 'telescope-web': The online version (depends on curl).
       -- 'browser': Open hoogle search in the default browser.
-      mode = 'telescope-local',
+      --mode = 'telescope-local',
+      mode = 'auto',
     },
   },
   hls = {
     on_attach = function(client, bufnr)
       local local_opts = vim.tbl_extend('keep', opts, { buffer = bufnr, })
-      vim.keymap.set('n', '<space>ca', vim.lsp.codelens.run, local_opts)
-      vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, local_opts)
+      vim.keymap.set('n', '<leader>ca', vim.lsp.codelens.run, local_opts)
+      vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, local_opts)
       default_on_attach(client, bufnr)
     end,
     haskell = {
