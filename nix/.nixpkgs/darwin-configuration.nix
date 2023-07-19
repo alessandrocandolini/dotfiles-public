@@ -31,18 +31,20 @@ let
       compilers =
         [
           #(pkgs.haskell.packages.ghc8107.ghcWithPackages troublesomePackages)
-          (pkgs.haskell.packages.ghc902.ghcWithPackages troublesomePackages)
+          #(pkgs.haskell.packages.ghc902.ghcWithPackages troublesomePackages)
+          (pkgs.haskell.packages.ghc925.ghcWithPackages troublesomePackages)
         ];
 
       hls = pkgs.haskell-language-server.override {
         supportedGhcVersions = [
            #"8107"
-          "902"
+          #"902"
+          "925"
        ];
       };
     in
       compilers ++ [
-        hls
+        #hls
         pkgs.stack
         pkgs.llvm_12
       ];
@@ -50,7 +52,7 @@ in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ haskellStuff ++ 
+  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ # haskellStuff ++ 
     [
       jq
       fzf
