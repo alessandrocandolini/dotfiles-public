@@ -48,6 +48,7 @@ alias cp='/bin/cp -i -v'
 alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
 alias ls='/bin/ls -GFh'
+alias rg='rg --hidden'
 
 # =============================================================================
 # NODE/NPM (local installation)
@@ -193,3 +194,9 @@ export C_INCLUDE_PATH="`xcrun --show-sdk-path`/usr/include/ffi"
 export LDFLAGS="-L/usr/local/opt/zlib/lib"
 export CPPFLAGS="-I/usr/local/opt/zlib/include"
 export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
+
+[ -f "/Users/alessandrocandolini/.ghcup/env" ] && source "/Users/alessandrocandolini/.ghcup/env" # ghcup-env
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+
+export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
