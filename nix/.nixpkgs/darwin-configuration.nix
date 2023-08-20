@@ -67,18 +67,17 @@ in
       ripgrep
       git
       awscli2
-      #(gradle.override { java = pkgs.jdk17; })
+#     (gradle.override { java = pkgs.jdk17; })
       tmux
       unzip
       curl
-#     bash_5
       nodejs_latest
       starship
 #     terraform-lsp
 #     texlab
 #     apacheHttpd
-      rnix-lsp
-      postgresql
+#     rnix-lsp
+#     postgresql
       coreutils
       fd
       gh
