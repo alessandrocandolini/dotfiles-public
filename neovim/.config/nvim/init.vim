@@ -177,5 +177,5 @@ function! AgdaFiletype()
 endfunction
 
 
-lua require('setup')
+lua require('setup1')
 
