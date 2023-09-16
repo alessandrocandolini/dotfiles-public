@@ -20,6 +20,14 @@ let
   vimStuff = with pkgs; [
       vim
       neovim
+##      (neovim.override { 
+##       configure = {
+##      packages.myPlugins = with pkgs.vimPlugins; {
+##        start = [ vim-plug ]; 
+##      };
+##     };
+##    }
+##   )
   ];
 
   haskellStuff =
