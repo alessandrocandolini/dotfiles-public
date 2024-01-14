@@ -42,8 +42,8 @@ set noruler
 
 " Don't show line number. If you turn it on, consider relative numbers:
 " set number
-" set number relativenumber
-set nonumber
+set number relativenumber
+"set nonumber
 
 " disable mouse by default in recent neovim
 set mouse=
@@ -139,6 +139,12 @@ fun s:StripTrailingWhitespaces()
 endfun
 autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
+
+augroup ToggleStatusLine
+  autocmd FileType scala set laststatus=2
+  autocmd FileType !scala set laststatus=0
+augroup END
+
 
 ""
 command! -bang -nargs=* Rg2 call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
