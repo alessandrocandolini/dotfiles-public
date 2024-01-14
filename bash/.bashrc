@@ -200,3 +200,12 @@ export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 
 
 export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
+
+
+# Nix
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+# End Nixa
+#
+export PATH="$PATH:/Users/alessandrocandolini/Library/Application Support/Coursier/bin"
