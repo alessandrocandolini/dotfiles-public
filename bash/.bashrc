@@ -209,3 +209,8 @@ fi
 # End Nixa
 #
 export PATH="$PATH:/Users/alessandrocandolini/Library/Application Support/Coursier/bin"
+# =============================================================================
+# Colima
+# =============================================================================
+
+export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
