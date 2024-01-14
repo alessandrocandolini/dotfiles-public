@@ -26,6 +26,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run)
+    vim.keymap.set('n', '<leader>sh', vim.lsp.buf.signature_help)
     vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
     vim.keymap.set('n', '<leader>wl', function()
@@ -51,13 +53,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local cmp = require("cmp")
+local cmp_select = {behavior = cmp.SelectBehavior.Select}
 cmp.setup({
   sources = {
-    { name = "nvim_lsp" }
+    { name = "nvim_lsp" },
+    { name = "vsnip" },
+  },
+  snippet = {
+    expand = function(args)
+      -- Comes from vsnip
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
   },
   mapping = cmp.mapping.preset.insert({
-    --["<CR>"] = cmp.mapping.confirm({ select = false }),
+    -- if you remove snippets you need to remove this select
+    ['<cr>'] = cmp.mapping.confirm({ select = true }),
     -- I use tabs... some say you should stick to ins-completion but this is just here as an example
+    ["<C-Space>"] = cmp.mapping.complete(),
     ["<Tab>"] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -86,6 +98,7 @@ metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
 metals_config.on_attach = default_on_attach
 metals_config.settings = {
   showImplicitArguments = true,
+  serverVersion = "latest.snapshot",
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
 }
 
