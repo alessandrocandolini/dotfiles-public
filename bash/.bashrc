@@ -200,3 +200,10 @@ export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
 
 
 export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
+
+
+# =============================================================================
+# Colima
+# =============================================================================
+
+export DOCKER_HOST="unix://$HOME/.colima/docker.sock"

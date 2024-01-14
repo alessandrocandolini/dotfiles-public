@@ -174,7 +174,10 @@ function! AgdaFiletype()
     nnoremap <buffer> ]/        :CornelisNextGoal<CR>
     nnoremap <buffer> <C-A>     :CornelisInc<CR>
     nnoremap <buffer> <C-X>     :CornelisDec<CR>
+    let g:cornelis_split_location = 'bottom'
+    set laststatus=2
 endfunction
+au BufWritePost *.agda execute "normal! :CornelisLoad\<CR>"
 
 
 lua require('setup1')
