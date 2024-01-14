@@ -12,7 +12,8 @@ syntax on
 set encoding=utf-8 nobomb
 
 " Show invisible characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+" set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+set lcs=tab:▸\ ,trail:·,nbsp:_
 set list
 set expandtab ts=2 sw=2 ai
 
