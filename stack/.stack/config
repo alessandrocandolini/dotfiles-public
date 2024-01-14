@@ -1,4 +1,0 @@
-nix:
-  enable: true
-  packages:
-  - libz
