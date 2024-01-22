@@ -143,8 +143,8 @@ autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> 
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
 augroup ToggleStatusLine
-  autocmd FileType scala set laststatus=2
-  autocmd FileType !scala set laststatus=0
+  autocmd FileType scala,agda set laststatus=2
+  autocmd FileType !scala, !agda set laststatus=0
 augroup END
 
 
