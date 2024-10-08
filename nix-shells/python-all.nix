@@ -29,6 +29,7 @@ let
     openpyxl
     virtualenv  # Include virtualenv here
     notebook
+    python-lsp-server
   ]);
 
   # List of packages to install via pip
@@ -37,6 +38,7 @@ let
     "load-dotenv==0.1.0"
     "mimetype"
     "json_repair"
+#    "azure-functions-worker"
     "azure-monitor-opentelemetry==1.6.1"
     "azure-monitor-opentelemetry-exporter==1.0.0b28"
     "opentelemetry-instrumentation-flask==0.47b0"
@@ -49,6 +51,7 @@ pkgs.mkShell {
   buildInputs = [
     python-with-my-packages
     pkgs.neovim  # Include other tools if needed
+    pkgs.azure-functions-core-tools
   ];
 
   shellHook = ''
