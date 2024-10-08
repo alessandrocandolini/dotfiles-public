@@ -81,7 +81,7 @@ in
       coreutils
       fd
       gh
-      pkgconfig
+      pkg-config 
 
     ];
 
