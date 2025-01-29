@@ -60,7 +60,7 @@ export NODE_MODULES=$HOME/node-modules
 export PATH=$NPM_PACKAGES/bin:$NODE_MODULES/.bin:$PATH
 
 # =============================================================================
-# LaTeX 2e
+# LaTeX 2e (for legacy projects, now i use nix)
 # =============================================================================
 # Rules:
 # * The // means that TeX programs will search recursively in that folder
@@ -98,7 +98,7 @@ if [ -d $HOME/.asy/node-4.0/modyles ]; then
 fi
 
 # =============================================================================
-# GIT
+# GIT and GH
 # =============================================================================
 
 # git autocompletion
@@ -108,6 +108,9 @@ if [ -f $HOME/.git-completion.bash ]; then
    source $HOME/.git-completion.bash
 fi
 
+if command -v gh &>/dev/null; then
+  eval "$(gh completion -s bash)"
+fi
 # =============================================================================
 # ETERNAL BASH HISTORY
 # =============================================================================
@@ -206,7 +209,7 @@ export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
 if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 fi
-# End Nixa
+# End Nix
 #
 export PATH="$PATH:/Users/alessandrocandolini/Library/Application Support/Coursier/bin"
 # =============================================================================
