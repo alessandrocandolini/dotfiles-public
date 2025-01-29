@@ -16,9 +16,6 @@ set list
 set lcs=tab:▸\ ,trail:·,nbsp:_
 set expandtab ts=2 sw=2 ai
 
-" Optimize for fast terminal connections
-set ttyfast
-
 " Recursive search in path (useful for file search)
 set path+=**
 
@@ -102,11 +99,6 @@ call plug#end()
 " Either place this code AFTER the vim-plug section, or you might need to generate symb links in the .vim/colors folder
 " ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
 " ln -s ~/.config/nvim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.config/nvim/colors/jellybeans.vim
-" This seems necessary if you use "set termguicolors".
-" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-" fixes glitch? in colors when using vim with tmux
-set t_Co=256
 set termguicolors     " enable true colors support
 try
   colorscheme jellybeans
