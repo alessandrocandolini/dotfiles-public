@@ -87,15 +87,15 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'scalameta/nvim-metals'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
-Plug 'preservim/nerdcommenter'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
+Plug 'numToStr/Comment.nvim' " Lightweight commenting plugin
+Plug 'hrsh7th/nvim-cmp'              " Core completion framework
+Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
+Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
+Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
 Plug 'MrcJkb/haskell-tools.nvim'
-Plug 'isovector/cornelis', { 'do': 'stack build' }
+Plug 'agda/cornelis', { 'do': 'stack build' }
 
 call plug#end()
 
@@ -141,11 +141,6 @@ if !isdirectory($HOME."/.vim/undo-dir")
 endif
 set undodir=~/.vim/undo-dir
 set undofile
-
-" NERDCommenter mappings
-let g:NERDCreateDefaultMappings = 0
-nmap <silent> <Leader>cc <Plug>NERDCommenterToggle
-vmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 
 " Agda specific settings
 au BufRead,BufNewFile *.agda call AgdaFiletype()

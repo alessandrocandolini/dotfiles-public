@@ -1,3 +1,9 @@
+-- Setup comments
+require('Comment').setup()
+-- Custom keybinding: \cc to toggle line comment
+vim.keymap.set('n', '<leader>cc', 'gcc', { remap = true, silent = true })
+vim.keymap.set('v', '<leader>cc', 'gc', { remap = true, silent = true })
+
 --https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
 --https://github.com/scalameta/nvim-metals/discussions/39
 
