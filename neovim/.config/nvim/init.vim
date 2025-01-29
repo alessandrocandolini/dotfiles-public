@@ -1,8 +1,8 @@
-" Use Vim settings, rather then Vi settings (much better!).
+" Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" Enable file detection, plugin and indentation
+" Enable file detection, plugin, and indentation
 filetype plugin indent on
 
 " Switch syntax highlighting on (requires filetype detection on)
@@ -12,9 +12,8 @@ syntax on
 set encoding=utf-8 nobomb
 
 " Show invisible characters
-" set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
-set lcs=tab:▸\ ,trail:·,nbsp:_
 set list
+set lcs=tab:▸\ ,trail:·,nbsp:_
 set expandtab ts=2 sw=2 ai
 
 " Optimize for fast terminal connections
@@ -34,41 +33,39 @@ set laststatus=0
 " Don’t add empty newlines at the end of files
 set noeol
 
-"disable unsafe commands
+" Disable unsafe commands
 set secure
 
 " Don't show the cursor position
 set noruler
 
-" Don't show line number. If you turn it on, consider relative numbers:
-" set number
+" Show line numbers with relative numbers
 set number relativenumber
-"set nonumber
 
-" disable mouse by default in recent neovim
+" Disable mouse by default in recent Neovim
 set mouse=
 
 " Disable error bells
 set noerrorbells
 set belloff=all
 
-" milliseconds after stop typing before processing plugins (default 4000)
+" Milliseconds after stop typing before processing plugins (default 4000)
 set updatetime=300
 
-" do not keep a backup file (some LSP don't work well in coc with backup files)
+" Do not keep a backup file (some LSP don't work well with backup files)
 set nobackup
 set nowritebackup
 
-" display incomplete commands (partial command as it’s being typed)
+" Display incomplete commands (partial command as it’s being typed)
 set showcmd
 
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v for opening a window
 nnoremap <C-w>v :vnew<CR>
 
-" Do not highlight search results (default in vim but not in neovim)
+" Do not highlight search results (default in Vim but not in Neovim)
 set nohlsearch
 
-" Do not change cursor shape in insert mode (to fix neovim standard behaviour)
+" Do not change cursor shape in insert mode (to fix Neovim standard behaviour)
 set guicursor=
 
 " ==========================
@@ -81,32 +78,24 @@ set guicursor=
 " To uninstall, remove it from this file and run :PlugClean
 
 call plug#begin('~/.config/nvim/plugged')
+
+" Essential plugins
 Plug 'nanotech/jellybeans.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'scalameta/nvim-metals'
-
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
-
-"Plug 'tpope/vim-surround'
-"Plug 'tpope/vim-repeat'
-
 Plug 'preservim/nerdcommenter'
-
-"more advanced (not sure i wanna keep them)
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'glepnir/lspsaga.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'MrcJkb/haskell-tools.nvim'
-
-Plug 'kana/vim-textobj-user'
-Plug 'neovimhaskell/nvim-hs.vim'
 Plug 'isovector/cornelis', { 'do': 'stack build' }
+
 call plug#end()
 
 " Default colorscheme (has to be installed, see vim-plug above)
@@ -123,14 +112,12 @@ try
   colorscheme jellybeans
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
+
 " Set background to transparent
 autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
 autocmd ColorScheme * highlight LineNr guibg=NONE ctermbg=NONE
 highlight Normal guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
-
-" Setup fuzzy finder fzf bridge (requires fzf installed)
-set rtp+=/usr/local/opt/fzf
 
 " Help Vim recognize *.sbt and *.sc as Scala files
 au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
@@ -145,18 +132,9 @@ endfun
 autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
-augroup ToggleStatusLine
-  autocmd FileType scala,agda set laststatus=2
-  autocmd FileType !scala, !agda set laststatus=0
-augroup END
-
-
-""
-command! -bang -nargs=* Rg2 call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
-
-nnoremap <Leader>ff :GFiles --cached --others --exclude-standard<CR>
+" Custom mappings for fzf
+nnoremap <Leader>ff :Files<CR>
 nnoremap <Leader>fg :Rg<CR>
-nnoremap <Leader>fb :Buffers<CR>
 
 " Persist undo
 if !isdirectory($HOME."/.vim")
@@ -168,10 +146,12 @@ endif
 set undodir=~/.vim/undo-dir
 set undofile
 
+" NERDCommenter mappings
 let g:NERDCreateDefaultMappings = 0
 nmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 vmap <silent> <Leader>cc <Plug>NERDCommenterToggle
 
+" Agda specific settings
 au BufRead,BufNewFile *.agda call AgdaFiletype()
 function! AgdaFiletype()
     nnoremap <buffer> <leader>l :CornelisLoad<CR>
@@ -192,6 +172,5 @@ function! AgdaFiletype()
 endfunction
 au BufWritePost *.agda execute "normal! :CornelisLoad\<CR>"
 
-
+" Load Lua setup
 lua require('setup1')
-
