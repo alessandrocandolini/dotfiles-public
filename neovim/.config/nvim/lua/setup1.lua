@@ -1,80 +1,69 @@
 -- Setup comments
 require('Comment').setup()
--- Custom keybinding: \cc to toggle line comment
-vim.keymap.set('n', '<leader>cc', 'gcc', { remap = true, silent = true })
-vim.keymap.set('v', '<leader>cc', 'gc', { remap = true, silent = true })
+vim.keymap.set('n', '<leader>cc', 'gcc', { noremap = true, silent = true })
+vim.keymap.set('v', '<leader>cc', 'gc', { noremap = true, silent = true })
 
---https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/
---https://github.com/scalameta/nvim-metals/discussions/39
+-- Completion options
+vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
 
-vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
-
-local opts = { noremap=true, silent=true }
+-- Diagnostics Keybindings
+local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[c', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']c', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
 
--- Use LspAttach autocommand to only map the following keys
--- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+    local buf_opts = { buffer = ev.buf, noremap = true, silent = true }
 
-    -- Buffer local mappings.
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run)
-    vim.keymap.set('n', '<leader>sh', vim.lsp.buf.signature_help)
-    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    -- Standard LSP keybindings
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, buf_opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, buf_opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, buf_opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, buf_opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, buf_opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, buf_opts)
+
+    -- Code actions and renaming
+    vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, buf_opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, buf_opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)  -- **Restored**
+
+    -- Workspace folder management (Restored)
+    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, buf_opts)
+    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, buf_opts)
     vim.keymap.set('n', '<leader>wl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, opts)
-    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, opts)
+    end, buf_opts)
+
+    -- Type definition
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, buf_opts)
+
+    -- Formatting (Restored)
     vim.keymap.set('n', '<leader>F', function()
       print("formatting...")
       vim.lsp.buf.format { async = true }
-    end, opts)
+    end, buf_opts)
   end,
 })
 
---vim.lsp.set_log_level("debug")
-
-
-----------------------------------
--- Autocompletion
-----------------------------------
-
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
+-- Autocompletion setup
 local cmp = require("cmp")
-local cmp_select = {behavior = cmp.SelectBehavior.Select}
 cmp.setup({
   sources = {
     { name = "nvim_lsp" },
-    { name = "vsnip" },
+    { name = "luasnip" },  -- Use LuaSnip instead of vsnip
   },
   snippet = {
     expand = function(args)
-      -- Comes from vsnip
-      vim.fn["vsnip#anonymous"](args.body)
+      require('luasnip').lsp_expand(args.body)
     end,
   },
   mapping = cmp.mapping.preset.insert({
     -- if you remove snippets you need to remove this select
     ['<cr>'] = cmp.mapping.confirm({ select = true }),
-    -- I use tabs... some say you should stick to ins-completion but this is just here as an example
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<Tab>"] = function(fallback)
       if cmp.visible() then
