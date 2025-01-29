@@ -1,0 +1,30 @@
+[[keyboard.bindings]]
+chars = "\u001Bb"
+key = "Left"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bf"
+key = "Right"
+mods = "Alt"
+
+[font]
+size = 15.0
+
+[font.normal]
+family = "Menlo"
+
+[scrolling]
+history = 10000
+
+[selection]
+save_to_clipboard = true
+
+[window]
+startup_mode = "Fullscreen"
+
+[window.padding]
+x = 16
+y = 16
+
+[keyboard]
