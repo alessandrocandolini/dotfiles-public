@@ -109,7 +109,6 @@ Plug 'neovimhaskell/nvim-hs.vim'
 Plug 'isovector/cornelis', { 'do': 'stack build' }
 call plug#end()
 
-
 " Default colorscheme (has to be installed, see vim-plug above)
 " Either place this code AFTER the vim-plug section, or you might need to generate symb links in the .vim/colors folder
 " ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
@@ -118,13 +117,17 @@ call plug#end()
 " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 " let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " fixes glitch? in colors when using vim with tmux
-set background=dark
 set t_Co=256
 set termguicolors     " enable true colors support
 try
   colorscheme jellybeans
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
+" Set background to transparent
+autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
+autocmd ColorScheme * highlight LineNr guibg=NONE ctermbg=NONE
+highlight Normal guibg=NONE ctermbg=NONE
+highlight LineNr guibg=NONE ctermbg=NONE
 
 " Setup fuzzy finder fzf bridge (requires fzf installed)
 set rtp+=/usr/local/opt/fzf
