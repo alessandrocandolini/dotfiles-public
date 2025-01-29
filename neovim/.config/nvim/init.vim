@@ -96,7 +96,8 @@ Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
 Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
 Plug 'MrcJkb/haskell-tools.nvim'
 Plug 'agda/cornelis', { 'do': 'stack build' }
-
+Plug 'j-hui/fidget.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 call plug#end()
 
 " Default colorscheme (has to be installed, see vim-plug above)

@@ -41,12 +41,31 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Type definition
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, buf_opts)
 
+    -- Quicklist
+    vim.keymap.set("n", "]q", ":cnext<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "[q", ":cprev<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "<leader>qq", ":copen<CR>", { noremap = true, silent = true })  -- Open quickfix manually
+
     -- Formatting (Restored)
     vim.keymap.set('n', '<leader>F', function()
       print("formatting...")
       vim.lsp.buf.format { async = true }
     end, buf_opts)
   end,
+})
+
+vim.diagnostic.config({
+    underline = true,
+    signs = true,
+    virtual_text = false,
+    float = {
+        show_header = true,
+        source = 'if_many',
+        border = 'rounded',
+        focusable = true,
+    },
+    update_in_insert = false, -- default to false
+    severity_sort = false, -- default to false
 })
 
 -- Autocompletion setup
@@ -82,10 +101,6 @@ cmp.setup({
   })
 })
 
-----------------------------------
--- LSP Setup
-----------------------------------
-
 -- Metals (scala)
 local metals_config = require("metals").bare_config()
 
@@ -111,5 +126,39 @@ vim.api.nvim_create_autocmd("FileType", {
   group = nvim_metals_group,
 })
 
+-- Improve LSP Floating Windows
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+  border = "rounded",
+})
 
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+  border = "rounded",
+})
 
+vim.lsp.inlay_hint.enable(true)
+
+require("lsp_signature").setup()
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if vim.tbl_contains({ 'null-ls' }, client.name) then  -- blacklist lsp
+      return
+    end
+    require("lsp_signature").on_attach({
+      bind = true,
+      handler_opts = {
+        border = "rounded"
+      }
+    }, bufnr)
+  end,
+})
+
+require("fidget").setup()
+
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+  callback = function()
+    vim.diagnostic.setqflist({ severity = nil, open = false })  -- Add all severities, don't open
+  end,
+})
