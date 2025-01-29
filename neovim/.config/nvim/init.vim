@@ -47,7 +47,11 @@ set noerrorbells
 set belloff=all
 
 " Milliseconds after stop typing before processing plugins (default 4000)
-set updatetime=300
+set updatetime=100
+set lazyredraw
+set scrolloff=3
+set sidescrolloff=5
+set sidescroll=1
 
 " Do not keep a backup file (some LSP don't work well with backup files)
 set nobackup
