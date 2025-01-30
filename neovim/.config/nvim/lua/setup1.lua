@@ -1,7 +1,18 @@
 -- Setup comments
-require('Comment').setup()
-vim.keymap.set('n', '<leader>cc', 'gcc', { noremap = true, silent = true })
-vim.keymap.set('v', '<leader>cc', 'gc', { noremap = true, silent = true })
+local ft = require("Comment.ft")
+ft.set("nix", "# %s")  -- Ensure Nix uses `#`
+ft.set("lua", "-- %s") -- Ensure Lua uses `--`
+
+require("Comment").setup()
+
+-- 🔹 Fixed Keybindings for Comment.nvim
+vim.keymap.set('n', '<leader>cc', function()
+  require("Comment.api").toggle.linewise.current()
+end, { noremap = true, silent = true })
+
+vim.keymap.set('v', '<leader>cc', function()
+  require("Comment.api").toggle.linewise(vim.fn.visualmode())
+end, { noremap = true, silent = true })
 
 -- Completion options
 vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
