@@ -49,7 +49,8 @@ in
       coreutils
       fd
       pkg-config 
-
+      ollama
+      llama-cpp
     ];
 
   # Use a custom configuration.nix location.
