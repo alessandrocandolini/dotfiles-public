@@ -20,52 +20,20 @@ let
   vimStuff = with pkgs; [
       vim
       neovim
-##      (neovim.override { 
-##       configure = {
-##      packages.myPlugins = with pkgs.vimPlugins; {
-##        start = [ vim-plug ]; 
-##      };
-##     };
-##    }
-##   )
   ];
 
-  haskellStuff =
-    let
-
-      # things that cabal can't install on its own due to native dependencies
-      troublesomePackages = p: [ p.digest p.postgresql-libpq p.zlib ];
-
-      compilers =
-        [
-          #(pkgs.haskell.packages.ghc8107.ghcWithPackages troublesomePackages)
-          #(pkgs.haskell.packages.ghc902.ghcWithPackages troublesomePackages)
-          (pkgs.haskell.packages.ghc925.ghcWithPackages troublesomePackages)
-        ];
-
-      hls = pkgs.haskell-language-server.override {
-        supportedGhcVersions = [
-           #"8107"
-          #"902"
-          "925"
-       ];
-      };
-    in
-      compilers ++ [
-        #hls
-        pkgs.stack
-        pkgs.llvm_12
-      ];
 in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ # haskellStuff ++ 
+  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++
     [
       jq
       fzf
       ripgrep
       git
+      gh
+      delta
       awscli2
 #     (gradle.override { java = pkgs.jdk17; })
       tmux
@@ -80,7 +48,6 @@ in
 #     postgresql
       coreutils
       fd
-      gh
       pkg-config 
 
     ];
