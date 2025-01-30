@@ -2,15 +2,16 @@
 
 Personal dotfiles managed using `git` and [stow](https://www.gnu.org/software/stow/). 
 
-I use these dotfiles on MACOS, some of them can be used on linux, but not all of them. 
+I use these dotfiles on MACOS, some of them can be used on linux too, but not all of them. 
 
-See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about those specific dotfiles.
+See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about specific dotfiles.
 
 ## Requirements
 
 * `git`
-* close this repo 
 * GNU `stow` 
+
+Git is usually pre-installed with the developer tools (although it can be convenient to update the version using a package manager). 
 
 Install `stow` using `nix`
 ```bash
@@ -51,15 +52,17 @@ If you want to run it in dry mode, use the `--simulate` option:
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
 
-Notice: for some dotfiles (eg, bash or git) `--no-folding` can be omitted, because the files are created in the `$HOME` folder. For other dotfiles created under nested folders (eg, those that will create links under `~/.config/`) be sure to always use `--no-folding` , otherwise `stow` will create symbolic links to the whole folder (if the folder does not exist) instead of creating the folder first and then generate the symbolic links. 
+## Why --no-folding?
 
+* For dotfiles placed directly in $HOME (e.g., `.bashrc`, `.gitconfig`), the `--no-folding` flag is redundant and can be omitted.
+* For configurations that reside in nested directories where there might be other files that we don't necessarily wanna track in git (e.g., `~/.config/`), always use `--no-folding` to prevent stow from creating a symlink to the entire folder instead of linking individual files, and the content of that folder to become part of this repo.
 
 ## stow-global-ignore
 
-Stow will install symbolic links for every file but those matching the patterns in the `$HOME/.stow-global-ignore` file. This repo contains also a version of it, and it can be installed through stow itself.
+By default, stow creates symbolic links for all files except those matching patterns specified in `$HOME/.stow-global-ignore`.
 
-Notice: *by default* `.gitignore` is in the list of files that stow will ignore.
-So, running `stow git` on this repo will NOT work, unless a custom `.stow-global-ignore` without `gitignore` is available (like the one provided by this repo).
+This repository includes a predefined `.stow-global-ignore file`, which can be installed via stow.
 
+Note: `.gitignore` is excluded by default. If you intend to apply stow git, ensure your `.stow-global-ignore` file does not exclude gitignore. You can use the one provided in this repository.
 
 
