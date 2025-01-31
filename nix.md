@@ -115,7 +115,16 @@ The solution is to edit `/etc/synthetic.conf` to look like this:
 nix
 run     /System/Volumes/Data/private/var/run/
 ```
-then run the following command to apply the changes 
+Be careful to avoid an extra line at the end of the file, and extra tabs. You can check by running 
+```
+cat -vet /etc/synthetic.conf
+```
+and check that the output is exactly matching 
+```
+nix$
+run^Iprivate/var/run$
+```
+with no extra $ on the third line. Then run **apfs** to apply the changes 
 ```
 sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 ```
