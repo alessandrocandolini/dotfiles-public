@@ -95,6 +95,8 @@ Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
 Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
 Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
 Plug 'MrcJkb/haskell-tools.nvim'
+Plug 'kana/vim-textobj-user' " Required by cornelis
+Plug 'neovimhaskell/nvim-hs.vim' " Required by cornelis
 Plug 'agda/cornelis', { 'do': 'stack build' }
 Plug 'j-hui/fidget.nvim'
 Plug 'ray-x/lsp_signature.nvim'
@@ -142,27 +144,6 @@ if !isdirectory($HOME."/.vim/undo-dir")
 endif
 set undodir=~/.vim/undo-dir
 set undofile
-
-" Agda specific settings
-au BufRead,BufNewFile *.agda call AgdaFiletype()
-function! AgdaFiletype()
-    nnoremap <buffer> <leader>l :CornelisLoad<CR>
-    nnoremap <buffer> <leader>r :CornelisRefine<CR>
-    nnoremap <buffer> <leader>d :CornelisMakeCase<CR>
-    nnoremap <buffer> <leader>, :CornelisTypeContext<CR>
-    nnoremap <buffer> <leader>. :CornelisTypeContextInfer<CR>
-    nnoremap <buffer> <leader>s :CornelisSolve<CR>
-    nnoremap <buffer> <leader>n :CornelisNormalize<CR>
-    nnoremap <buffer> <leader>a :CornelisAuto<CR>
-    nnoremap <buffer> gd        :CornelisGoToDefinition<CR>
-    nnoremap <buffer> [/        :CornelisPrevGoal<CR>
-    nnoremap <buffer> ]/        :CornelisNextGoal<CR>
-    nnoremap <buffer> <C-A>     :CornelisInc<CR>
-    nnoremap <buffer> <C-X>     :CornelisDec<CR>
-    let g:cornelis_split_location = 'bottom'
-    set laststatus=2
-endfunction
-au BufWritePost *.agda execute "normal! :CornelisLoad\<CR>"
 
 " Load Lua setup
 lua require('setup1')
