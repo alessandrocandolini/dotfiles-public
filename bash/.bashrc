@@ -193,10 +193,10 @@ if command -v starship >/dev/null; then
   eval "$(starship init bash)"
 fi
 
-export C_INCLUDE_PATH="`xcrun --show-sdk-path`/usr/include/ffi"
-export LDFLAGS="-L/usr/local/opt/zlib/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include"
-export PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
+export C_INCLUDE_PATH="$(xcrun --show-sdk-path)/usr/include"
+export LDFLAGS="-L/opt/homebrew/opt/zlib/lib"
+export CPPFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig"
 
 [ -f "/Users/alessandrocandolini/.ghcup/env" ] && source "/Users/alessandrocandolini/.ghcup/env" # ghcup-env
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
