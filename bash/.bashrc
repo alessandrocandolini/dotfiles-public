@@ -201,6 +201,9 @@ export PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig"
 [ -f "/Users/alessandrocandolini/.ghcup/env" ] && source "/Users/alessandrocandolini/.ghcup/env" # ghcup-env
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+if command -v delta >/dev/null; then
+  eval "$(delta --generate-completion bash)"
+fi
 
 export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
 
