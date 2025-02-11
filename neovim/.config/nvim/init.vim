@@ -1,4 +1,4 @@
-" Use Vim settings, rather than Vi settings (much better!).
+" Use Vim settings rather than Vi settings.
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
@@ -8,15 +8,15 @@ filetype plugin indent on
 " Switch syntax highlighting on (requires filetype detection on)
 syntax on
 
-" Use UTF-8 without BOM
+" Set encoding to UTF-8 without BOM
 set encoding=utf-8 nobomb
 
-" Show invisible characters
+" Show invisible characters and set indentation preferences
 set list
 set lcs=tab:▸\ ,trail:·,nbsp:_
 set expandtab ts=2 sw=2 ai
 
-" Recursive search in path (useful for file search)
+" Enable recursive search in path (useful for file searches)
 set path+=**
 
 " show encoding in statusbar, if/when statusbar is enabled
@@ -27,19 +27,17 @@ endif
 " no statusbar by default (0 = never, 2 = always)
 set laststatus=0
 
-" Don’t add empty newlines at the end of files
+" Do not add empty newline at EOF
 set noeol
 
-" Disable unsafe commands
+" Disable unsafe commands and the ruler display
 set secure
-
-" Don't show the cursor position
 set noruler
 
-" Show line numbers with relative numbers
+" Show absolute and relative line numbers
 set number relativenumber
 
-" Disable mouse by default in recent Neovim
+" Disable mouse support
 set mouse=
 
 " Disable error bells
@@ -47,30 +45,30 @@ set noerrorbells
 set belloff=all
 
 " Milliseconds after stop typing before processing plugins (default 4000)
-set updatetime=100
+set updatetime=300
 set lazyredraw
 set scrolloff=3
 set sidescrolloff=5
 set sidescroll=1
 
-" Do not keep a backup file (some LSP don't work well with backup files)
+" Do not keep backup files (some LSPs are sensitive to backup files)
 set nobackup
 set nowritebackup
 
-" Display incomplete commands (partial command as it’s being typed)
+" Display incomplete commands while typing
 set showcmd
 
-" Fix the asymmetry between Ctrl-W n and Ctrl-W v for opening a window
+" Fix the asymmetry between Ctrl-W n and Ctrl-W v to split the window
 nnoremap <C-w>v :vnew<CR>
 
 " Do not highlight search results (default in Vim but not in Neovim)
 set nohlsearch
 
-" Do not change cursor shape in insert mode (to fix Neovim standard behaviour)
+" Do not change the cursor shape in insert mode
 set guicursor=
 
 " ==========================
-" Vim-Plug
+" Vim-Plug Setup
 " ==========================
 " https://github.com/junegunn/vim-plug
 " Installation of vim-plug is described in the readme (curl command)
@@ -80,7 +78,6 @@ set guicursor=
 
 call plug#begin('~/.config/nvim/plugged')
 
-" Essential plugins
 Plug 'nanotech/jellybeans.vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
@@ -93,7 +90,7 @@ Plug 'hrsh7th/nvim-cmp'              " Core completion framework
 Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
 Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
 Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
-Plug 'MrcJkb/haskell-tools.nvim'
+Plug 'mrcjkb/haskell-tools.nvim', {'version': 4}
 Plug 'kana/vim-textobj-user' " Required by cornelis
 Plug 'neovimhaskell/nvim-hs.vim' " Required by cornelis
 Plug 'agda/cornelis', { 'do': 'stack build' }
@@ -102,46 +99,41 @@ Plug 'ray-x/lsp_signature.nvim'
 call plug#end()
 
 " Default colorscheme (has to be installed, see vim-plug above)
-" Either place this code AFTER the vim-plug section, or you might need to generate symb links in the .vim/colors folder
-" ln -s ~/.vim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.vim/colors/jellybeans.vim
-" ln -s ~/.config/nvim/bundle/jellybeans.vim/colors/jellybeans.vim ~/.config/nvim/colors/jellybeans.vim
+" Place this code AFTER the vim-plug section, otherwise you need to generate symb links in the colors folder
 set termguicolors     " enable true colors support
 try
   colorscheme jellybeans
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
-" Set background to transparent
+" Set transparent background for Normal and LineNr highlights
 autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
 autocmd ColorScheme * highlight LineNr guibg=NONE ctermbg=NONE
 highlight Normal guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
 
-" Help Vim recognize *.sbt and *.sc as Scala files
+" Associate Scala file extensions with the Scala filetype
 au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
 
-" Remove trailing spaces on save
-fun s:StripTrailingWhitespaces()
+" Trailing Whitespace Removal
+function! s:StripTrailingWhitespaces() abort
     let l = line(".")
     let c = col(".")
-    keepp %s/\s\+$//e
+    keepjumps %s/\s\+$//e
     call cursor(l, c)
-endfun
-autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+endfunction
+autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
 " Custom mappings for fzf
 nnoremap <Leader>ff :Files<CR>
 nnoremap <Leader>fg :Rg<CR>
 
-" Persist undo
-if !isdirectory($HOME."/.vim")
-    call mkdir($HOME."/.vim", "", 0770)
+" Persist Undo in an XDG-Compliant Location
+if !isdirectory($HOME."/.local/share/nvim/undo")
+    call mkdir($HOME."/.local/share/nvim/undo", "p", 0700)
 endif
-if !isdirectory($HOME."/.vim/undo-dir")
-    call mkdir($HOME."/.vim/undo-dir", "", 0700)
-endif
-set undodir=~/.vim/undo-dir
+set undodir=~/.local/share/nvim/undo
 set undofile
 
 " Load Lua setup
