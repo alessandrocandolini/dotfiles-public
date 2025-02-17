@@ -61,8 +61,8 @@ set showcmd
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v to split the window
 nnoremap <C-w>v :vnew<CR>
 
-" Do not highlight search results (default in Vim but not in Neovim)
-set nohlsearch
+" Remove search highlights when a search is completed
+nnoremap <leader>h :nohlsearch<CR>
 
 " Do not change the cursor shape in insert mode
 set guicursor=
