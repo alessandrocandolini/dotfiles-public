@@ -212,6 +212,24 @@ if vim.lsp.buf.inlay_hint and type(vim.lsp.buf.inlay_hint) == "function" then
 end
 
 ------------------------------------------------------------
+-- Pyright
+------------------------------------------------------------
+require('lspconfig').pyright.setup{
+  on_attach = your_on_attach_function,
+  capabilities = your_capabilities,
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = 'basic',
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = 'workspace'
+      }
+    }
+  }
+}
+
+------------------------------------------------------------
 -- Optional: Initialize lsp_signature with Default Settings
 ------------------------------------------------------------
 require("lsp_signature").setup()
