@@ -12,8 +12,8 @@ let
   ];
 
   scalaStuff = with pkgs; [
-      jdk17
-      (sbt.override { jre = pkgs.jdk17; })
+      jdk21
+      (sbt.override { jre = pkgs.jdk21; })
       coursier # for metals
   ];
 
@@ -51,6 +51,8 @@ in
       pkg-config 
       ollama
       llama-cpp
+      htop
+      macmon
     ];
 
   # Use a custom configuration.nix location.
