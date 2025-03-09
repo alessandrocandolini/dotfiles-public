@@ -9,5 +9,8 @@
 [merge]
   conflictstyle = zdiff3
 
+[diff]
+    algorithm = histogram
+
 [url "git@github.com-acando86:"]
   insteadOf = https://github.com/
