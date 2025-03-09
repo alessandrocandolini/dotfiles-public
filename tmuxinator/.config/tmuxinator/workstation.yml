@@ -1,0 +1,15 @@
+name: workstation
+
+windows:
+  - main:
+      layout: even-horizontal
+      panes:
+        -
+  - nvim:
+      layout: even-horizontal
+      panes:
+        -
+  - htop:
+      layout: even-horizontal
+      panes:
+        - htop
