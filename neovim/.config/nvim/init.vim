@@ -94,7 +94,7 @@ Plug 'mrcjkb/haskell-tools.nvim', {'version': 4}
 Plug 'kana/vim-textobj-user' " Required by cornelis
 Plug 'neovimhaskell/nvim-hs.vim' " Required by cornelis
 Plug 'agda/cornelis', { 'do': 'stack build' }
-Plug 'j-hui/fidget.nvim'
+Plug 'j-hui/fidget.nvim' " Neovim notifications and LSP progress messages
 Plug 'ray-x/lsp_signature.nvim'
 call plug#end()
 
@@ -122,7 +122,7 @@ function! s:StripTrailingWhitespaces() abort
     keepjumps %s/\s\+$//e
     call cursor(l, c)
 endfunction
-autocmd FileType sh,scala,kotlin,json,haskell,yaml autocmd BufWritePre <buffer> call <SID>StripTrailingWhitespaces()
+autocmd FileType sh,scala,kotlin,json,haskell,yaml,markdown,nix autocmd BufWritePre <buffer> call <SID>StripTrailingWhitespaces()
 command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
 
 " Custom mappings for fzf
