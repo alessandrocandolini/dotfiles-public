@@ -52,6 +52,10 @@ If you want to run it in dry mode, use the `--simulate` option:
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
 
+## Keep Makefile up to date
+
+When adding a new target, update the list of all targets in the Makefile
+
 ## Why --no-folding?
 
 * For dotfiles placed directly in $HOME (e.g., `.bashrc`, `.gitconfig`), the `--no-folding` flag is redundant and can be omitted.
