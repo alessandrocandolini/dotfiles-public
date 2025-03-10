@@ -230,6 +230,16 @@ require('lspconfig').pyright.setup{
 }
 
 ------------------------------------------------------------
+-- Fortls
+------------------------------------------------------------
+require('lspconfig').fortls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "fortran", "f90" },
+  root_dir = require("lspconfig").util.root_pattern("Makefile", ".git")
+}
+
+------------------------------------------------------------
 -- Optional: Initialize lsp_signature with Default Settings
 ------------------------------------------------------------
 require("lsp_signature").setup()
