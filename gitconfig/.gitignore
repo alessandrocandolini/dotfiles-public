@@ -34,3 +34,4 @@ project/project/
 .bloop/
 .ammonite/
 metals.sbt
+aws-rds*.pem*
