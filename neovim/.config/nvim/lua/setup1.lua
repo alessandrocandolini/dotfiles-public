@@ -214,30 +214,40 @@ end
 ------------------------------------------------------------
 -- Pyright
 ------------------------------------------------------------
-require('lspconfig').pyright.setup{
+vim.lsp.config("pyright", {
   on_attach = your_on_attach_function,
   capabilities = your_capabilities,
+
   settings = {
     python = {
       analysis = {
-        typeCheckingMode = 'basic',
+        typeCheckingMode = "basic",
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
-        diagnosticMode = 'workspace'
-      }
-    }
-  }
-}
+        diagnosticMode = "workspace",
+      },
+    },
+  },
+})
+
+-- Start/enable Pyright
+vim.lsp.enable("pyright")
 
 ------------------------------------------------------------
 -- Fortls
 ------------------------------------------------------------
-require('lspconfig').fortls.setup{
+-- Define/override the fortls config
+vim.lsp.config("fortls", {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { "fortran", "f90" },
-  root_dir = require("lspconfig").util.root_pattern("Makefile", ".git")
-}
+
+  -- New-style root detection: use markers instead of util.root_pattern()
+  root_markers = { "Makefile", ".git" },
+})
+
+-- Enable fortls (this replaces `.setup{}` in the old API)
+vim.lsp.enable("fortls")
 
 ------------------------------------------------------------
 -- Optional: Initialize lsp_signature with Default Settings
