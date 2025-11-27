@@ -50,9 +50,8 @@ in
   home.packages =
     dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff;
 
-  programs.bash.enable = true;
+  programs.bash.enable = false;
   programs.starship.enable = true;
-
   programs.git.enable = true;
 
   home.sessionVariables.JAVA_HOME = "${pkgs.jdk21}/";

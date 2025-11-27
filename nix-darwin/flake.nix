@@ -18,6 +18,8 @@
   outputs = { nixpkgs, darwin, home-manager, ... }:
     let
       system = "aarch64-darwin";
+      username = "alessandrocandolini";
+      homeDirectory = "/Users/alessandrocandolini";
     in {
       darwinConfigurations.this-mac =
         darwin.lib.darwinSystem {
@@ -28,8 +30,11 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.alessandrocandolini =
-                import ./home.nix;
+              home-manager.users.${username} = {
+                imports = [ ./home.nix ];
+                home.username = username;
+                home.homeDirectory = homeDirectory;
+              };
             }
           ];
         };
