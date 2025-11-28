@@ -206,3 +206,5 @@ vim.keymap.set('n', '<leader>ls', function()
   vim.cmd("lopen")
 end, { noremap = true, silent = true })
 
+
+require('spaceless').setup()

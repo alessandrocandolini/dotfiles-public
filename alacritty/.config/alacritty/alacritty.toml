@@ -22,6 +22,7 @@ save_to_clipboard = true
 
 [window]
 startup_mode = "Fullscreen"
+opacity = 0
 
 [window.padding]
 x = 16

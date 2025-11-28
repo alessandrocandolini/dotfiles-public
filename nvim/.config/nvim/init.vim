@@ -16,9 +16,6 @@ set list
 set lcs=tab:▸\ ,trail:·,nbsp:_
 set expandtab ts=2 sw=2 ai
 
-" Enable recursive search in path (useful for file searches)
-set path+=**
-
 " show encoding in statusbar, if/when statusbar is enabled
 if has("statusline")
  set statusline=%<%f\ %h%m%r%=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%k\ %-14.(%l,%c%V%)\ %P
@@ -29,6 +26,9 @@ set laststatus=0
 
 " Do not add empty newline at EOF
 set noeol
+
+" Display end of buffer lines as blank
+"set fillchars+=eob:\
 
 " Disable unsafe commands and the ruler display
 set secure
@@ -46,7 +46,6 @@ set belloff=all
 
 " Milliseconds after stop typing before processing plugins (default 4000)
 set updatetime=300
-set lazyredraw
 set scrolloff=3
 set sidescrolloff=5
 set sidescroll=1
@@ -77,8 +76,8 @@ set guicursor=
 " To uninstall, remove it from this file and run :PlugClean
 
 call plug#begin('~/.config/nvim/plugged')
-
 Plug 'nanotech/jellybeans.vim'
+Plug 'lewis6991/spaceless.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'scalameta/nvim-metals'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
@@ -104,27 +103,13 @@ catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
 " Set transparent background for Normal and LineNr highlights
-autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
-autocmd ColorScheme * highlight LineNr guibg=NONE ctermbg=NONE
 highlight Normal guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
-
-" Associate Scala file extensions with the Scala filetype
-au BufRead,BufNewFile *.sbt,*.sc,*.scala set filetype=scala
-
-" Trailing Whitespace Removal
-function! s:StripTrailingWhitespaces() abort
-    let l = line(".")
-    let c = col(".")
-    keepjumps %s/\s\+$//e
-    call cursor(l, c)
-endfunction
-autocmd FileType sh,scala,kotlin,json,haskell,yaml,markdown,nix autocmd BufWritePre <buffer> call <SID>StripTrailingWhitespaces()
-command! StripTrailingWhitespaces call s:StripTrailingWhitespaces()
+highlight EndOfBuffer guibg=NONE ctermbg=NONE
 
 " Custom mappings for fzf
-nnoremap <Leader>ff :Files<CR>
-nnoremap <Leader>fg :Rg<CR>
+nnoremap <silent> <Leader>ff :Files<CR>
+nnoremap <silent> <Leader>fg :Rg<CR>
 
 " Persist Undo in an XDG-Compliant Location
 if !isdirectory($HOME."/.local/share/nvim/undo")
