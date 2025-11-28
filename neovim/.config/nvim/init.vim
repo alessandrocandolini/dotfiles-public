@@ -80,12 +80,10 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'nanotech/jellybeans.vim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'neovim/nvim-lspconfig'
 Plug 'scalameta/nvim-metals'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-telescope/telescope.nvim'
 Plug 'hrsh7th/nvim-cmp'              " Core completion framework
 Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
 Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
@@ -95,7 +93,6 @@ Plug 'kana/vim-textobj-user' " Required by cornelis
 Plug 'neovimhaskell/nvim-hs.vim' " Required by cornelis
 Plug 'agda/cornelis', { 'do': 'stack build' }
 Plug 'j-hui/fidget.nvim' " Neovim notifications and LSP progress messages
-Plug 'ray-x/lsp_signature.nvim'
 call plug#end()
 
 " Default colorscheme (has to be installed, see vim-plug above)

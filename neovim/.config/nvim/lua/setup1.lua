@@ -50,17 +50,6 @@ local function on_attach(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
-  -- Optionally attach lsp_signature (if installed) for non-null-ls clients
-  if client.name ~= "null-ls" then
-    local ok, lsp_signature = pcall(require, "lsp_signature")
-    if ok then
-      lsp_signature.on_attach({
-        bind = true,
-        handler_opts = { border = "rounded" },
-      }, bufnr)
-    end
-  end
-
   -- Enable inlay hints if supported (Neovim 0.10+)
   if vim.lsp.buf.inlay_hint then
     vim.lsp.buf.inlay_hint(bufnr, true)
@@ -96,10 +85,16 @@ vim.diagnostic.config({
     source = 'if_many',
     border = 'rounded',
     focusable = true,
+    max_width = 80,
+    max_height = 20,
   },
   update_in_insert = false,
   severity_sort = false,
 })
+
+vim.keymap.set('n', 'gl', function()
+  vim.diagnostic.open_float(nil, { focus = true })
+end, diag_opts)
 
 ------------------------------------------------------------
 -- Autocompletion Setup Using nvim-cmp and LuaSnip
@@ -178,78 +173,36 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+
 ------------------------------------------------------------
--- Additional LSP Signature Setup (for non-null-ls clients)
+--  Print list of attached LSP on lopen
 ------------------------------------------------------------
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(args)
-    local bufnr = args.buf
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if vim.tbl_contains({ 'null-ls' }, client.name) then
-      return
+
+vim.keymap.set('n', '<leader>ls', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+  local items = {}
+  if #clients == 0 then
+    table.insert(items, {
+      filename = "",
+      lnum = 1,
+      col = 1,
+      text = "No LSP clients attached",
+    })
+  else
+    for _, client in ipairs(clients) do
+      table.insert(items, {
+        filename = "",
+        lnum = 1,
+        col = 1,
+        text = "LSP client: " .. client.name,
+      })
     end
-    require("lsp_signature").on_attach({
-      bind = true,
-      handler_opts = { border = "rounded" },
-    }, bufnr)
-  end,
-})
+  end
 
-------------------------------------------------------------
--- Auto-update Quickfix List on Diagnostic Changes
-------------------------------------------------------------
-vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  callback = function()
-    vim.diagnostic.setqflist({ severity = nil, open = false })
-  end,
-})
+  -- Location list
+  vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
+  vim.cmd("lopen")
+end, { noremap = true, silent = true })
 
-------------------------------------------------------------
--- Optional: Enable Inlay Hints Globally (if supported)
-------------------------------------------------------------
-if vim.lsp.buf.inlay_hint and type(vim.lsp.buf.inlay_hint) == "function" then
-  vim.lsp.buf.inlay_hint(0, true) -- Applies to the current buffer; adjust as desired.
-end
-
-------------------------------------------------------------
--- Pyright
-------------------------------------------------------------
-vim.lsp.config("pyright", {
-  on_attach = your_on_attach_function,
-  capabilities = your_capabilities,
-
-  settings = {
-    python = {
-      analysis = {
-        typeCheckingMode = "basic",
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-        diagnosticMode = "workspace",
-      },
-    },
-  },
-})
-
--- Start/enable Pyright
-vim.lsp.enable("pyright")
-
-------------------------------------------------------------
--- Fortls
-------------------------------------------------------------
--- Define/override the fortls config
-vim.lsp.config("fortls", {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = { "fortran", "f90" },
-
-  -- New-style root detection: use markers instead of util.root_pattern()
-  root_markers = { "Makefile", ".git" },
-})
-
--- Enable fortls (this replaces `.setup{}` in the old API)
-vim.lsp.enable("fortls")
-
-------------------------------------------------------------
--- Optional: Initialize lsp_signature with Default Settings
-------------------------------------------------------------
-require("lsp_signature").setup()
