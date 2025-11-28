@@ -201,10 +201,11 @@ vim.keymap.set('n', '<leader>ls', function()
     end
   end
 
-  -- Location list
   vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
   vim.cmd("lopen")
 end, { noremap = true, silent = true })
 
-
+------------------------------------------------------------
+-- Spaceless
+------------------------------------------------------------
 require('spaceless').setup()
