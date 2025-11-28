@@ -82,7 +82,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'scalameta/nvim-metals'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'hrsh7th/nvim-cmp'              " Core completion framework
 Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
 Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
