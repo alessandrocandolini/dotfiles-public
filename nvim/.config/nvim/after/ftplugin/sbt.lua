@@ -1,0 +1,1 @@
+require("config.metals").setup()
