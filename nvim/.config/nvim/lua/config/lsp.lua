@@ -2,12 +2,6 @@
 local M = {}
 
 ------------------------------------------------------------
--- Shared capabilities for all LSP servers
--- (cmp_nvim_lsp intentionally not used for now)
-------------------------------------------------------------
-M.capabilities = vim.lsp.protocol.make_client_capabilities()
-
-------------------------------------------------------------
 -- Shared on_attach Function for LSP Clients
 -- (ALL buffer-local LSP keymaps live here)
 ------------------------------------------------------------
@@ -71,7 +65,50 @@ function M.setup()
   if initialized then return end
   initialized = true
 
-  -- Hook on_attach into all LSP clients
+  --------------------------------------------------------
+  -- Capabilities (nvim-cmp + LSP)
+  --------------------------------------------------------
+  local cmp_lsp = require('cmp_nvim_lsp')
+  M.capabilities = cmp_lsp.default_capabilities()
+
+  --------------------------------------------------------
+  -- nvim-cmp + LuaSnip
+  --------------------------------------------------------
+  local cmp = require("cmp")
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<CR>']      = cmp.mapping.confirm({ select = true }),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<Tab>']     = function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        else
+          fallback()
+        end
+      end,
+      ['<S-Tab>']   = function(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        else
+          fallback()
+        end
+      end,
+    }),
+    sources = {
+      { name = "nvim_lsp" },
+      { name = "luasnip" },
+    },
+  })
+
+  --------------------------------------------------------
+  -- LspAttach autocommand (usa on_attach_impl)
+  --------------------------------------------------------
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
 
   vim.api.nvim_create_autocmd("LspAttach", {
