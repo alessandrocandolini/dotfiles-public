@@ -24,16 +24,16 @@ let
   cliStuff = with pkgs; [
     jq
     fzf
+    skim
     ripgrep
     git
     gh
     delta
     awscli2
     tmux
-    tmuxinator
     unzip
     curl
-    nodejs_latest
+    # nodejs_latest
     starship
     coreutils
     fd
