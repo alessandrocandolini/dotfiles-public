@@ -22,10 +22,12 @@ save_to_clipboard = true
 
 [window]
 startup_mode = "Fullscreen"
-opacity = 0
 
 [window.padding]
 x = 16
 y = 16
+
+[colors.primary]
+background = "0x000000"
 
 [keyboard]
