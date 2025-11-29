@@ -109,6 +109,7 @@ highlight EndOfBuffer guibg=NONE ctermbg=NONE
 " Custom mappings for fzf
 nnoremap <silent> <Leader>ff :Files<CR>
 nnoremap <silent> <Leader>fg :Rg<CR>
+command! W write "to prevent accidentally triggering fzf's :Windows
 
 " Persist Undo in an XDG-Compliant Location
 if !isdirectory($HOME."/.local/share/nvim/undo")
