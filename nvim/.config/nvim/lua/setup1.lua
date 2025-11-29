@@ -35,7 +35,7 @@ vim.keymap.set('n', 'gl', function()
 end, diag_opts)
 
 ------------------------------------------------------------
--- Generic non-LSP plugins
+-- Other plugins that we wanna load for every projects
 ------------------------------------------------------------
 require('spaceless').setup()
-
+require("config.projectionist")

@@ -6,13 +6,6 @@ local lsp = require("config.lsp")
 -- Ensure shared LSP behaviour (on_attach, <leader>ls, handlers, etc.)
 lsp.setup()
 
--- Fidget: ONLY for Haskell (lazy init, guarded)
-if not vim.g._fidget_haskell_setup then
-  require("fidget").setup()
-  require("config.projectionist")
-  vim.g._fidget_haskell_setup = true
-end
-
 local def_opts = { noremap = true, silent = true }
 
 vim.g.haskell_tools = {

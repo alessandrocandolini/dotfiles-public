@@ -65,6 +65,8 @@ function M.setup()
   if initialized then return end
   initialized = true
 
+  require("fidget").setup()
+
   --------------------------------------------------------
   -- Capabilities (nvim-cmp + LSP)
   --------------------------------------------------------
