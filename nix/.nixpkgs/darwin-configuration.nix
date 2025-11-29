@@ -2,6 +2,12 @@
 
 let
 
+  neovimPkgs = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+  }) {
+    system = pkgs.system;
+  };
+
   dockerStuff = with pkgs; [
       colima
       docker
@@ -19,7 +25,7 @@ let
 
   vimStuff = with pkgs; [
       vim
-      neovim
+      neovimPkgs.neovim
   ];
 
 in
