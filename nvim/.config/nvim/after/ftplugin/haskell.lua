@@ -9,6 +9,7 @@ lsp.setup()
 -- Fidget: ONLY for Haskell (lazy init, guarded)
 if not vim.g._fidget_haskell_setup then
   require("fidget").setup()
+  require("config.projectionist")
   vim.g._fidget_haskell_setup = true
 end
 
