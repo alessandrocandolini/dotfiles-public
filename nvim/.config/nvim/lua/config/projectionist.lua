@@ -2,7 +2,7 @@
 local M = {}
 
 vim.g.projectionist_heuristics = {
-  ["src/*.hs"] = {
+  ["stack.yaml"] = {
     -- from src/Foo.hs -> test/FooSpec.hs
     ["src/*.hs"] = {
       alternate = "test/{}Spec.hs",
