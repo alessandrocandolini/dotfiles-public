@@ -3,63 +3,19 @@
 local ht  = require("haskell-tools")
 local lsp = require("config.lsp")
 
--- Ensure shared LSP behaviour (on_attach, <leader>ls, handlers, etc.)
 lsp.setup()
 
-local def_opts = { noremap = true, silent = true }
+require("config.haskell_snippets").setup()
 
-vim.g.haskell_tools = {
-  tools = {
-    log = {
-      level = vim.log.levels.DEBUG,
-    },
-  },
-  hls = {
-    on_attach = function(client, bufnr)
-      -- Haskell-specific keymaps
-      local local_opts = vim.tbl_extend("keep", { buffer = bufnr }, def_opts)
+local bufnr = vim.api.nvim_get_current_buf()
+local opts = { noremap = true, silent = true, buffer = bufnr }
 
-      vim.keymap.set("n", "<leader>ca", vim.lsp.codelens.run,       local_opts)
-      vim.keymap.set("n", "<leader>hs", ht.hoogle.hoogle_signature, local_opts)
+-- Run codelens in this buffer
+vim.keymap.set("n", "<leader>ca", vim.lsp.codelens.run, opts)
 
-      -- Shared LSP behaviour (all the standard maps)
-      lsp.on_attach(client, bufnr)
-    end,
+-- Hoogle signature lookup
+vim.keymap.set("n", "<leader>hs", ht.hoogle.hoogle_signature, opts)
 
-    settings = {
-      haskell = {
-        formattingProvider = "ormolu",
-        plugin = {
-          class = { -- missing class methods
-            codeLensOn = true,
-          },
-          importLens = { -- make import lists fully explicit
-            codeLensOn = true,
-          },
-          refineImports = { -- refine imports
-            codeLensOn = true,
-          },
-          tactics = { -- wingman
-            codeLensOn = false,
-          },
-          moduleName = { -- fix module names
-            globalOn = true,
-          },
-          rename = {
-            config = {
-              crossModule = false,
-            },
-            globalOn = true,
-          },
-          eval = { -- evaluate code snippets
-            globalOn = false,
-          },
-          ["ghcide-type-lenses"] = { -- show/add missing type signatures
-            globalOn = true,
-          },
-        },
-      },
-    },
-  },
-}
+-- Evaluate all code snippets
+vim.keymap.set('n', '<space>ea', ht.lsp.buf_eval_all, opts)
 
