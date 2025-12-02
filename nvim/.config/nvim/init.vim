@@ -87,7 +87,7 @@ Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
 Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
 Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
 Plug 'tpope/vim-projectionist'
-Plug 'Mrcjkb/haskell-tools.nvim', {'version': 4}
+Plug 'Mrcjkb/haskell-tools.nvim', {'version': 6}
 Plug 'kana/vim-textobj-user' " Required by cornelis
 Plug 'neovimhaskell/nvim-hs.vim' " Required by cornelis
 Plug 'agda/cornelis', { 'do': 'stack build' }
