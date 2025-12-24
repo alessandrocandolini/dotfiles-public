@@ -10,9 +10,6 @@ require("config.haskell_snippets").setup()
 local bufnr = vim.api.nvim_get_current_buf()
 local opts = { noremap = true, silent = true, buffer = bufnr }
 
--- Run codelens in this buffer
-vim.keymap.set("n", "<leader>ca", vim.lsp.codelens.run, opts)
-
 -- Hoogle signature lookup
 vim.keymap.set("n", "<leader>hs", ht.hoogle.hoogle_signature, opts)
 
