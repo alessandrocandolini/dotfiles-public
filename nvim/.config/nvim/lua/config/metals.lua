@@ -19,7 +19,6 @@ function M.setup()
   local cfg = metals.bare_config()
 
   cfg.capabilities = lsp.capabilities
-  cfg.on_attach    = lsp.on_attach
 
   cfg.settings = {
     showImplicitArguments = true,
