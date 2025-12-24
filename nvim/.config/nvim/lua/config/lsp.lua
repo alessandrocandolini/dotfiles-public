@@ -46,10 +46,9 @@ local function on_attach_impl(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
-  -- Enable inlay hints if supported (Neovim 0.10+)
-  if vim.lsp.buf.inlay_hint then
-    vim.lsp.buf.inlay_hint(bufnr, true)
-  end
+  -- Enable inlay hints if supported (requires Neovim > 0.11)
+  vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+
 end
 
 function M.on_attach(client, bufnr)
