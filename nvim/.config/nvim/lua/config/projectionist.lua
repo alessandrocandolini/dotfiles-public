@@ -15,7 +15,7 @@ vim.g.projectionist_heuristics = {
     },
   },
 
-  ["*.scala"] = {
+  ["build.sbt"] = {
     ["src/main/scala/*.scala"] = {
       alternate = "src/test/scala/{}Spec.scala",
       type = "source",
