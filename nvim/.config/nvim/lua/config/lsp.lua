@@ -47,7 +47,9 @@ local function on_attach_impl(client, bufnr)
   end, buf_opts)
 
   -- Enable inlay hints if supported (requires Neovim > 0.11)
-  vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  end
 
 end
 
