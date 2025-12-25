@@ -7,8 +7,9 @@ local M = {}
 ------------------------------------------------------------
 local function on_attach_impl(client, bufnr)
   -- Prevent duplicate key mappings if multiple LSPs attach
-  if vim.b.lsp_keys_set then return end
-  vim.b.lsp_keys_set = true
+  if vim.b[bufnr].lsp_keys_set then return end
+  vim.b[bufnr].lsp_keys_set = true
+
 
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
@@ -28,7 +29,7 @@ local function on_attach_impl(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
-  -- Enable inlay hints if supported (requires Neovim > 0.11)
+  -- Enable inlay hints if supported (requires Neovim >= 0.11)
   if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
