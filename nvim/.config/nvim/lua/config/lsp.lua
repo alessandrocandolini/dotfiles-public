@@ -45,10 +45,6 @@ local function on_attach_impl(client, bufnr)
 
 end
 
-function M.on_attach(client, bufnr)
-  on_attach_impl(client, bufnr)
-end
-
 ------------------------------------------------------------
 -- Lazy setup: called once from language ftplugins
 ------------------------------------------------------------
@@ -131,9 +127,7 @@ function M.setup()
   end, { silent = true })
 
 
-  --------------------------------------------------------
-  -- LspAttach autocommand (usa on_attach_impl)
-  --------------------------------------------------------
+  -- LspAttach autocommand
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
 
   vim.api.nvim_create_autocmd("LspAttach", {
@@ -141,7 +135,7 @@ function M.setup()
     callback = function(ev)
       local client = vim.lsp.get_client_by_id(ev.data.client_id)
       if client then
-        M.on_attach(client, ev.buf)
+        on_attach_impl(client, ev.buf)
       end
     end,
   })
