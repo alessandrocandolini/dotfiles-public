@@ -29,9 +29,19 @@ local function on_attach_impl(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
-  -- Enable inlay hints if supported (requires Neovim >= 0.11)
+  -- Enable inlay hints if supported (requires Neovim > 0.11)
   if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  end
+
+  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+
+  if client.server_capabilities.inlayHintProvider then
+    vim.keymap.set("n", "<leader>uh", function()
+      local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+      vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+    end, { buffer = bufnr, silent = true })
   end
 
 end
@@ -50,6 +60,21 @@ function M.setup()
   initialized = true
 
   require("fidget").setup()
+
+  -- Force a default border for all LSP floating previews (hover, signature, etc.)
+  if not vim.g._user_lsp_float_border then
+    vim.g._user_lsp_float_border = true
+
+    local orig = vim.lsp.util.open_floating_preview
+    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+      opts = opts or {}
+      if opts.border == nil then
+        opts.border = "rounded"
+      end
+      return orig(contents, syntax, opts, ...)
+    end
+  end
+
 
   --------------------------------------------------------
   -- Capabilities (nvim-cmp + LSP)
@@ -123,18 +148,6 @@ function M.setup()
     end,
   })
 
-  -- LSP handler UI (hover/signature borders)
-  if not vim.g.lsp_handlers_configured then
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-      vim.lsp.handlers.hover,
-      { border = "rounded" }
-    )
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-      vim.lsp.handlers.signature_help,
-      { border = "rounded" }
-    )
-    vim.g.lsp_handlers_configured = true
-  end
 
   -- Print list of attached LSP clients (LSP-specific utility)
   vim.keymap.set('n', '<leader>ls', function()
