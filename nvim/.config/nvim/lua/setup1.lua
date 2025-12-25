@@ -1,11 +1,7 @@
-------------------------------------------------------------
--- Global editor UI / options (LSP-agnostic)
-------------------------------------------------------------
-vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
+-- appearance of popup menu for autocomplete
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
-------------------------------------------------------------
 -- Diagnostic
-------------------------------------------------------------
 local diag_opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "[c", function()
@@ -36,9 +32,7 @@ vim.keymap.set("n", "gl", function()
   end
 end, { silent = true, desc = "Diagnostics float (enter)" })
 
-------------------------------------------------------------
 -- Other plugins that we wanna load for every projects
-------------------------------------------------------------
 require('spaceless').setup()
 require("config.projectionist")
 
