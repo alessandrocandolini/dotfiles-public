@@ -87,10 +87,10 @@ Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
 Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
 Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
 Plug 'tpope/vim-projectionist'
-Plug 'Mrcjkb/haskell-tools.nvim', {'version': 6}
-Plug 'kana/vim-textobj-user' " Required by cornelis
-Plug 'neovimhaskell/nvim-hs.vim' " Required by cornelis
-Plug 'agda/cornelis', { 'do': 'stack build' }
+Plug 'Mrcjkb/haskell-tools.nvim', {'version': 6, 'for': ['haskell']}
+Plug 'kana/vim-textobj-user', { 'for': ['agda'] }
+Plug 'neovimhaskell/nvim-hs.vim', { 'for': ['agda'] }
+Plug 'agda/cornelis', { 'for': ['agda'], 'do': 'stack build' }
 Plug 'j-hui/fidget.nvim' " Neovim notifications and LSP progress messages
 call plug#end()
 
