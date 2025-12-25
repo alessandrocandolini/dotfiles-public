@@ -13,36 +13,23 @@ local function on_attach_impl(client, bufnr)
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
   -- Standard LSP keybindings (buffer-local)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,        buf_opts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition,         buf_opts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation,     buf_opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references,         buf_opts)
-  vim.keymap.set('n', 'K',  vim.lsp.buf.hover,              buf_opts)
+  vim.keymap.set('n', 'grD', vim.lsp.buf.declaration,        buf_opts)
+  vim.keymap.set('n', 'grd', vim.lsp.buf.definition,         buf_opts)
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,  buf_opts)
 
-  -- Code actions and renaming
-  vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run,          buf_opts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename,            buf_opts)
+  -- Code actions and lenses
+  vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, buf_opts)
+  vim.keymap.set('n', '<leader>cL', vim.lsp.codelens.refresh, buf_opts)
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
-
-  -- Workspace folder management
-  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder,    buf_opts)
-  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, buf_opts)
-  vim.keymap.set('n', '<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, buf_opts)
-
-  -- Type definition
-  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, buf_opts)
+  vim.keymap.set('n', '<leader>ss', vim.lsp.buf.workspace_symbol, buf_opts)
 
   -- Quickfix list navigation (for LSP-driven lists)
-  vim.keymap.set('n', ']q', ":cnext<CR>", buf_opts)
-  vim.keymap.set('n', '[q', ":cprev<CR>", buf_opts)
-  vim.keymap.set('n', '<leader>qq', ":copen<CR>", buf_opts)
+  vim.keymap.set('n', ']q', ':cnext<CR>', buf_opts)
+  vim.keymap.set('n', '[q', ':cprev<CR>', buf_opts)
+  vim.keymap.set('n', '<leader>qq', ':copen<CR>', buf_opts)
 
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
-    print("formatting...")
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
