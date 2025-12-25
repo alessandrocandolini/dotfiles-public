@@ -7,8 +7,8 @@ local M = {}
 ------------------------------------------------------------
 local function on_attach_impl(client, bufnr)
   -- Prevent duplicate key mappings if multiple LSPs attach
-  if vim.b[bufnr].lsp_keys_set then return end
-  vim.b[bufnr].lsp_keys_set = true
+  if vim.b.lsp_keys_set then return end
+  vim.b.lsp_keys_set = true
 
 
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
