@@ -4,35 +4,37 @@
 vim.opt_global.completeopt = { "menu", "menuone", "noselect" }
 
 ------------------------------------------------------------
--- Global Diagnostic Keymaps & Configuration
--- (These work fine even when *no* LSP is active)
+-- Diagnostic
 ------------------------------------------------------------
 local diag_opts = { noremap = true, silent = true }
 
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, diag_opts)
-vim.keymap.set('n', '[c', vim.diagnostic.goto_prev,        diag_opts)
-vim.keymap.set('n', ']c', vim.diagnostic.goto_next,        diag_opts)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, diag_opts)
+vim.keymap.set("n", "[c", function()
+  vim.diagnostic.goto_prev({ float = true })
+end, diag_opts)
+
+vim.keymap.set("n", "]c", function()
+  vim.diagnostic.goto_next({ float = true })
+end, diag_opts)
+
+vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, diag_opts)
 
 vim.diagnostic.config({
-  underline = true,
-  signs = true,
   virtual_text = false,
   float = {
-    show_header = true,
-    source = 'if_many',
-    border = 'rounded',
-    focusable = true,
-    max_width = 80,
-    max_height = 20,
+    border = 'rounded'
   },
-  update_in_insert = false,
-  severity_sort = false,
 })
 
-vim.keymap.set('n', 'gl', function()
-  vim.diagnostic.open_float(nil, { focus = true })
-end, diag_opts)
+-- same as Crtr-W d , but with autofocus on the floating box
+vim.keymap.set("n", "gl", function()
+  local _, winid = vim.diagnostic.open_float(nil, {
+    focusable = true,
+    border = "rounded",
+  })
+  if winid and vim.api.nvim_win_is_valid(winid) then
+    vim.api.nvim_set_current_win(winid)
+  end
+end, { silent = true, desc = "Diagnostics float (enter)" })
 
 ------------------------------------------------------------
 -- Other plugins that we wanna load for every projects

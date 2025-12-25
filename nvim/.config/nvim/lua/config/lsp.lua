@@ -23,11 +23,6 @@ local function on_attach_impl(client, bufnr)
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
   vim.keymap.set('n', '<leader>ss', vim.lsp.buf.workspace_symbol, buf_opts)
 
-  -- Quickfix list navigation (for LSP-driven lists)
-  vim.keymap.set('n', ']q', ':cnext<CR>', buf_opts)
-  vim.keymap.set('n', '[q', ':cprev<CR>', buf_opts)
-  vim.keymap.set('n', '<leader>qq', ':copen<CR>', buf_opts)
-
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
     vim.lsp.buf.format { async = true }
