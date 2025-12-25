@@ -10,7 +10,6 @@ local function on_attach_impl(client, bufnr)
   if vim.b.lsp_keys_set then return end
   vim.b.lsp_keys_set = true
 
-
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
   -- Standard LSP keybindings (buffer-local)
@@ -29,15 +28,18 @@ local function on_attach_impl(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
-  -- Enable inlay hints if supported (requires Neovim > 0.11)
+  -- Enable inlay hints by default if supported (requires Neovim >= 0.11)
   if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 
+  -- Expose a key binding to hide / show inlay hints if supported
   if client.server_capabilities.inlayHintProvider then
     vim.keymap.set("n", "<leader>uh", function()
-      local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-      vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+      if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
+        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+        vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+      end
     end, { buffer = bufnr, silent = true })
   end
 
