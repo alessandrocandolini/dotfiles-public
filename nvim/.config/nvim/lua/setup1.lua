@@ -25,7 +25,7 @@ vim.diagnostic.config({
   },
 })
 
--- same as Crtr-W d , but with autofocus on the floating box
+-- same as Ctrl-W d , but with autofocus on the floating box
 vim.keymap.set("n", "gl", function()
   local _, winid = vim.diagnostic.open_float(nil, {
     focusable = true,
