@@ -37,7 +37,7 @@ local function on_attach_impl(client, bufnr)
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
   vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
-  if client.server_capabilities.inlayHintProvider then
+  if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
     vim.keymap.set("n", "<leader>uh", function()
       local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
       vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
