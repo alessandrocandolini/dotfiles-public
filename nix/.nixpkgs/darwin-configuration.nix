@@ -76,5 +76,5 @@ in
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-  environment.variables.JAVA_HOME = "${pkgs.jdk17}/";
+  environment.variables.JAVA_HOME = "${pkgs.jdk21}/";
 }
