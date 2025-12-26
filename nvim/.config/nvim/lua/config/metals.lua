@@ -2,13 +2,7 @@
 
 local M = {}
 
-local initialized = false
-
 function M.setup()
-  if initialized then
-    return
-  end
-  initialized = true
 
   local metals = require("metals")
   local lsp    = require("config.lsp")
@@ -29,7 +23,17 @@ function M.setup()
     },
   }
 
-  metals.initialize_or_attach(cfg)
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "scala", "sbt" },
+    callback = function()
+      metals.initialize_or_attach(cfg)
+    end,
+  })
+
+  -- if setup() runs after a scala buffer is already open
+  if vim.bo.filetype == "scala" or vim.bo.filetype == "sbt" then
+    metals.initialize_or_attach(cfg)
+  end
 end
 
 return M
