@@ -109,7 +109,7 @@ highlight EndOfBuffer guibg=NONE ctermbg=NONE
 
 " Custom mappings for fzf
 nnoremap <silent> <Leader>ff :Files<CR>
-nnoremap <silent> <Leader>fg :Rg<CR>
+nnoremap <silent> <Leader>fg :RG<CR>
 command! W write "to prevent accidentally triggering fzf's :Windows
 
 " Persist Undo in an XDG-Compliant Location
