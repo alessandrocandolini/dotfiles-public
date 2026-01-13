@@ -83,7 +83,7 @@ set guicursor=
 
 call plug#begin('~/.config/nvim/plugged')
 "Plug 'nanotech/jellybeans.vim'
-Plug 'rktjmp/lush.nvim' "required by jellybeans-nvim
+Plug 'rktjmp/lush.nvim' " required by jellybeans-nvim
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'lewis6991/spaceless.nvim'
 Plug 'nvim-lua/plenary.nvim'
