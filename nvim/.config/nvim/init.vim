@@ -63,6 +63,12 @@ nnoremap <C-w>v :vnew<CR>
 " Remove search highlights when a search is completed
 nnoremap <leader>h :nohlsearch<CR>
 
+" <leader><leader> toggles between buffers
+nnoremap <leader><leader> <c-^>
+
+" Open new file adjacent to current file
+nnoremap <leader>o :e <C-R>=expand('%:p:h') . '/'<CR>
+
 " Do not change the cursor shape in insert mode
 set guicursor=
 
