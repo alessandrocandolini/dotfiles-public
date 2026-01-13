@@ -13,7 +13,7 @@ set encoding=utf-8 nobomb
 
 " Show invisible characters and set indentation preferences
 set list
-set lcs=tab:▸\ ,trail:·,nbsp:_
+set lcs=tab:▸\ ,trail:␣,nbsp:¬
 set expandtab ts=2 sw=2 ai
 
 " show encoding in statusbar, if/when statusbar is enabled
