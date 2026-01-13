@@ -82,7 +82,9 @@ set guicursor=
 " To uninstall, remove it from this file and run :PlugClean
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'nanotech/jellybeans.vim'
+"Plug 'nanotech/jellybeans.vim'
+Plug 'rktjmp/lush.nvim' "required by jellybeans-nvim
+Plug 'metalelf0/jellybeans-nvim'
 Plug 'lewis6991/spaceless.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'scalameta/nvim-metals'
@@ -104,7 +106,7 @@ call plug#end()
 " Place this code AFTER the vim-plug section, otherwise you need to generate symb links in the colors folder
 set termguicolors     " enable true colors support
 try
-  colorscheme jellybeans
+  colorscheme jellybeans-nvim
 catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
