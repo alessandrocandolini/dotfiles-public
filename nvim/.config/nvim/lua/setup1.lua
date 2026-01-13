@@ -33,6 +33,5 @@ vim.keymap.set("n", "gl", function()
 end, { silent = true, desc = "Diagnostics float (enter)" })
 
 -- Other plugins that we wanna load for every projects
-require('spaceless').setup()
 require("config.projectionist")
 
