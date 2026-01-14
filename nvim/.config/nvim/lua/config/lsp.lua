@@ -30,6 +30,9 @@ local function on_attach_impl(client, bufnr)
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 
+  --  Disable semantics tokens
+  client.server_capabilities.semanticTokensProvider = nil
+
   -- Expose a key binding to hide / show inlay hints if supported
   if client.server_capabilities.inlayHintProvider then
     vim.keymap.set("n", "<leader>uh", function()
