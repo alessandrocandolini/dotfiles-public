@@ -18,7 +18,7 @@ local function on_attach_impl(client, bufnr)
   vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, buf_opts)
   vim.keymap.set('n', '<leader>cL', vim.lsp.codelens.refresh, buf_opts)
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
-  vim.keymap.set('n', '<leader>ss', vim.lsp.buf.workspace_symbol, buf_opts)
+  vim.keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, buf_opts)
 
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
