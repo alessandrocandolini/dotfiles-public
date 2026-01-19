@@ -42,7 +42,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "highlight yanked text"
 })
 
-
 -- Other plugins that we wanna load for every projects
 require("config.projectionist")
 
