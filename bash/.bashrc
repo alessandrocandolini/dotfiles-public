@@ -38,7 +38,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # Set default editor to nvim for both shell (EDITOR) and Git (GIT_EDITOR)
 # https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
 export EDITOR="nvim -u NONE"
-export GIT_EDITOR=$EDITOR
+export GIT_EDITOR="$EDITOR"
 
 # =============================================================================
 # SAFE ALIAS
