@@ -32,6 +32,17 @@ vim.keymap.set("n", "<leader>dl", function()
   end
 end, { silent = true, desc = "Diagnostics float (enter)" })
 
+-- Highlight on yank for visual feedback
+local group = vim.api.nvim_create_augroup("UserConfig", {clear = true})
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = group,
+  callback = function()
+    vim.highlight.on_yank({timeout = 150})
+  end,
+  desc = "highlight yanked text"
+})
+
+
 -- Other plugins that we wanna load for every projects
 require("config.projectionist")
 
