@@ -86,6 +86,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'rktjmp/lush.nvim' " required by jellybeans-nvim
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'axelf4/vim-strip-trailing-whitespace'
+Plug 'windwp/nvim-autopairs'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'scalameta/nvim-metals'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}

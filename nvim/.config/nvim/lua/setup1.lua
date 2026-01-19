@@ -34,4 +34,4 @@ end, { silent = true, desc = "Diagnostics float (enter)" })
 
 -- Other plugins that we wanna load for every projects
 require("config.projectionist")
-
+require("nvim-autopairs").setup {}
