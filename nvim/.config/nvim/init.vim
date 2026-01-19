@@ -61,7 +61,7 @@ set showcmd
 nnoremap <C-w>v :vnew<CR>
 
 " Remove search highlights when a search is completed
-nnoremap <leader>h :nohlsearch<CR>
+nnoremap <Esc> :nohlsearch<CR>
 
 " <leader><leader> toggles between buffers
 nnoremap <leader><leader> <c-^>
