@@ -28,7 +28,7 @@ set laststatus=0
 set noeol
 
 " Display end of buffer lines as blank
-"set fillchars+=eob:\
+set fillchars+=eob:\ 
 
 " Disable unsafe commands and the ruler display
 set secure
