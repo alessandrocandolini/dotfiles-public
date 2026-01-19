@@ -60,7 +60,8 @@ set showcmd
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v to split the window
 nnoremap <C-w>v :vnew<CR>
 
-" Remove search highlights when a search is completed
+" Intentionally override the default <C-l> (redraw screen) to clear search highlights.
+" Use :redraw! or another custom mapping if you need the original redraw behavior.
 nnoremap <silent> <C-l> :nohlsearch<CR>
 
 " <leader><leader> toggles between buffers
