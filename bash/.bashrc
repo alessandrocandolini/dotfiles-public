@@ -35,9 +35,10 @@ bind 'set bell-style none'
 # https://support.apple.com/en-us/HT208050
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-# Git editor default to vim
+# Set default editor to nvim for both shell (EDITOR) and Git (GIT_EDITOR)
 # https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
-export GIT_EDITOR="nvim -u NONE"
+export EDITOR="nvim -u NONE"
+export GIT_EDITOR="$EDITOR"
 
 # =============================================================================
 # SAFE ALIAS
