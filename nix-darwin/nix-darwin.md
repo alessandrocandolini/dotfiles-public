@@ -1,6 +1,6 @@
 # Nix-darwin with flakes! 
 
-Yes, i've finally taken the time to migrate nix-darwing to 
+Yes, i've finally taken the time to migrate nix-darwin to 
 * use flakes (so i can have a `flake.lock`)
 * use home manager
 
