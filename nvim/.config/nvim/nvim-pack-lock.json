@@ -1,0 +1,76 @@
+{
+  "plugins": {
+    "LuaSnip": {
+      "rev": "dae4f5aaa3574bd0c2b9dd20fb9542a02c10471c",
+      "src": "https://github.com/L3MON4D3/LuaSnip"
+    },
+    "cmp-nvim-lsp": {
+      "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
+    },
+    "cmp_luasnip": {
+      "rev": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90",
+      "src": "https://github.com/saadparwaiz1/cmp_luasnip"
+    },
+    "cornelis": {
+      "rev": "8f7bdfe1a05dd3a310a9af3325bd4da2c78b567b",
+      "src": "https://github.com/agda/cornelis"
+    },
+    "fidget.nvim": {
+      "rev": "7fa433a83118a70fe24c1ce88d5f0bd3453c0970",
+      "src": "https://github.com/j-hui/fidget.nvim"
+    },
+    "fzf": {
+      "rev": "d01eaa9de3f0cfa1b57701e3577b4f7afee0e2be",
+      "src": "https://github.com/junegunn/fzf"
+    },
+    "fzf.vim": {
+      "rev": "ddc14a6a5471147e2a38e6b32a7268282f669b0a",
+      "src": "https://github.com/junegunn/fzf.vim"
+    },
+    "haskell-tools.nvim": {
+      "rev": "15de9c7de389c9182154b03302d0fcea6995f17a",
+      "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
+    },
+    "jellybeans-nvim": {
+      "rev": "d5989265b5256cb296b5772c73e57490e84f69b1",
+      "src": "https://github.com/metalelf0/jellybeans-nvim"
+    },
+    "lush.nvim": {
+      "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
+      "src": "https://github.com/rktjmp/lush.nvim"
+    },
+    "nvim-autopairs": {
+      "rev": "c2a0dd0d931d0fb07665e1fedb1ea688da3b80b4",
+      "src": "https://github.com/windwp/nvim-autopairs"
+    },
+    "nvim-cmp": {
+      "rev": "85bbfad83f804f11688d1ab9486b459e699292d6",
+      "src": "https://github.com/hrsh7th/nvim-cmp"
+    },
+    "nvim-hs.vim": {
+      "rev": "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342",
+      "src": "https://github.com/neovimhaskell/nvim-hs.vim"
+    },
+    "nvim-metals": {
+      "rev": "7ed47cd3095508e80423e30922385d5b9988f9d6",
+      "src": "https://github.com/scalameta/nvim-metals"
+    },
+    "plenary.nvim": {
+      "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "vim-projectionist": {
+      "rev": "5ff7bf79a6ef741036d2038a226bcb5f8b1cd296",
+      "src": "https://github.com/tpope/vim-projectionist"
+    },
+    "vim-strip-trailing-whitespace": {
+      "rev": "59385775cbe416b2797ec5e2c7eb445a3398dd46",
+      "src": "https://github.com/axelf4/vim-strip-trailing-whitespace"
+    },
+    "vim-textobj-user": {
+      "rev": "41a675ddbeefd6a93664a4dc52f302fe3086a933",
+      "src": "https://github.com/kana/vim-textobj-user"
+    }
+  }
+}

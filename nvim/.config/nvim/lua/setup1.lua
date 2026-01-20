@@ -1,3 +1,6 @@
+-- install plugins
+require('config.load-plugins').setup()
+
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
