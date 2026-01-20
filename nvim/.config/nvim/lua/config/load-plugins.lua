@@ -55,14 +55,15 @@ function M.setup()
     { src = gh("agda/cornelis"), name = "cornelis" }, -- stack build hook above
   })
 
-  -- Lazy-loaded plugins (installed as opt)
-  vim.pack.load({
-    { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim" },
+  -- Lazy-loaded plugins (installed as opt, not loaded on startup)
+  vim.pack.add({
+    { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim", opt = true },
   })
 
   -- Lazy load haskell-tools.nvim on Haskell filetype
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "haskell",
+    once = true,
     callback = function()
       vim.pack.load("haskell-tools.nvim")
     end,
