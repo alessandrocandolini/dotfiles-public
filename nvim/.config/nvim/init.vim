@@ -103,19 +103,6 @@ Plug 'agda/cornelis', { 'for': ['agda'], 'do': 'stack build' }
 Plug 'j-hui/fidget.nvim' " Neovim notifications and LSP progress messages
 call plug#end()
 
-" Default colorscheme (has to be installed, see vim-plug above)
-" Place this code AFTER the vim-plug section, otherwise you need to generate symb links in the colors folder
-set termguicolors     " enable true colors support
-try
-  colorscheme jellybeans-nvim
-catch /^Vim\%((\a\+)\)\=:E185/
-endtry
-
-" Set transparent background for Normal and LineNr highlights
-highlight Normal guibg=NONE ctermbg=NONE
-highlight LineNr guibg=NONE ctermbg=NONE
-highlight EndOfBuffer guibg=NONE ctermbg=NONE
-
 " Persist Undo in an XDG-Compliant Location
 if !isdirectory($HOME."/.local/share/nvim/undo")
     call mkdir($HOME."/.local/share/nvim/undo", "p", 0700)
