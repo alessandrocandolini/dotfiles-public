@@ -63,8 +63,8 @@ function M.setup()
   -- Lazy load haskell-tools.nvim on Haskell filetype
   vim.api.nvim_create_autocmd("FileType", {
     pattern = "haskell",
-    once = true,
     callback = function()
+      -- Load the plugin if not already loaded
       vim.pack.load("haskell-tools.nvim")
     end,
   })
