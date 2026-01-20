@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 let
   dockerStuff = with pkgs; [
@@ -18,7 +18,8 @@ let
 
   vimStuff = with pkgs; [
     vim
-    neovim
+    # neovim
+    inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   cliStuff = with pkgs; [
