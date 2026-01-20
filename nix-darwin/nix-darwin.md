@@ -17,5 +17,5 @@ sudo darwin-rebuild switch --flake ~/dotfiles-public/nix-darwin/#this-mac
 
 ```
 
-A number of things is still not ideal, for instance the fact that I couldn't find a better way to setup darwin other than hardcoding my name in the file (absolutely not portable)
+A number of things are still not ideal, for instance the fact that I couldn't find a better way to setup darwin other than hardcoding my name in the file (absolutely not portable)
 I will have to research more for better alternatives. 
