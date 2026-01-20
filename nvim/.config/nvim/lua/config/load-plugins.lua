@@ -1,4 +1,4 @@
--- lua/config/plugins.lua
+-- lua/config/load-plugins.lua
 local M = {}
 
 local function gh(repo)

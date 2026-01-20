@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 -- install plugins
 require('config.load-plugins').setup()
 
