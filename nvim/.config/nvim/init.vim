@@ -73,36 +73,6 @@ nnoremap <leader><leader> <c-^>
 " Open new file adjacent to current file
 nnoremap <leader>o :e <C-R>=expand('%:p:h') . '/'<CR>
 
-" ==========================
-" Vim-Plug Setup
-" ==========================
-" https://github.com/junegunn/vim-plug
-" Installation of vim-plug is described in the readme (curl command)
-" curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-" Restart and run :PlugInstall to install plugins.
-" To uninstall, remove it from this file and run :PlugClean
-
-call plug#begin('~/.config/nvim/plugged')
-Plug 'rktjmp/lush.nvim' " required by jellybeans-nvim
-Plug 'metalelf0/jellybeans-nvim'
-Plug 'axelf4/vim-strip-trailing-whitespace'
-Plug 'windwp/nvim-autopairs'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'scalameta/nvim-metals'
-Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
-Plug 'junegunn/fzf.vim' " needed for previews
-Plug 'hrsh7th/nvim-cmp'              " Core completion framework
-Plug 'hrsh7th/cmp-nvim-lsp'          " LSP completion source
-Plug 'L3MON4D3/LuaSnip'              " Lua-based snippet engine
-Plug 'saadparwaiz1/cmp_luasnip'      " LuaSnip completion source
-Plug 'tpope/vim-projectionist'
-Plug 'Mrcjkb/haskell-tools.nvim', {'version': 6, 'for': ['haskell']}
-Plug 'kana/vim-textobj-user', { 'for': ['agda'] }
-Plug 'neovimhaskell/nvim-hs.vim', { 'for': ['agda'] }
-Plug 'agda/cornelis', { 'for': ['agda'], 'do': 'stack build' }
-Plug 'j-hui/fidget.nvim' " Neovim notifications and LSP progress messages
-call plug#end()
-
 " Persist Undo in an XDG-Compliant Location
 if !isdirectory($HOME."/.local/share/nvim/undo")
     call mkdir($HOME."/.local/share/nvim/undo", "p", 0700)
