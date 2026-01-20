@@ -65,7 +65,7 @@ function M.setup()
     pattern = "haskell",
     callback = function()
       -- Load the plugin if not already loaded
-      vim.pack.load("haskell-tools.nvim")
+      vim.cmd.packadd("haskell-tools.nvim")
     end,
   })
 
