@@ -1,3 +1,4 @@
+vim.loader.enable()
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
