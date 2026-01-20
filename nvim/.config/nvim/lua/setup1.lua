@@ -49,3 +49,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Other plugins that we wanna load for every projects
 require("config.projectionist")
 require("nvim-autopairs").setup {}
+
+
+-- Colorscheme
+vim.opt.termguicolors = true
+pcall(vim.cmd.colorscheme, "jellybeans-nvim")
+
+-- Transparent background
+vim.cmd([[
+  highlight Normal guibg=NONE ctermbg=NONE
+  highlight LineNr guibg=NONE ctermbg=NONE
+  highlight EndOfBuffer guibg=NONE ctermbg=NONE
+]])
