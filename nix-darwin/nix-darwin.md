@@ -1,7 +1,7 @@
 # Nix-darwin with flakes! 
 
 Yes, i've finally taken the time to migrate nix-darwin to 
-* use flakes (so i can have a `flake.lock`)
+* use flakes (so I can have a `flake.lock`)
 * use home manager
 
 The new setup is under `nix-darwin` folder. The legacy setup is still available for older installations. 
