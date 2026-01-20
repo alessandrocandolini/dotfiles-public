@@ -42,7 +42,6 @@ function M.setup()
     -- LSPs
     gh("j-hui/fidget.nvim"),
     gh("scalameta/nvim-metals"),
-    gh("Mrcjkb/haskell-tools.nvim"),
 
     -- completion/snippets
     gh("hrsh7th/nvim-cmp"),
@@ -54,6 +53,19 @@ function M.setup()
     gh("kana/vim-textobj-user"),
     gh("neovimhaskell/nvim-hs.vim"),
     { src = gh("agda/cornelis"), name = "cornelis" }, -- stack build hook above
+  })
+
+  -- Lazy-loaded plugins (installed as opt)
+  vim.pack.load({
+    { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim" },
+  })
+
+  -- Lazy load haskell-tools.nvim on Haskell filetype
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "haskell",
+    callback = function()
+      vim.pack.load("haskell-tools.nvim")
+    end,
   })
 
 end
