@@ -1,18 +1,22 @@
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
--- Diagnostic
-local diag_opts = { noremap = true, silent = true }
+-- Custom mappings for fzf
+vim.keymap.set('n', '<Leader>ff', ':Files<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>fg', ':RG<CR>',    { silent = true })
+-- to prevent accidentally triggering fzf's :Windows
+vim.api.nvim_create_user_command('W', 'write', {})
 
+-- Diagnostic
 vim.keymap.set("n", "[c", function()
   vim.diagnostic.goto_prev({ float = true })
-end, diag_opts)
+end, { silent = true })
 
 vim.keymap.set("n", "]c", function()
   vim.diagnostic.goto_next({ float = true })
-end, diag_opts)
+end, { silent = true })
 
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, diag_opts)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { silent = true })
 
 vim.diagnostic.config({
   virtual_text = false,

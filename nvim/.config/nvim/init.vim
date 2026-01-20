@@ -21,7 +21,7 @@ if has("statusline")
  set statusline=%<%f\ %h%m%r%=%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%k\ %-14.(%l,%c%V%)\ %P
 endif
 
-" no statusbar by default (0 = never, 2 = always)
+" no statusbar by default (0 = never, 2 = always, 3 = global for all windows)
 set laststatus=0
 
 " Do not add empty newline at EOF
@@ -57,6 +57,9 @@ set nowritebackup
 " Display incomplete commands while typing
 set showcmd
 
+" Do not change the cursor shape in insert mode
+set guicursor=
+
 " Fix the asymmetry between Ctrl-W n and Ctrl-W v to split the window
 nnoremap <C-w>v :vnew<CR>
 
@@ -70,9 +73,6 @@ nnoremap <leader><leader> <c-^>
 " Open new file adjacent to current file
 nnoremap <leader>o :e <C-R>=expand('%:p:h') . '/'<CR>
 
-" Do not change the cursor shape in insert mode
-set guicursor=
-
 " ==========================
 " Vim-Plug Setup
 " ==========================
@@ -83,7 +83,6 @@ set guicursor=
 " To uninstall, remove it from this file and run :PlugClean
 
 call plug#begin('~/.config/nvim/plugged')
-"Plug 'nanotech/jellybeans.vim'
 Plug 'rktjmp/lush.nvim' " required by jellybeans-nvim
 Plug 'metalelf0/jellybeans-nvim'
 Plug 'axelf4/vim-strip-trailing-whitespace'
@@ -116,11 +115,6 @@ endtry
 highlight Normal guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
 highlight EndOfBuffer guibg=NONE ctermbg=NONE
-
-" Custom mappings for fzf
-nnoremap <silent> <Leader>ff :Files<CR>
-nnoremap <silent> <Leader>fg :RG<CR>
-command! W write "to prevent accidentally triggering fzf's :Windows
 
 " Persist Undo in an XDG-Compliant Location
 if !isdirectory($HOME."/.local/share/nvim/undo")
