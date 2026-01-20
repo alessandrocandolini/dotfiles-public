@@ -6,6 +6,11 @@ let
     url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
   }) {
     system = pkgs.system;
+    overlays = [
+      (import (builtins.fetchTarball {
+        url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
+      }))
+    ];
   };
 
   dockerStuff = with pkgs; [
