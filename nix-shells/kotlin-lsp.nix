@@ -24,7 +24,7 @@ let
       throw "Add the correct hash for ${system} from the release checksums.";
 in
 pkgs.mkShell {
-  packages = [
+  buildInputs = [
     (pkgs.stdenvNoCC.mkDerivation {
       pname = "kotlin-lsp";
       inherit version;
