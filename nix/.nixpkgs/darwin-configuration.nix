@@ -65,6 +65,7 @@ in
       llama-cpp
       htop
       macmon
+      universal-ctags
     ];
 
   # Use a custom configuration.nix location.
