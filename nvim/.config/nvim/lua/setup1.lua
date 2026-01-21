@@ -9,7 +9,7 @@ vim.keymap.set("n", "<Leader>fg", function()
   if w == nil or w == "" then
     vim.cmd("RG")
   else
-    vim.cmd("RG " .. vim.fn.fnameescape(w))
+    vim.cmd({ cmd = "RG", args = { w } })
   end
 end, { silent = true })
 -- to prevent accidentally triggering fzf's :Windows
