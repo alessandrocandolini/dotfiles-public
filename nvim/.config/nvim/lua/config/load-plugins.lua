@@ -25,7 +25,11 @@ end
 
 function M.setup()
   -- Run post-install/update hooks
-  vim.api.nvim_create_autocmd("PackChanged", { callback = postProcessingAfterInstallation })
+  local packchanged_group = vim.api.nvim_create_augroup("PackChangedPostInstall", { clear = true })
+  vim.api.nvim_create_autocmd("PackChanged", {
+    group = packchanged_group,
+    callback = postProcessingAfterInstallation,
+  })
 
   -- Always-on plugins
   vim.pack.add({
