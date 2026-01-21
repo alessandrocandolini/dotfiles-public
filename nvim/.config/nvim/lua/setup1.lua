@@ -4,7 +4,14 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- Custom mappings for fzf
 vim.keymap.set('n', '<Leader>ff', ':Files<CR>', { silent = true })
-vim.keymap.set('n', '<Leader>fg', ':RG<CR>',    { silent = true })
+vim.keymap.set("n", "<Leader>fg", function()
+  local w = vim.fn.expand("<cWORD>") -- big word under cursor
+  if w == nil or w == "" then
+    vim.cmd("RG")
+  else
+    vim.cmd({ cmd = "RG", args = { w } })
+  end
+end, { silent = true })
 -- to prevent accidentally triggering fzf's :Windows
 vim.api.nvim_create_user_command('W', 'write', {})
 
