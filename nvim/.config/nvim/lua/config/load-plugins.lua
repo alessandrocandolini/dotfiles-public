@@ -1,4 +1,4 @@
--- lua/config/load-plugins.lua
+-- Plugin loader for Neovim's built-in package manager, including install hooks and lazy-loading setup.
 local M = {}
 
 local function gh(repo)
