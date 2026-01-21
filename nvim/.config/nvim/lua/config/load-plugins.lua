@@ -12,7 +12,7 @@ local function postProcessingAfterInstallation(ev)
   local kind = ev.data.kind
   local name = ev.data.spec.name
   local path = ev.data.path
-  if (kind == "install" or kind == "update") then
+  if kind == "install" or kind == "update" then
     if name == "fzf" then
       vim.system({ "sh", "-c", "./install --all" }, { cwd = path })
     end
