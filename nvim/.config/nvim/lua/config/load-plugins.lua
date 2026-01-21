@@ -24,7 +24,7 @@ local function runPostInstallationHook(cmd, opts)
           res.stdout or "",
           res.stderr or ""
         )
-        level = vim.log.leels.ERROR
+        level = vim.log.levels.ERROR
       end
 
       vim.notify(message, level, { title = "vim.pack" })
