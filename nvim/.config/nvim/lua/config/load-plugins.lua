@@ -71,7 +71,7 @@ function M.setup()
 
   -- haskell
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "haskell", "lhaskell", "cabal" , "stack"},
+    pattern = { "haskell", "lhaskell", "cabal", "stack" },
     callback = function()
       vim.cmd("packadd haskell-tools.nvim")
     end,
