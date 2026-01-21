@@ -31,7 +31,7 @@ function M.setup()
     callback = postProcessingAfterInstallation,
   })
 
-  -- Always-on plugins
+  -- Global plugins
   vim.pack.add({
     gh("rktjmp/lush.nvim"), -- required by jellybeans-nvim
     gh("metalelf0/jellybeans-nvim"),
@@ -43,8 +43,7 @@ function M.setup()
     gh("windwp/nvim-autopairs"),
     gh("tpope/vim-projectionist"),
 
-    -- LSP UI
-    gh("j-hui/fidget.nvim"),
+    gh("j-hui/fidget.nvim"), -- LSP UI
 
     -- completion/snippets
     gh("hrsh7th/nvim-cmp"),
@@ -54,20 +53,21 @@ function M.setup()
 
   }, { load = true })
 
-  -- Filetype plugins: ensure installed, but don't source plugin/* yet (startup-safe)
+  -- Optional plugins
   vim.pack.add({
     { src = gh("scalameta/nvim-metals"), name = "nvim-metals" },
     { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim" },
-
-    -- Agda (and deps)
-    { src = gh("kana/vim-textobj-user"), name = "vim-textobj-user" },
-    { src = gh("neovimhaskell/nvim-hs.vim"), name = "nvim-hs.vim" },
+    { src = gh("kana/vim-textobj-user"), name = "vim-textobj-user" }, -- required by cornelis
+    { src = gh("neovimhaskell/nvim-hs.vim"), name = "nvim-hs.vim" }, -- required by cornelis
     { src = gh("agda/cornelis"), name = "cornelis" },
   }, { load = false })
 
+  local group = vim.api.nvim_create_augroup("LazyPlugins", { clear = true })
+
   -- metals
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = "scala",
+    group = group,
+    pattern = {"scala", "sbt"},
     callback = function()
       vim.cmd("packadd nvim-metals")
     end,
@@ -75,6 +75,7 @@ function M.setup()
 
   -- haskell
   vim.api.nvim_create_autocmd("FileType", {
+    group = group,
     pattern = { "haskell", "lhaskell", "cabal", "stack" },
     callback = function()
       vim.cmd("packadd haskell-tools.nvim")
@@ -83,6 +84,7 @@ function M.setup()
 
   -- Agda
   vim.api.nvim_create_autocmd("FileType", {
+    group = group,
     pattern = "agda",
     callback = function()
       vim.cmd("packadd vim-textobj-user")
