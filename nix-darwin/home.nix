@@ -43,6 +43,7 @@ let
     llama-cpp
     htop
     macmon
+    universal-ctags
   ];
 in
 {
