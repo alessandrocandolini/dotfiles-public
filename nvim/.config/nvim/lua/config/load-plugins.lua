@@ -1,8 +1,35 @@
--- lua/config/load-plugins.lua
 local M = {}
 
 local function gh(repo)
   return "https://github.com/" .. repo
+end
+
+local function runPostInstallationHook(cmd, opts)
+  opts = opts or {}
+  local cwd = opts.cwd
+
+  vim.system(cmd, { cwd = cwd, text = true }, function(res)
+    vim.schedule(function()
+      local cmd_str = table.concat(cmd, " ")
+      local message, level
+      if res.code == 0 then
+        message = ("✅ Post installation hook %s succeeded"):format(cmd_str)
+        level = vim.log.levels.INFO
+      else
+        message = string.format(
+          "❌ Post installation hook %s failed\ncwd: %s\nexit: %s\n\nstdout:\n%s\n\nstderr:\n%s",
+          cmd_str,
+          cwd or "(nil)",
+          tostring(res.code),
+          res.stdout or "",
+          res.stderr or ""
+        )
+        level = vim.log.leels.ERROR
+      end
+
+      vim.notify(message, level, { title = "vim.pack" })
+    end)
+  end)
 end
 
 local function postProcessingAfterInstallation(ev)
@@ -12,19 +39,18 @@ local function postProcessingAfterInstallation(ev)
   local kind = ev.data.kind
   local name = ev.data.spec.name
   local path = ev.data.path
-  if (kind == "install" or kind == "update") then
+  if kind == "install" or kind == "update" then
     if name == "fzf" then
-      vim.system({ "sh", "-c", "./install --all" }, { cwd = path })
+      runPostInstallationHook({ "sh", "-c", "./install --all" }, { cwd = path })
     end
 
     if name == "cornelis" then
-      vim.system({ "stack", "build" }, { cwd = path })
+      runPostInstallationHook({ "stack", "build" }, { cwd = path })
     end
   end
 end
 
 function M.setup()
-  -- Run post-install/update hooks
   local packchanged_group = vim.api.nvim_create_augroup("PackChangedPostInstall", { clear = true })
   vim.api.nvim_create_autocmd("PackChanged", {
     group = packchanged_group,
