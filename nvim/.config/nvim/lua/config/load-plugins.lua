@@ -39,7 +39,7 @@ function M.setup()
     gh("windwp/nvim-autopairs"),
     gh("tpope/vim-projectionist"),
 
-    -- LSPs
+    -- LSP UI
     gh("j-hui/fidget.nvim"),
 
     -- completion/snippets
