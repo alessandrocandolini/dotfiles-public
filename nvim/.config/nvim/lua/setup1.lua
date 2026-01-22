@@ -61,7 +61,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Other plugins that we wanna load for every projects
 require("config.projectionist")
 require("nvim-autopairs").setup {}
-
+require("oil").setup({
+  view_options = {
+    show_hidden = true
+  }
+})
+require('mini.splitjoin').setup()
 
 -- Colorscheme
 vim.opt.termguicolors = true
