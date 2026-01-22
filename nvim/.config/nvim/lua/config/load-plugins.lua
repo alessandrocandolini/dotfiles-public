@@ -68,8 +68,9 @@ function M.setup()
     gh("axelf4/vim-strip-trailing-whitespace"),
     gh("windwp/nvim-autopairs"),
     gh("tpope/vim-projectionist"),
-
     gh("j-hui/fidget.nvim"), -- LSP UI
+    gh("stevearc/oil.nvim"),
+    gh("nvim-mini/mini.splitjoin"),
 
     -- completion/snippets
     gh("hrsh7th/nvim-cmp"),
