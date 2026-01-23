@@ -1,6 +1,8 @@
 " Agda-specific settings (buffer-local by default in ftplugin files)
 "setlocal laststatus=2
-vim.cmd("packadd haskell-tools.nvim")
+packadd vim-textobj-user
+packadd nvim-hs.vim
+packadd cornelis
 let g:cornelis_split_location = 'bottom'
 
 nnoremap <buffer> <leader>l :CornelisLoad<CR>
