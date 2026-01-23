@@ -7,7 +7,7 @@ local ok, ht = pcall(require, "haskell-tools")
 if not ok then
   vim.notify(
     "[haskell] Failed to load haskell-tools.nvim",
-    vim.log.levels.ERROR,
+    vim.log.levels.ERROR
   )
   return
 end
