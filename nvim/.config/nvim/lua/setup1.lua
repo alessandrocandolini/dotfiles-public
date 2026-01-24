@@ -9,7 +9,7 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 -- Custom mappings for fzf
 vim.keymap.set('n', '<Leader>ff', ':Files<CR>', { silent = true })
 vim.keymap.set("n", "<Leader>fg", function()
-  local w = vim.fn.expand("<cWORD>") -- big word under cursor
+  local w = vim.fn.expand("<cword>") -- small word under cursor, to not include :, [], (), etc
   if w == nil or w == "" then
     vim.cmd("RG")
   else
