@@ -67,6 +67,7 @@ in
 #     apacheHttpd
 #     postgresql
       coreutils
+      pigz
       fd
       pkg-config 
       ollama
