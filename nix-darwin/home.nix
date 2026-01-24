@@ -45,12 +45,22 @@ let
     macmon
     universal-ctags
   ];
+
+  lspStuff = with pkgs; [
+    bash-language-server
+    shellcheck
+    nil
+    terraform-ls
+    basedpyright
+    ruff
+    lua-language-server
+  ];
 in
 {
   home.stateVersion = "25.05";
 
   home.packages =
-    dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff;
+    dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
