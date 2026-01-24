@@ -25,6 +25,16 @@ local function on_attach_impl(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
+  -- format on save
+  if client.server_capabilities.documentFormattingProvider then
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format({ bufnr = bufnr })
+      end,
+    })
+  end
+
   -- Enable inlay hints by default if supported (requires Neovim >= 0.11)
   if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
