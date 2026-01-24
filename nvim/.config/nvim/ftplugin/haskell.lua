@@ -1,4 +1,4 @@
-vim.cmd("packadd haskell-tools.nvim")
+vim.cmd.packadd("haskell-tools.nvim")
 
 require("config.lsp").setup()
 require("config.haskell_snippets").setup()

@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
 
-  vim.cmd("packadd nvim-metals")
+  vim.cmd.packadd("nvim-metals")
   local metals = require("metals")
   local lsp    = require("config.lsp")
   vim.api.nvim_set_hl(0, "@lsp.type.namespace.scala", { link = "Normal" })
