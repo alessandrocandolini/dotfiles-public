@@ -19,7 +19,7 @@ end, { silent = true })
 -- to prevent accidentally triggering fzf's :Windows
 vim.api.nvim_create_user_command('W', 'write', {})
 
-vim.g.fzf_layout = { down = 20 }
+vim.g.fzf_layout = { down = '20' }
 vim.g.fzf_preview_window = { "right:50%:hidden", "ctrl-/" }
 
 local extra = table.concat({
