@@ -1,11 +1,16 @@
--- ~/.config/nvim/after/ftplugin/haskell.lua
+vim.cmd("packadd haskell-tools.nvim")
 
-local ht  = require("haskell-tools")
-local lsp = require("config.lsp")
-
-lsp.setup()
-
+require("config.lsp").setup()
 require("config.haskell_snippets").setup()
+
+local ok, ht = pcall(require, "haskell-tools")
+if not ok then
+  vim.notify(
+    "[haskell] Failed to load haskell-tools.nvim",
+    vim.log.levels.ERROR
+  )
+  return
+end
 
 local bufnr = vim.api.nvim_get_current_buf()
 local opts = { noremap = true, silent = true, buffer = bufnr }

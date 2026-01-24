@@ -68,7 +68,7 @@ function M.setup()
     gh("axelf4/vim-strip-trailing-whitespace"),
     gh("windwp/nvim-autopairs"),
     gh("tpope/vim-projectionist"),
-    gh("j-hui/fidget.nvim"), -- LSP UI
+    gh("j-hui/fidget.nvim"), -- LSP loader indicator
     gh("stevearc/oil.nvim"),
     gh("nvim-mini/mini.splitjoin"),
 
@@ -80,7 +80,7 @@ function M.setup()
 
   }, { load = true })
 
-  -- Optional plugins
+  -- Optional plugins (they are loaded on specific buffers in ftplugin)
   vim.pack.add({
     { src = gh("scalameta/nvim-metals"), name = "nvim-metals" },
     { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim" },
@@ -88,37 +88,6 @@ function M.setup()
     { src = gh("neovimhaskell/nvim-hs.vim"), name = "nvim-hs.vim" }, -- required by cornelis
     { src = gh("agda/cornelis"), name = "cornelis" },
   }, { load = false })
-
-  local group = vim.api.nvim_create_augroup("LazyPlugins", { clear = true })
-
-  -- metals
-  vim.api.nvim_create_autocmd("FileType", {
-    group = group,
-    pattern = {"scala", "sbt"},
-    callback = function()
-      vim.cmd("packadd nvim-metals")
-    end,
-  })
-
-  -- haskell
-  vim.api.nvim_create_autocmd("FileType", {
-    group = group,
-    pattern = { "haskell", "lhaskell", "cabal", "stack" },
-    callback = function()
-      vim.cmd("packadd haskell-tools.nvim")
-    end,
-  })
-
-  -- Agda
-  vim.api.nvim_create_autocmd("FileType", {
-    group = group,
-    pattern = "agda",
-    callback = function()
-      vim.cmd("packadd vim-textobj-user")
-      vim.cmd("packadd nvim-hs.vim")
-      vim.cmd("packadd cornelis")
-    end,
-  })
 
 end
 
