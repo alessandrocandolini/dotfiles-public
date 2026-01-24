@@ -33,11 +33,21 @@ let
       neovimPkgs.neovim
   ];
 
+  lspStuff = with pkgs; [
+    bash-language-server
+    shellcheck
+    nil
+    terraform-ls
+    basedpyright
+    ruff
+    lua-language-server
+  ];
+
 in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++
+  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ lspStuff ++
     [
       jq
       fzf
@@ -53,10 +63,8 @@ in
       curl
       nodejs_latest
       starship
-#     terraform-lsp
 #     texlab
 #     apacheHttpd
-#     rnix-lsp
 #     postgresql
       coreutils
       fd
