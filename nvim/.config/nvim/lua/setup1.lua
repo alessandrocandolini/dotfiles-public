@@ -20,11 +20,11 @@ end, { silent = true })
 vim.api.nvim_create_user_command('W', 'write', {})
 
 vim.g.fzf_layout = { down = 20 }
-vim.g.fzf_preview_window = { "right:60%:hidden", "ctrl-/" }
+vim.g.fzf_preview_window = { "right:50%:hidden", "ctrl-/" }
 
 local extra = table.concat({
-  "--layout=default",
-  "--info=inline",
+  '--info=inline',
+  '--bind ctrl-q:select-all+accept'
 }, " ")
 
 vim.env.FZF_DEFAULT_OPTS = (vim.env.FZF_DEFAULT_OPTS and (vim.env.FZF_DEFAULT_OPTS .. " " .. extra)) or extra
