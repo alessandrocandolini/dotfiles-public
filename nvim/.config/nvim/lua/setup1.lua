@@ -28,7 +28,11 @@ vim.keymap.set("n", "]c", function()
   vim.diagnostic.goto_next({ float = true })
 end, { silent = true })
 
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { silent = true })
+vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics: buffer (loclist)" })
+
+vim.keymap.set('n', '<leader>dq', function()
+  vim.diagnostic.setqflist({ open = true })
+end, { silent = true, desc = "Diagnostics: workspace (quickfix)" })
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -38,7 +42,7 @@ vim.diagnostic.config({
 })
 
 -- same as Ctrl-W d , but with autofocus on the floating box
-vim.keymap.set("n", "<leader>dl", function()
+vim.keymap.set("n", "<leader>df", function()
   local _, winid = vim.diagnostic.open_float(nil, {
     focusable = true,
     border = "rounded",
