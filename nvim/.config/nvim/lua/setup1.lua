@@ -19,6 +19,19 @@ end, { silent = true })
 -- to prevent accidentally triggering fzf's :Windows
 vim.api.nvim_create_user_command('W', 'write', {})
 
+vim.g.fzf_layout = { down = '20' }
+vim.g.fzf_preview_window = { "right:50%:hidden", "ctrl-/" }
+
+local extra = table.concat({
+  '--info=inline',
+  '--bind ctrl-q:select-all+accept'
+}, " ")
+
+if vim.env.FZF_DEFAULT_OPTS ~= nil then
+  vim.env.FZF_DEFAULT_OPTS = vim.env.FZF_DEFAULT_OPTS .. " " .. extra
+else
+  vim.env.FZF_DEFAULT_OPTS = extra
+end
 -- Diagnostic
 vim.keymap.set("n", "[c", function()
   vim.diagnostic.goto_prev({ float = true })
