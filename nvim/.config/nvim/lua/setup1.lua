@@ -27,8 +27,11 @@ local extra = table.concat({
   '--bind ctrl-q:select-all+accept'
 }, " ")
 
-vim.env.FZF_DEFAULT_OPTS = (vim.env.FZF_DEFAULT_OPTS and (vim.env.FZF_DEFAULT_OPTS .. " " .. extra)) or extra
-
+if vim.env.FZF_DEFAULT_OPTS ~= nil then
+  vim.env.FZF_DEFAULT_OPTS = vim.env.FZF_DEFAULT_OPTS .. " " .. extra
+else
+  vim.env.FZF_DEFAULT_OPTS = extra
+end
 -- Diagnostic
 vim.keymap.set("n", "[c", function()
   vim.diagnostic.goto_prev({ float = true })
