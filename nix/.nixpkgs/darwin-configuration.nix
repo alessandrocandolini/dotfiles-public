@@ -67,8 +67,9 @@ in
 #     apacheHttpd
 #     postgresql
       coreutils
+      pigz
       fd
-      pkg-config 
+      pkg-config
       ollama
       llama-cpp
       htop

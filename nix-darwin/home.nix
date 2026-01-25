@@ -37,6 +37,7 @@ let
     # nodejs_latest
     starship
     coreutils
+    pigz
     fd
     pkg-config
     ollama
