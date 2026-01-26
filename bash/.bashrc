@@ -49,8 +49,9 @@ alias cp='/bin/cp -i -v'
 alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
 alias ls='/bin/ls -GFh'
-alias rg='rg --hidden'
 
+# Rg config
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
 # =============================================================================
 # NODE/NPM (local installation)
 # =============================================================================
