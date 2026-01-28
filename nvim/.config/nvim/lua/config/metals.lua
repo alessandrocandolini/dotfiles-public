@@ -3,20 +3,20 @@ local M = {}
 function M.setup()
 
   vim.cmd.packadd("nvim-metals")
-  local metals = require("metals")
-  local lsp    = require("config.lsp")
-  vim.api.nvim_set_hl(0, "@lsp.type.namespace.scala", { link = "Normal" })
-
   -- Ensure shared LSP behaviour is initialized (on_attach, <leader>ls, etc.)
+  local lsp    = require("config.lsp")
   lsp.setup()
 
+  vim.api.nvim_set_hl(0, "@lsp.type.namespace.scala", { link = "Normal" })
+
+  local metals = require("metals")
   local cfg = metals.bare_config()
 
   cfg.capabilities = lsp.capabilities
 
   cfg.settings = {
     showImplicitArguments = true,
-    serverVersion = "2.0.0-M7",
+    serverVersion = "1.6.5",
     excludedPackages = {
       "akka.actor.typed.javadsl",
       "com.github.swagger.akka.javadsl",
