@@ -62,8 +62,7 @@ function M.setup()
     gh("rktjmp/lush.nvim"), -- required by jellybeans-nvim
     gh("metalelf0/jellybeans-nvim"),
 
-    { src = gh("junegunn/fzf"), name = "fzf" },
-    gh("junegunn/fzf.vim"),
+    gh("ibhagwan/fzf-lua"),
     gh("nvim-lua/plenary.nvim"),
     gh("axelf4/vim-strip-trailing-whitespace"),
     gh("windwp/nvim-autopairs"),
