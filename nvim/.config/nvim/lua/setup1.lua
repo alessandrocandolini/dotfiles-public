@@ -6,32 +6,70 @@ require('config.load-plugins').setup()
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
--- Custom mappings for fzf
-vim.keymap.set('n', '<Leader>ff', ':Files<CR>', { silent = true })
+-- fzf-lua
+local fzf = require("fzf-lua")
+
+fzf.setup({
+  winopts = {
+    split = "belowright 20new",
+    preview = { hidden = true }
+  },
+  files = {
+     file_icons = false,
+     git_icons = false,
+  },
+  fzf_opts = {
+    ["--info"] = "inline",
+    ["--layout"]    = "default",
+  },
+  keymap = {
+    fzf = {
+      true,
+      ["ctrl-p"] = "toggle-preview",
+      ["ctrl-q"] = "select-all+accept",
+    },
+  },
+  grep = {
+    rg_opts = table.concat({
+      "--column",
+      "--line-number",
+      "--no-heading",
+      "--color=always",
+      "--smart-case",
+      "--hidden",
+      "--glob=!.git/*",
+    }, " "),
+  },
+})
+
+vim.keymap.set("n", "<Leader>ff", function()
+    local cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
+    local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
+    if base ~= '.' then
+     cmd = cmd .. (" | proximity-sort %s"):format(vim.fn.shellescape(vim.fn.expand('%')))
+    end
+    fzf.files({
+      cmd = cmd,
+      fzf_opts = {
+        ['--scheme']    = 'path',
+        ['--tiebreak']  = 'index',
+      }
+    })
+end, { silent = true })
+
 vim.keymap.set("n", "<Leader>fg", function()
-  local w = vim.fn.expand("<cword>") -- small word under cursor, to not include :, [], (), etc
+    fzf.live_grep()
+end, { silent = true })
+
+vim.keymap.set("n", "grw", function()
+  local w = vim.fn.expand("<cword>")
   if w == nil or w == "" then
-    vim.cmd("RG")
+    return
   else
-    vim.cmd({ cmd = "RG", args = { w } })
+    fzf.grep_cword()
   end
 end, { silent = true })
--- to prevent accidentally triggering fzf's :Windows
-vim.api.nvim_create_user_command('W', 'write', {})
 
-vim.g.fzf_layout = { down = '20' }
-vim.g.fzf_preview_window = { "right:50%:hidden", "ctrl-/" }
-
-local extra = table.concat({
-  '--info=inline',
-  '--bind ctrl-q:select-all+accept'
-}, " ")
-
-if vim.env.FZF_DEFAULT_OPTS ~= nil then
-  vim.env.FZF_DEFAULT_OPTS = vim.env.FZF_DEFAULT_OPTS .. " " .. extra
-else
-  vim.env.FZF_DEFAULT_OPTS = extra
-end
 -- Diagnostic
 vim.keymap.set("n", "[c", function()
   vim.diagnostic.goto_prev({ float = true })
