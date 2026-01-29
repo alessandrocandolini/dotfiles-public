@@ -24,7 +24,6 @@ fzf.setup({
   },
   keymap = {
     fzf = {
-      true,
       ["ctrl-p"] = "toggle-preview",
       ["ctrl-q"] = "select-all+accept",
     },
