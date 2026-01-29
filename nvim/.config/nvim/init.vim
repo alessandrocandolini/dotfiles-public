@@ -27,6 +27,10 @@ set laststatus=0
 " Do not add empty newline at EOF
 set noeol
 
+" Recursive file search in path
+" (useful for :find/:e, does not perform search on hidden folders)
+set path+=**
+
 " Display end of buffer lines as blank
 set fillchars+=eob:\  " eob fillchar is a space; keep the escaped space before this comment
 
