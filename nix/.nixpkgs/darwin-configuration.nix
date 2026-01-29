@@ -31,6 +31,7 @@ let
   vimStuff = with pkgs; [
       vim
       neovimPkgs.neovim
+      proximity-sort
   ];
 
   lspStuff = with pkgs; [
