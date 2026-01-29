@@ -20,13 +20,9 @@
       "rev": "7fa433a83118a70fe24c1ce88d5f0bd3453c0970",
       "src": "https://github.com/j-hui/fidget.nvim"
     },
-    "fzf": {
-      "rev": "d01eaa9de3f0cfa1b57701e3577b4f7afee0e2be",
-      "src": "https://github.com/junegunn/fzf"
-    },
-    "fzf.vim": {
-      "rev": "ddc14a6a5471147e2a38e6b32a7268282f669b0a",
-      "src": "https://github.com/junegunn/fzf.vim"
+    "fzf-lua": {
+      "rev": "94e2ae01cbc76ba4aa61e2c7b38fe7f25159fc29",
+      "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
       "rev": "15de9c7de389c9182154b03302d0fcea6995f17a",
