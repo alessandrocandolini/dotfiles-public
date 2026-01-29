@@ -20,6 +20,7 @@ let
     vim
     # neovim
     inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
+    proximity-sort
   ];
 
   cliStuff = with pkgs; [
