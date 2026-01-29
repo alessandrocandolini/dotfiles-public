@@ -88,10 +88,3 @@ require('mini.splitjoin').setup()
 -- Colorscheme
 vim.opt.termguicolors = true
 pcall(vim.cmd.colorscheme, "jellybeans-nvim")
-
--- Transparent background
-vim.cmd([[
-  highlight Normal guibg=NONE ctermbg=NONE
-  highlight LineNr guibg=NONE ctermbg=NONE
-  highlight EndOfBuffer guibg=NONE ctermbg=NONE
-]])
