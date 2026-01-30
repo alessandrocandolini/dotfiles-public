@@ -13,7 +13,7 @@
       "src": "https://github.com/saadparwaiz1/cmp_luasnip"
     },
     "cornelis": {
-      "rev": "8f7bdfe1a05dd3a310a9af3325bd4da2c78b567b",
+      "rev": "8401538b8d5056571827679658331136c38f11be",
       "src": "https://github.com/agda/cornelis"
     },
     "fidget.nvim": {
@@ -21,11 +21,11 @@
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "94e2ae01cbc76ba4aa61e2c7b38fe7f25159fc29",
+      "rev": "134477b441be0be5fff575642d790c28e5d13401",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
-      "rev": "15de9c7de389c9182154b03302d0fcea6995f17a",
+      "rev": "c7d0249f81bdcdd2b29dcf6aaf9b7926f88bc559",
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
     "jellybeans-nvim": {
@@ -41,11 +41,11 @@
       "src": "https://github.com/nvim-mini/mini.splitjoin"
     },
     "nvim-autopairs": {
-      "rev": "c2a0dd0d931d0fb07665e1fedb1ea688da3b80b4",
+      "rev": "59bce2eef357189c3305e25bc6dd2d138c1683f5",
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-cmp": {
-      "rev": "85bbfad83f804f11688d1ab9486b459e699292d6",
+      "rev": "da88697d7f45d16852c6b2769dc52387d1ddc45f",
       "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-hs.vim": {
