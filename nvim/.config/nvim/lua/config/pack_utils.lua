@@ -53,11 +53,22 @@ exit $?
     term_cmd[#term_cmd + 1] = a
   end
 
-  local function slurp(path)
+  local function slurp_tail(path, max_lines)
     local ok, lines = pcall(vim.fn.readfile, path)
     if not ok or not lines then
       return ""
     end
+    
+    local total = #lines
+    if max_lines and total > max_lines then
+      local truncated = {}
+      for i = total - max_lines + 1, total do
+        table.insert(truncated, lines[i])
+      end
+      local header = string.format("... (showing last %d of %d lines) ...\n", max_lines, total)
+      return header .. table.concat(truncated, "\n")
+    end
+    
     return table.concat(lines, "\n")
   end
 
@@ -94,17 +105,15 @@ exit $?
       vim.schedule(function()
         scroll_to_bottom()
 
-        local stdout = slurp(out_file)
-        local stderr = slurp(err_file)
-
-        pcall(vim.fn.delete, out_file)
-        pcall(vim.fn.delete, err_file)
-
         local message, level
         if code == 0 then
           message = ("✅ Post installation hook %s succeeded"):format(cmd_str)
           level = vim.log.levels.INFO
         else
+          -- Only read temp files on failure, and truncate to last 50 lines
+          local stdout = slurp_tail(out_file, 50)
+          local stderr = slurp_tail(err_file, 50)
+          
           message = string.format(
             "❌ Post installation hook %s failed\ncwd: %s\nexit: %s\n\nstdout:\n%s\n\nstderr:\n%s",
             cmd_str,
@@ -115,6 +124,10 @@ exit $?
           )
           level = vim.log.levels.ERROR
         end
+
+        -- Always clean up temp files
+        pcall(vim.fn.delete, out_file)
+        pcall(vim.fn.delete, err_file)
 
         vim.notify(message, level, { title = "vim.pack" })
       end)
