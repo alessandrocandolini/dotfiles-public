@@ -1,73 +1,77 @@
 vim.loader.enable()
 
 -- install plugins
-require('config.load-plugins').setup()
+local pack = require('config.pack_utils')
+
+local packchanged_group = vim.api.nvim_create_augroup("PackChangedPostInstall", { clear = true })
+vim.api.nvim_create_autocmd("PackChanged", {
+  group = packchanged_group,
+  callback = pack.post_processing_hook(function(h)
+    h:on("cornelis", { "stack", "build" })
+  end),
+})
+
+-- Global plugins
+local gh   = pack.gh
+vim.pack.add({
+  gh("rktjmp/lush.nvim"), -- required by jellybeans-nvim
+  gh("metalelf0/jellybeans-nvim"),
+
+  gh("ibhagwan/fzf-lua"),
+  gh("nvim-lua/plenary.nvim"),
+  gh("axelf4/vim-strip-trailing-whitespace"),
+  gh("windwp/nvim-autopairs"),
+  gh("tpope/vim-projectionist"),
+  gh("j-hui/fidget.nvim"), -- LSP loader indicator
+  gh("stevearc/oil.nvim"),
+  gh("nvim-mini/mini.splitjoin"),
+
+  -- completion/snippets
+  gh("hrsh7th/nvim-cmp"),
+  gh("hrsh7th/cmp-nvim-lsp"),
+  gh("L3MON4D3/LuaSnip"),
+  gh("saadparwaiz1/cmp_luasnip"),
+
+}, { load = true })
+
+-- Optional plugins (they are loaded on specific buffers in ftplugin)
+vim.pack.add({
+  { src = gh("scalameta/nvim-metals"), name = "nvim-metals" },
+  { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim" },
+  { src = gh("kana/vim-textobj-user"), name = "vim-textobj-user" }, -- required by cornelis
+  { src = gh("neovimhaskell/nvim-hs.vim"), name = "nvim-hs.vim" }, -- required by cornelis
+  { src = gh("agda/cornelis"), name = "cornelis" },
+}, { load = false })
 
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
--- fzf-lua
-local fzf = require("fzf-lua")
-
-fzf.setup({
-  winopts = {
-    split = "belowright 20new",
-    preview = { hidden = true }
-  },
-  files = {
-     file_icons = false,
-     git_icons = false,
-  },
-  fzf_opts = {
-    ["--info"] = "inline",
-    ["--layout"]    = "default",
-  },
-  keymap = {
-    fzf = {
-      ["ctrl-p"] = "toggle-preview",
-      ["ctrl-q"] = "select-all+accept",
-    },
-  },
-  grep = {
-    rg_opts = table.concat({
-      "--column",
-      "--line-number",
-      "--no-heading",
-      "--color=always",
-      "--smart-case",
-      "--hidden",
-      "--glob=!.git/*",
-    }, " "),
-  },
-})
-
-vim.keymap.set("n", "<Leader>f", function()
-    local cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
-    local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
-    if base ~= '.' then
-     cmd = cmd .. (" | proximity-sort %s"):format(vim.fn.shellescape(vim.fn.expand('%')))
-    end
-    fzf.files({
-      cmd = cmd,
-      fzf_opts = {
-        ['--scheme']    = 'path',
-        ['--tiebreak']  = 'index',
-      }
-    })
-end, { silent = true })
-
-vim.keymap.set("n", "<Leader>r", function()
-    fzf.live_grep()
-end, { silent = true })
-
-vim.keymap.set("n", "grw", function()
-  local w = vim.fn.expand("<cword>")
-  if w == nil or w == "" then
+-- rename
+vim.api.nvim_create_user_command("Rename", function(opts)
+  local old = vim.fn.expand("%:p")
+  if old == "" then
+    vim.notify("No file to rename", vim.log.levels.ERROR)
     return
-  else
-    fzf.grep_cword()
   end
-end, { silent = true })
+
+  local new = opts.args
+  if new == "" then
+    new = vim.fn.input("New name: ", old)
+  end
+  if new == "" or new == old then
+    return
+  end
+
+  vim.cmd("saveas " .. vim.fn.fnameescape(new))
+
+  local ok, err = pcall(vim.fn.delete, old)
+  if not ok or err ~= 0 then
+    vim.notify(("Failed to delete old file: %s"):format(old), vim.log.levels.WARN)
+  end
+
+  pcall(vim.cmd, "bwipeout #")
+end, { nargs = "?" })
+
 
 -- Diagnostic
 vim.keymap.set("n", "[c", function()
@@ -113,6 +117,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Other plugins that we wanna load for every projects
+require("config.fzf").setup()
 require("config.projectionist")
 require("nvim-autopairs").setup {}
 require("oil").setup({
