@@ -26,26 +26,26 @@ let
   cliStuff = with pkgs; [
     jq
     fzf
-    skim
     ripgrep
+    fd
     git
     gh
     delta
     awscli2
     tmux
     unzip
+    pigz
     curl
     # nodejs_latest
     starship
     coreutils
-    pigz
-    fd
     pkg-config
     ollama
     llama-cpp
     htop
     macmon
     universal-ctags
+    # aerc
   ];
 
   lspStuff = with pkgs; [
