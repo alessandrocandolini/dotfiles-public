@@ -65,8 +65,8 @@ exit $?
       for i = total - max_lines + 1, total do
         table.insert(truncated, lines[i])
       end
-      local header = string.format("... (showing last %d of %d lines) ...\n", max_lines, total)
-      return header .. table.concat(truncated, "\n")
+      local header = string.format("... (showing last %d of %d lines) ...", max_lines, total)
+      return header .. "\n" .. table.concat(truncated, "\n")
     end
     
     return table.concat(lines, "\n")
