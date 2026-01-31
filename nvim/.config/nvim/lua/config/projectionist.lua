@@ -29,7 +29,7 @@ function M.setup()
   }
 
   vim.g.projectionist_heuristics = heuristics
-  -- Keymap: <leader>gt = "go to test"
+  -- Keymap: <leader>gt = "go to alternate (source/test)"
   vim.keymap.set("n", "<leader>gt", "<Cmd>A<CR>", { noremap = true, silent = true })
   vim.keymap.set("n", "<leader>gT", "<Cmd>AV<CR>", { noremap = true, silent = true })
 end
