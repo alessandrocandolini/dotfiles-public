@@ -19,8 +19,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Other plugins that we wanna load for every projects
 require("config.fzf").setup()
 require("config.diagnostics").setup()
-require("config.projectionist")
-require("nvim-autopairs").setup {}
+require("config.projectionist").setup()
+require("nvim-autopairs").setup()
 require("oil").setup({
   view_options = {
     show_hidden = true

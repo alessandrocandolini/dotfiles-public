@@ -1,8 +1,10 @@
--- ~/.config/nvim/lua/config/projectionist.lua
 local M = {}
 
-vim.g.projectionist_heuristics = {
-  ["stack.yaml"] = {
+function M.setup()
+
+  local heuristics = vim.g.projectionist_heuristics
+
+  heuristics["stack.yaml"] = {
     -- from src/Foo.hs -> test/FooSpec.hs
     ["src/*.hs"] = {
       alternate = "test/{}Spec.hs",
@@ -13,9 +15,9 @@ vim.g.projectionist_heuristics = {
       alternate = "src/{}.hs",
       type = "test",
     },
-  },
+  }
 
-  ["build.sbt"] = {
+  heuristics["build.sbt"] = {
     ["src/main/scala/*.scala"] = {
       alternate = "src/test/scala/{}Spec.scala",
       type = "source",
@@ -24,11 +26,11 @@ vim.g.projectionist_heuristics = {
       alternate = "src/main/scala/{}.scala",
       type = "test",
     },
-  },
-}
+  }
 
--- Keymap: <leader>gt = "go to test" (o back a source)
-vim.keymap.set("n", "<leader>gt", "<Cmd>A<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>gT", "<Cmd>AV<CR>", { noremap = true, silent = true })
-
+  vim.g.projectionist_heuristics = heuristics
+  -- Keymap: <leader>gt = "go to test"
+  vim.keymap.set("n", "<leader>gt", "<Cmd>A<CR>", { noremap = true, silent = true })
+  vim.keymap.set("n", "<leader>gT", "<Cmd>AV<CR>", { noremap = true, silent = true })
+end
 return M
