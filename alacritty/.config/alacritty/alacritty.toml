@@ -1,13 +1,3 @@
-[[keyboard.bindings]]
-chars = "\u001Bb"
-key = "Left"
-mods = "Alt"
-
-[[keyboard.bindings]]
-chars = "\u001Bf"
-key = "Right"
-mods = "Alt"
-
 [font]
 size = 15.0
 
@@ -22,6 +12,7 @@ save_to_clipboard = true
 
 [window]
 startup_mode = "Fullscreen"
+option_as_alt = "OnlyRight"
 
 [window.padding]
 x = 16
