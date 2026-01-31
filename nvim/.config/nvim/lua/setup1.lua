@@ -41,7 +41,7 @@ fzf.setup({
   },
 })
 
-vim.keymap.set("n", "<Leader>ff", function()
+vim.keymap.set("n", "<Leader>f", function()
     local cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
     local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
     if base ~= '.' then
@@ -56,7 +56,7 @@ vim.keymap.set("n", "<Leader>ff", function()
     })
 end, { silent = true })
 
-vim.keymap.set("n", "<Leader>fg", function()
+vim.keymap.set("n", "<Leader>r", function()
     fzf.live_grep()
 end, { silent = true })
 
