@@ -40,10 +40,6 @@ local function postProcessingAfterInstallation(ev)
   local name = ev.data.spec.name
   local path = ev.data.path
   if kind == "install" or kind == "update" then
-    if name == "fzf" then
-      runPostInstallationHook({ "sh", "-c", "./install --all" }, { cwd = path })
-    end
-
     if name == "cornelis" then
       runPostInstallationHook({ "stack", "build" }, { cwd = path })
     end
