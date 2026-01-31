@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
 
-  local heuristics = vim.g.projectionist_heuristics
+  local heuristics = vim.g.projectionist_heuristics or {}
 
   heuristics["stack.yaml"] = {
     -- from src/Foo.hs -> test/FooSpec.hs
