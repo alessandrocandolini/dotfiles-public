@@ -56,7 +56,7 @@ vim.keymap.set("n", "<Leader>f", function()
     })
 end, { silent = true })
 
-vim.keymap.set("n", "<Leader>s", function()
+vim.keymap.set("n", "<Leader>r", function()
     fzf.live_grep()
 end, { silent = true })
 
