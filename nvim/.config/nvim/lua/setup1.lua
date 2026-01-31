@@ -46,33 +46,6 @@ vim.pack.add({
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
--- rename
-vim.api.nvim_create_user_command("Rename", function(opts)
-  local old = vim.fn.expand("%:p")
-  if old == "" then
-    vim.notify("No file to rename", vim.log.levels.ERROR)
-    return
-  end
-
-  local new = opts.args
-  if new == "" then
-    new = vim.fn.input("New name: ", old)
-  end
-  if new == "" or new == old then
-    return
-  end
-
-  vim.cmd("saveas " .. vim.fn.fnameescape(new))
-
-  local ok, err = pcall(vim.fn.delete, old)
-  if not ok or err ~= 0 then
-    vim.notify(("Failed to delete old file: %s"):format(old), vim.log.levels.WARN)
-  end
-
-  pcall(vim.cmd, "bwipeout #")
-end, { nargs = "?" })
-
-
 -- Diagnostic
 vim.keymap.set("n", "[c", function()
   vim.diagnostic.goto_prev({ float = true })
