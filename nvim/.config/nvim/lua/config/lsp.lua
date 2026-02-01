@@ -1,33 +1,34 @@
--- ~/.config/nvim/lua/config/lsp.lua
+-- lua/config/lsp.lua
 local M = {}
 
-------------------------------------------------------------
--- Shared on_attach Function for LSP Clients
--- (ALL buffer-local LSP keymaps live here)
-------------------------------------------------------------
+-- Capabilities: cheap, and safe to call before any server starts.
+function M.capabilities()
+  local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+  if ok then
+    return cmp_lsp.default_capabilities()
+  end
+  return vim.lsp.protocol.make_client_capabilities()
+end
+
 local function on_attach_impl(client, bufnr)
+  local opts = { buffer = bufnr, noremap = true, silent = true }
 
-  local buf_opts = { buffer = bufnr, noremap = true, silent = true }
+  vim.keymap.set("n", "grD", vim.lsp.buf.declaration, opts)
+  vim.keymap.set("n", "grd", vim.lsp.buf.definition, opts)
+  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
 
-  -- Standard LSP keybindings (buffer-local)
-  vim.keymap.set('n', 'grD', vim.lsp.buf.declaration,        buf_opts)
-  vim.keymap.set('n', 'grd', vim.lsp.buf.definition,         buf_opts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,  buf_opts)
+  vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, opts)
+  vim.keymap.set("n", "<leader>cL", vim.lsp.codelens.refresh, opts)
+  vim.keymap.set({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "<leader>ws", vim.lsp.buf.workspace_symbol, opts)
 
-  -- Code actions and lenses
-  vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, buf_opts)
-  vim.keymap.set('n', '<leader>cL', vim.lsp.codelens.refresh, buf_opts)
-  vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
-  vim.keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, buf_opts)
+  vim.keymap.set("n", "<leader>F", function()
+    vim.lsp.buf.format({ async = true })
+  end, opts)
 
-  -- Formatting
-  vim.keymap.set('n', '<leader>F', function()
-    vim.lsp.buf.format { async = true }
-  end, buf_opts)
-
-  -- format on save
   if client.server_capabilities.documentFormattingProvider then
     vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("UserLspFormat_" .. bufnr, { clear = true }),
       buffer = bufnr,
       callback = function()
         vim.lsp.buf.format({ bufnr = bufnr })
@@ -35,108 +36,23 @@ local function on_attach_impl(client, bufnr)
     })
   end
 
-  -- Enable inlay hints by default if supported (requires Neovim >= 0.11)
   if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
 
-  -- Expose a key binding to hide / show inlay hints if supported
-  if client.server_capabilities.inlayHintProvider then
+  if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
     vim.keymap.set("n", "<leader>uh", function()
-      if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
-        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-        vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
-      end
-    end, { buffer = bufnr, silent = true })
+      local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+      vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+    end, opts)
   end
-
 end
 
-------------------------------------------------------------
--- Lazy setup: called once from language ftplugins
-------------------------------------------------------------
-local initialized = false
-
+-- Register shared LSP behavior.
+-- Stateless + idempotent: we always (re)define autocmds into known augroups.
 function M.setup()
-  if initialized then return end
-  initialized = true
-
-  require("fidget").setup()
-
-  -- Force a default border for all LSP floating previews (hover, signature, etc.)
-  if not vim.g._user_lsp_float_border then
-    vim.g._user_lsp_float_border = true
-
-    local orig = vim.lsp.util.open_floating_preview
-    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
-      opts = opts or {}
-      if opts.border == nil then
-        opts.border = "rounded"
-      end
-      return orig(contents, syntax, opts, ...)
-    end
-  end
-
-  --------------------------------------------------------
-  -- Capabilities (nvim-cmp + LSP)
-  --------------------------------------------------------
-  local cmp_lsp = require('cmp_nvim_lsp')
-  M.capabilities = cmp_lsp.default_capabilities()
-
-  --------------------------------------------------------
-  -- nvim-cmp + LuaSnip
-  --------------------------------------------------------
-  local cmp = require("cmp")
-
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<CR>']      = cmp.mapping.confirm({ select = true }),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<Tab>']     = function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        else
-          fallback()
-        end
-      end,
-      ['<S-Tab>']   = function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        else
-          fallback()
-        end
-      end,
-    }),
-    sources = {
-      { name = "nvim_lsp" },
-      { name = "luasnip" },
-    },
-  })
-
-
-  local ls = require("luasnip")
-
-  vim.keymap.set({ "i", "s" }, "<C-k>", function()
-    if ls.expand_or_jumpable() then
-      ls.expand_or_jump()
-    end
-  end, { silent = true })
-
-  vim.keymap.set({ "i", "s" }, "<C-j>", function()
-    if ls.jumpable(-1) then
-      ls.jump(-1)
-    end
-  end, { silent = true })
-
-
-  -- LspAttach autocommand
+  -- Per-buffer LSP maps
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
-
   vim.api.nvim_create_autocmd("LspAttach", {
     group = group,
     callback = function(ev)
@@ -147,34 +63,68 @@ function M.setup()
     end,
   })
 
+  -- One-time bootstrap when the FIRST LSP attaches (no flags; Neovim enforces once)
+  local boot = vim.api.nvim_create_augroup("UserLspBootstrap", { clear = true })
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = boot,
+    once = true,
+    callback = function()
+      -- UI niceties / plugins that you only want if LSP is actually used
+      pcall(function() require("fidget").setup() end)
 
-  -- Print list of attached LSP clients (LSP-specific utility)
-  vim.keymap.set('n', '<leader>ls', function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local clients = vim.lsp.get_clients({ bufnr = bufnr })
+      -- Default border for floating previews
+      local orig = vim.lsp.util.open_floating_preview
+      vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+        opts = opts or {}
+        if opts.border == nil then opts.border = "rounded" end
+        return orig(contents, syntax, opts, ...)
+      end
 
-    local items = {}
-    if #clients == 0 then
-      table.insert(items, {
-        filename = "",
-        lnum = 1,
-        col = 1,
-        text = "No LSP clients attached",
-      })
-    else
-      for _, client in ipairs(clients) do
-        table.insert(items, {
-          filename = "",
-          lnum = 1,
-          col = 1,
-          text = "LSP client: " .. client.name,
+      -- Optional cmp setup: still lazy (first LSP attach), not at startup
+      local ok_cmp, cmp = pcall(require, "cmp")
+      if ok_cmp then
+        cmp.setup({
+          snippet = {
+            expand = function(args)
+              pcall(function() require("luasnip").lsp_expand(args.body) end)
+            end,
+          },
+          mapping = cmp.mapping.preset.insert({
+            ["<CR>"] = cmp.mapping.confirm({ select = true }),
+            ["<C-Space>"] = cmp.mapping.complete(),
+            ["<Tab>"] = function(fallback)
+              if cmp.visible() then cmp.select_next_item() else fallback() end
+            end,
+            ["<S-Tab>"] = function(fallback)
+              if cmp.visible() then cmp.select_prev_item() else fallback() end
+            end,
+          }),
+          sources = {
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+          },
         })
       end
-    end
 
-    vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
-    vim.cmd("lopen")
-  end, { noremap = true, silent = true })
+      -- Utility: list clients
+      vim.keymap.set("n", "<leader>ls", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local clients = vim.lsp.get_clients({ bufnr = bufnr })
+        local items = {}
+
+        if #clients == 0 then
+          items[1] = { filename = "", lnum = 1, col = 1, text = "No LSP clients attached" }
+        else
+          for _, c in ipairs(clients) do
+            items[#items + 1] = { filename = "", lnum = 1, col = 1, text = "LSP client: " .. c.name }
+          end
+        end
+
+        vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
+        vim.cmd("lopen")
+      end, { noremap = true, silent = true })
+    end,
+  })
 end
 
 return M
