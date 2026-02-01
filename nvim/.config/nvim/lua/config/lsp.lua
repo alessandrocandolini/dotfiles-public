@@ -133,7 +133,7 @@ local function lsp_setup_global()
   end
 
   -- helper for showing attached LSPs
-  vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List list of attached LSP clients" })
+  vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
 
 end
 
