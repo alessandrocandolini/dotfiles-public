@@ -6,6 +6,12 @@ require("config.diagnostics").setup()
 require("config.fzf").setup()
 require("config.projectionist").setup()
 
+-- languages
+require("config.lsp").setup()
+require("lang.scala").setup()
+require("lang.haskell").setup()
+require("lang.lua").setup()
+
 -- other plugins
 require("nvim-autopairs").setup()
 require("oil").setup({
