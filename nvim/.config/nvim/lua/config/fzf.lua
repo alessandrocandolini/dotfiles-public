@@ -69,7 +69,7 @@ function M.setup()
     end
   end
 
-  vim.keymap.set("n", "grw", search_word_under_cursor,{ silent = true, desc = "Search word under cursor" })
+  vim.keymap.set("n", "grw", search_word_under_cursor, { silent = true, desc = "Search word under cursor" })
 end
 
 return M
