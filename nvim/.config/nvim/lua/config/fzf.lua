@@ -64,7 +64,7 @@ function M.setup()
 
   local function search_word_under_cursor()
     local w = vim.fn.expand("<cword>")
-    if w ~= "" then
+    if w and w ~= "" then
       fzf.grep_cword()
     end
   end
