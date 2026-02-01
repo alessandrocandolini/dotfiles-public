@@ -2,12 +2,12 @@ local M = {}
 
 function M.setup()
   vim.keymap.set("n", "[c", function()
-    vim.diagnostic.goto_prev({ float = true })
+    vim.diagnostic.jump({ count = -1, float = true })
   end, { silent = true, desc = "Diagnostics: previous (float)" })
 
   vim.keymap.set("n", "]c", function()
-    vim.diagnostic.goto_next({ float = true })
-  end, { silent = true, desc = "Diagnostics: next (float)"})
+    vim.diagnostic.jump({ count = 1, float = true })
+  end, { silent = true, desc = "Diagnostics: next (float)" })
 
   vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics: buffer (loclist)" })
 
