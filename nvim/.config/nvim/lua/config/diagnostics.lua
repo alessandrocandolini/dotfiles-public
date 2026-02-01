@@ -3,7 +3,7 @@ local M = {}
 function M.setup()
   vim.keymap.set("n", "[c", function()
     vim.diagnostic.goto_prev({ float = true })
-  end, { silent = true,desc = "Diagnostics: previous (float)" })
+  end, { silent = true, desc = "Diagnostics: previous (float)" })
 
   vim.keymap.set("n", "]c", function()
     vim.diagnostic.goto_next({ float = true })
