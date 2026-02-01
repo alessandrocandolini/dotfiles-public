@@ -7,7 +7,7 @@ function M.setup()
   pcall(vim.cmd.colorscheme, "jellybeans-nvim")
 
   -- Highlight on yank for visual feedback
-  local group = vim.api.nvim_create_augroup("UserConfig", {clear = true})
+  local group = vim.api.nvim_create_augroup("UserYankHighlight", {clear = true})
   vim.api.nvim_create_autocmd("TextYankPost", {
     group = group,
     callback = function()
