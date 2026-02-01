@@ -5,6 +5,7 @@ require("config.appearance").setup() -- must be after installing the plugins
 require("config.diagnostics").setup()
 require("config.fzf").setup()
 require("config.projectionist").setup()
+require("config.snippets").setup()
 
 -- other plugins
 require("nvim-autopairs").setup()

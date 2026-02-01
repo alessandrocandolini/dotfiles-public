@@ -70,8 +70,6 @@ function M.setup()
     -- completion/snippets
     gh("hrsh7th/nvim-cmp"),
     gh("hrsh7th/cmp-nvim-lsp"),
-    gh("L3MON4D3/LuaSnip"),
-    gh("saadparwaiz1/cmp_luasnip"),
 
   }, { load = true })
 
@@ -82,6 +80,8 @@ function M.setup()
     { src = gh("kana/vim-textobj-user"), name = "vim-textobj-user" }, -- required by cornelis
     { src = gh("neovimhaskell/nvim-hs.vim"), name = "nvim-hs.vim" }, -- required by cornelis
     { src = gh("agda/cornelis"), name = "cornelis" },
+    { src = gh("L3MON4D3/LuaSnip"), name = "LuaSnip"},
+    { src = gh("saadparwaiz1/cmp_luasnip"), name = "cmp_luasnip"},
   }, { load = false })
 
 end

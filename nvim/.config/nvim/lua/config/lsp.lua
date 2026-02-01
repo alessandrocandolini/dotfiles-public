@@ -78,48 +78,84 @@ local function lsp_setup_global()
   require("fidget").setup()
   local cmp = require("cmp")
 
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<CR>']      = cmp.mapping.confirm({ select = true }),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<Tab>']     = function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        else
-          fallback()
-        end
-      end,
-      ['<S-Tab>']   = function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        else
-          fallback()
-        end
-      end,
-    }),
-    sources = {
-      { name = "nvim_lsp" },
-      { name = "luasnip" },
-    },
-  })
-  local ls = require("luasnip")
-
-  vim.keymap.set({ "i", "s" }, "<C-k>", function()
-    if ls.expand_or_jumpable() then
-      ls.expand_or_jump()
+  local function setup_cmp(with_snips)
+    if with_snips then
+      local ok_ls, ls = pcall(require, "luasnip")
+      if ok_ls then
+        pcall(vim.cmd.packadd, "cmp_luasnip")
+        cmp.setup({
+          snippet = {
+            expand = function(args)
+              ls.lsp_expand(args.body)
+            end,
+          },
+          mapping = cmp.mapping.preset.insert({
+            ["<CR>"] = cmp.mapping.confirm({ select = true }),
+            ["<C-Space>"] = cmp.mapping.complete(),
+            ["<Tab>"] = function(fallback)
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                fallback()
+              end
+            end,
+            ["<S-Tab>"] = function(fallback)
+              if cmp.visible() then
+                cmp.select_prev_item()
+              else
+                fallback()
+              end
+            end,
+          }),
+          sources = {
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+          },
+        })
+        return
+      end
     end
-  end, { silent = true })
 
-  vim.keymap.set({ "i", "s" }, "<C-j>", function()
-    if ls.jumpable(-1) then
-      ls.jump(-1)
-    end
-  end, { silent = true })
+    cmp.setup({
+      mapping = cmp.mapping.preset.insert({
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<Tab>"] = function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item()
+          else
+            fallback()
+          end
+        end,
+        ["<S-Tab>"] = function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item()
+          else
+            fallback()
+          end
+        end,
+      }),
+      sources = {
+        { name = "nvim_lsp" },
+      },
+    })
+  end
+
+  -- If LuaSnip is already loaded (because snippets.lua ran first), integrate now.
+  local has_ls = pcall(require, "luasnip")
+  setup_cmp(has_ls)
+
+  -- If it wasn't loaded yet, upgrade once when snippets.lua signals it loaded.
+  if not has_ls then
+    vim.api.nvim_create_autocmd("User", {
+      once = true,
+      pattern = "UserLuaSnipLoaded",
+      desc = "Enable LuaSnip completion after LuaSnip loads",
+      callback = function()
+        setup_cmp(true)
+      end,
+    })
+  end
 
   -- set default floating preview UI (only once, as otherwise I wrap orig twice)
   if not vim.g._user_lsp_float_border then

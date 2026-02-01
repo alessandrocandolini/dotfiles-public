@@ -1,7 +1,6 @@
 vim.cmd.packadd("haskell-tools.nvim")
 
 require("config.lsp").setup()
-require("config.haskell_snippets").setup()
 
 local ok, ht = pcall(require, "haskell-tools")
 if not ok then
