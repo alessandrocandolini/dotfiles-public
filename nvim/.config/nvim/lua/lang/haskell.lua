@@ -3,7 +3,6 @@ local M = {}
 function M.setup()
   -- Shared LSP behavior (LspAttach keymaps, diagnostic UI, etc.)
   -- This should be stateless/idempotent in your refactor.
-  require("config.lsp").setup()
 
   local boot = vim.api.nvim_create_augroup("LangHaskellBoot", { clear = true })
   local maps = vim.api.nvim_create_augroup("LangHaskellMaps", { clear = true })
