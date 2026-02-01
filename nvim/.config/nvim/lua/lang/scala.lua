@@ -2,7 +2,7 @@
 local M = {}
 
 function M.setup()
-  -- IMPORTANT: do NOT call config.lsp.register() from every language module.
+  -- IMPORTANT: do NOT call config.lsp.setup() from every language module.
   -- Call it ONCE from setup.lua. (Otherwise you risk multiple bootstrap handlers.)
 
   local boot = vim.api.nvim_create_augroup("LangScalaBoot", { clear = true })
