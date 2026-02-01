@@ -60,7 +60,7 @@ function M.setup()
 
   vim.keymap.set("n", "<Leader>f", find_files, { silent = true, desc = "Find files"})
   vim.keymap.set("n", "<C-p>", find_files, { silent = true, desc = "Find files"})
-  vim.keymap.set("n", "<Leader>r", fzf.live_grep, { silent = true,desc = "Search project (live grep)" })
+  vim.keymap.set("n", "<Leader>r", fzf.live_grep, { silent = true, desc = "Search project (live grep)" })
 
   local function search_word_under_cursor()
     local w = vim.fn.expand("<cword>")
