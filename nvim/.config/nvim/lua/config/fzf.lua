@@ -43,7 +43,7 @@ function M.setup()
     },
   })
 
-  vim.keymap.set("n", "<Leader>f", function()
+  local function find_files()
     local cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
     local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
     if base ~= '.' then
@@ -56,20 +56,20 @@ function M.setup()
         ['--tiebreak']  = 'index',
       }
     })
-  end, { silent = true })
+  end
 
-  vim.keymap.set("n", "<Leader>r", function()
-    fzf.live_grep()
-  end, { silent = true })
+  vim.keymap.set("n", "<Leader>f", find_files, { silent = true, desc = "Find files"})
+  vim.keymap.set("n", "<C-p>", find_files, { silent = true, desc = "Find files"})
+  vim.keymap.set("n", "<Leader>r", fzf.live_grep, { silent = true, desc = "Search project (live grep)" })
 
-  vim.keymap.set("n", "grw", function()
+  local function search_word_under_cursor()
     local w = vim.fn.expand("<cword>")
-    if w == nil or w == "" then
-      return
-    else
+    if w and w ~= "" then
       fzf.grep_cword()
     end
-  end, { silent = true })
+  end
+
+  vim.keymap.set("n", "grw", search_word_under_cursor, { silent = true, desc = "Search word under cursor" })
 end
 
 return M
