@@ -1,4 +1,3 @@
--- lua/config/lsp.lua
 local M = {}
 
 -- Capabilities: cheap, and safe to call before any server starts.
@@ -51,7 +50,6 @@ end
 -- Register shared LSP behavior.
 -- Stateless + idempotent: we always (re)define autocmds into known augroups.
 function M.setup()
-  -- Per-buffer LSP maps
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
   vim.api.nvim_create_autocmd("LspAttach", {
     group = group,
@@ -63,14 +61,12 @@ function M.setup()
     end,
   })
 
-  -- One-time bootstrap when the FIRST LSP attaches (no flags; Neovim enforces once)
   local boot = vim.api.nvim_create_augroup("UserLspBootstrap", { clear = true })
   vim.api.nvim_create_autocmd("LspAttach", {
     group = boot,
     once = true,
     callback = function()
-      -- UI niceties / plugins that you only want if LSP is actually used
-      pcall(function() require("fidget").setup() end)
+      require("fidget").setup()
 
       -- Default border for floating previews
       local orig = vim.lsp.util.open_floating_preview
@@ -105,7 +101,6 @@ function M.setup()
           },
         })
 
-        -- LuaSnip keybindings for snippet navigation (non-conflicting with <C-k>)
         local ok_snip, luasnip = pcall(require, "luasnip")
         if ok_snip then
           -- Expand or jump forward in snippets

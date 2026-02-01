@@ -2,46 +2,72 @@
 local M = {}
 
 function M.setup()
-  local grp = vim.api.nvim_create_augroup("LangLuaBootstrap", { clear = true })
+  local lsp = require("config.lsp")
+  lsp.setup()
 
-  vim.api.nvim_create_autocmd("FileType", {
-    group = grp,
-    pattern = "lua",
-    once = true,
-    callback = function()
-      if vim.fn.executable("lua-language-server") ~= 1 then
-        vim.schedule(function()
-          vim.notify("[lua] lua-language-server not found in PATH", vim.log.levels.WARN)
-        end)
-        return
+  if vim.fn.executable("lua-language-server") ~= 1 then
+    vim.schedule(function()
+      vim.notify("[lua] lua-language-server not found in PATH", vim.log.levels.WARN)
+    end)
+    return
+  end
+
+  vim.lsp.config["lua_ls"] = {
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
+
+    root_markers = {
+      ".emmyrc.json",
+      ".luarc.json",
+      ".luarc.jsonc",
+      ".luacheckrc",
+      ".stylua.toml",
+      "stylua.toml",
+      "selene.toml",
+      "selene.yml",
+      ".git",
+    },
+
+    capabilities = lsp.capabilities(),
+
+    on_init = function(client)
+      -- Keep this exactly like the working snippet (it’s good)
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if
+            path ~= vim.fn.stdpath("config")
+            and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+        then
+          return
+        end
       end
 
-      local lsp = require("config.lsp")
-
-      vim.lsp.config["lua_ls"] = {
-        cmd = { "lua-language-server" },
-        filetypes = { "lua" },
-        root_dir = function(fname)
-          return vim.fs.root(fname, { ".luarc.json", ".luarc.jsonc", ".git" })
-            or vim.fs.dirname(fname)
-        end,
-        capabilities = lsp.capabilities(),
-        settings = {
-          Lua = {
-            runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-            telemetry = { enable = false },
+      client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua or {}, {
+        runtime = {
+          version = "LuaJIT",
+          path = {
+            "lua/?.lua",
+            "lua/?/init.lua",
           },
         },
-      }
-
-      vim.lsp.enable("lua_ls")
+        diagnostics = { globals = { "vim" } },
+        workspace = {
+          checkThirdParty = false,
+          library = { vim.env.VIMRUNTIME },
+        },
+        telemetry = { enable = false },
+      })
     end,
-  })
+
+    settings = {
+      Lua = {
+        codeLens = { enable = true },
+        hint = { enable = true, semicolon = "Disable" },
+      },
+    },
+  }
+
+  vim.lsp.enable("lua_ls")
 end
 
 return M
