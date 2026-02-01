@@ -41,9 +41,10 @@ function M.setup()
         end,
       })
 
-      -- Attach ONCE for the current buffer by re-emitting FileType for that buffer.
-      -- This avoids calling initialize_or_attach twice through two paths.
-      vim.api.nvim_exec_autocmds("FileType", { group = attach_grp, buffer = ev.buf })
+      -- Attach once for the current buffer directly, without re-emitting FileType.
+      vim.api.nvim_buf_call(ev.buf, function()
+        metals.initialize_or_attach(cfg)
+      end)
     end,
   })
 end
