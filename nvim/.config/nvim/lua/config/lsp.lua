@@ -122,14 +122,16 @@ local function lsp_setup_global()
   end, { silent = true })
 
   -- set default floating preview UI (only once, as otherwise I wrap orig twice)
-  vim.g._user_lsp_float_border = true
-  local orig = vim.lsp.util.open_floating_preview
-  vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
-    opts = opts or {}
-    if opts.border == nil then
-      opts.border = "rounded"
+  if not vim.g._user_lsp_float_border then
+    vim.g._user_lsp_float_border = true
+    local orig = vim.lsp.util.open_floating_preview
+    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+      opts = opts or {}
+      if opts.border == nil then
+        opts.border = "rounded"
+      end
+      return orig(contents, syntax, opts, ...)
     end
-    return orig(contents, syntax, opts, ...)
   end
 
   -- helper for showing attached LSPs
