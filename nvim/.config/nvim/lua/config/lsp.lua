@@ -104,6 +104,24 @@ function M.setup()
             { name = "luasnip" },
           },
         })
+
+        -- LuaSnip keybindings for snippet navigation (non-conflicting with <C-k>)
+        local ok_snip, luasnip = pcall(require, "luasnip")
+        if ok_snip then
+          -- Expand or jump forward in snippets
+          vim.keymap.set({ "i", "s" }, "<C-l>", function()
+            if luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            end
+          end, { silent = true, noremap = true })
+
+          -- Jump backward in snippets
+          vim.keymap.set({ "i", "s" }, "<C-h>", function()
+            if luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            end
+          end, { silent = true, noremap = true })
+        end
       end
 
       -- Utility: list clients
