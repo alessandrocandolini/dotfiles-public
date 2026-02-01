@@ -1,11 +1,6 @@
--- ~/.config/nvim/lua/config/lsp.lua
 local M = {}
 
-------------------------------------------------------------
--- Shared on_attach Function for LSP Clients
--- (ALL buffer-local LSP keymaps live here)
-------------------------------------------------------------
-local function on_attach_impl(client, bufnr)
+local function lsp_setup_per_buffer(client, bufnr)
 
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
@@ -49,43 +44,38 @@ local function on_attach_impl(client, bufnr)
       end
     end, { buffer = bufnr, silent = true })
   end
-
 end
 
-------------------------------------------------------------
--- Lazy setup: called once from language ftplugins
-------------------------------------------------------------
-local initialized = false
+local function list_lsp_clients()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
 
-function M.setup()
-  if initialized then return end
-  initialized = true
-
-  require("fidget").setup()
-
-  -- Force a default border for all LSP floating previews (hover, signature, etc.)
-  if not vim.g._user_lsp_float_border then
-    vim.g._user_lsp_float_border = true
-
-    local orig = vim.lsp.util.open_floating_preview
-    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
-      opts = opts or {}
-      if opts.border == nil then
-        opts.border = "rounded"
-      end
-      return orig(contents, syntax, opts, ...)
+  local items = {}
+  if #clients == 0 then
+    table.insert(items, {
+      filename = "",
+      lnum = 1,
+      col = 1,
+      text = "No LSP clients attached",
+    })
+  else
+    for _, client in ipairs(clients) do
+      table.insert(items, {
+        filename = "",
+        lnum = 1,
+        col = 1,
+        text = "LSP client: " .. client.name,
+      })
     end
   end
 
-  --------------------------------------------------------
-  -- Capabilities (nvim-cmp + LSP)
-  --------------------------------------------------------
-  local cmp_lsp = require('cmp_nvim_lsp')
-  M.capabilities = cmp_lsp.default_capabilities()
+  vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
+  vim.cmd("lopen")
+end
 
-  --------------------------------------------------------
-  -- nvim-cmp + LuaSnip
-  --------------------------------------------------------
+
+local function lsp_setup_global()
+  require("fidget").setup()
   local cmp = require("cmp")
 
   cmp.setup({
@@ -117,8 +107,6 @@ function M.setup()
       { name = "luasnip" },
     },
   })
-
-
   local ls = require("luasnip")
 
   vim.keymap.set({ "i", "s" }, "<C-k>", function()
@@ -133,48 +121,53 @@ function M.setup()
     end
   end, { silent = true })
 
+  -- set default floating preview UI (only once, as otherwise I wrap orig twice)
+  if not vim.g._user_lsp_float_border then
+    vim.g._user_lsp_float_border = true
+    local orig = vim.lsp.util.open_floating_preview
+    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
+      opts = opts or {}
+      if opts.border == nil then
+        opts.border = "rounded"
+      end
+      return orig(contents, syntax, opts, ...)
+    end
+  end
 
-  -- LspAttach autocommand
+  -- helper for showing attached LSPs
+  vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
+
+end
+
+
+function M.capabilities()
+  local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+  if ok then
+    return cmp_lsp.default_capabilities()
+  end
+  return vim.lsp.protocol.make_client_capabilities()
+end
+
+function M.setup()
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
 
   vim.api.nvim_create_autocmd("LspAttach", {
+    once = true,
     group = group,
+    desc = "Global LSP setup",
+    callback = lsp_setup_global
+  })
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = group,
+    desc = "Per-buffer LSP setup",
     callback = function(ev)
       local client = vim.lsp.get_client_by_id(ev.data.client_id)
       if client then
-        on_attach_impl(client, ev.buf)
+        lsp_setup_per_buffer(client, ev.buf)
       end
     end,
   })
-
-
-  -- Print list of attached LSP clients (LSP-specific utility)
-  vim.keymap.set('n', '<leader>ls', function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local clients = vim.lsp.get_clients({ bufnr = bufnr })
-
-    local items = {}
-    if #clients == 0 then
-      table.insert(items, {
-        filename = "",
-        lnum = 1,
-        col = 1,
-        text = "No LSP clients attached",
-      })
-    else
-      for _, client in ipairs(clients) do
-        table.insert(items, {
-          filename = "",
-          lnum = 1,
-          col = 1,
-          text = "LSP client: " .. client.name,
-        })
-      end
-    end
-
-    vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
-    vim.cmd("lopen")
-  end, { noremap = true, silent = true })
 end
 
 return M
