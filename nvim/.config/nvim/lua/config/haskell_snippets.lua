@@ -1,14 +1,6 @@
--- ~/.config/nvim/lua/config/haskell_snippets.lua
 local M = {}
 
-local initialized = false
-
 function M.setup()
-  if initialized then
-    return
-  end
-  initialized = true
-
   local ls = require("luasnip")
   local s  = ls.snippet
   local t  = ls.text_node
@@ -25,10 +17,8 @@ function M.setup()
     return name
   end
 
-  ------------------------------------------------------------
-  -- 1. Module header for src/ files
-  ------------------------------------------------------------
-  ls.add_snippets("haskell", {
+  local snippets = {
+    -- 1) Module header for src/ files
     s(
       { trig = "module", name = "Haskell module header (src)" },
       {
@@ -43,12 +33,8 @@ function M.setup()
         end,
       }
     ),
-  })
 
-  ------------------------------------------------------------
-  -- 2. Test module header (imports + spec skeleton)
-  ------------------------------------------------------------
-  ls.add_snippets("haskell", {
+    -- 2) Module header for test/ files
     s(
       { trig = "module", name = "Hspec test module (test)" },
       {
@@ -57,7 +43,6 @@ function M.setup()
         t({ " where", "", "" }),
         t("import Test.Hspec"),
         t({ "", "import Test.Hspec.QuickCheck", "import Test.QuickCheck", "", "" }),
-
         t("spec :: Spec"),
         t({ "", "spec = do", "  " }),
         i(0),
@@ -68,12 +53,8 @@ function M.setup()
         end,
       }
     ),
-  })
 
-  ------------------------------------------------------------
-  -- 3. Snippet: it-block
-  ------------------------------------------------------------
-  ls.add_snippets("haskell", {
+    -- 3) it-block
     s(
       { trig = "it", name = "Hspec it block" },
       {
@@ -82,21 +63,19 @@ function M.setup()
         t(" `shouldBe` "), i(3, "expected"),
       }
     ),
-  })
 
-  ------------------------------------------------------------
-  -- 4. Snippet: QuickCheck prop-block
-  ------------------------------------------------------------
-  ls.add_snippets("haskell", {
+    -- 4) prop-block
     s(
-      { trig = "prop", name = "Hspec it block" },
+      { trig = "prop", name = "QuickCheck prop block" },
       {
         t("prop \""), i(1, "description"), t("\" $"),
         t({ "", "  " }), i(2, "actual"),
         t(" `shouldBe` "), i(3, "expected"),
       }
     ),
-  })
+  }
+
+  ls.add_snippets("haskell", snippets, { key = "user_haskell_snippets" })
 end
 
 return M
