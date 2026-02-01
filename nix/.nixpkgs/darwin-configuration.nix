@@ -59,7 +59,6 @@ in
       awscli2
 #     (gradle.override { java = pkgs.jdk17; })
       tmux
-      tmuxinator
       unzip
       curl
       nodejs_latest
