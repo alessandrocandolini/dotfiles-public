@@ -36,10 +36,6 @@
       "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
       "src": "https://github.com/rktjmp/lush.nvim"
     },
-    "mini.splitjoin": {
-      "rev": "9fcd8856efb95a505090c3225726466494076127",
-      "src": "https://github.com/nvim-mini/mini.splitjoin"
-    },
     "nvim-autopairs": {
       "rev": "59bce2eef357189c3305e25bc6dd2d138c1683f5",
       "src": "https://github.com/windwp/nvim-autopairs"
