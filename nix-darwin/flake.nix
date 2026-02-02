@@ -18,10 +18,12 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, darwin, home-manager, neovim-nightly-overlay, ... }:
+  outputs = inputs@{ nixpkgs, darwin, home-manager, neovim-nightly-overlay, llm-agents, ... }:
     let
       system = "aarch64-darwin";
       username = "alessandrocandolini";

@@ -57,12 +57,16 @@ let
     ruff
     lua-language-server
   ];
+
+  llmStuff = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+    codex
+  ];
 in
 {
   home.stateVersion = "25.05";
 
   home.packages =
-    dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff;
+    dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff ++ llmStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
