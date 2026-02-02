@@ -1,15 +1,32 @@
 local M = {}
 
 function M.setup()
-  local cmp = require("cmp")
-  local ls = require("luasnip")
+  local ok_cmp, cmp = pcall(require, "cmp")
+  if not ok_cmp then
+    vim.notify("cmp is not installed or failed to load", vim.log.levels.WARN, { title = "Config" })
+    return
+  end
+  local ok_ls, ls = pcall(require, "luasnip")
+  local sources = {}
+  local snippet = nil
 
-  cmp.setup({
+  if ok_ls then
     snippet = {
       expand = function(args)
         ls.lsp_expand(args.body)
       end,
-    },
+    }
+    table.insert(sources, { name = "luasnip" })
+  end
+
+  local ok_cmp_lsp, _ = pcall(require, "cmp_nvim_lsp")
+  if ok_cmp_lsp then
+    -- will become active once an LSP attaches
+    table.insert(sources, { name = "nvim_lsp" })
+  end
+
+  cmp.setup({
+    snippet = snippet,
     mapping = cmp.mapping.preset.insert({
       ["<CR>"]      = cmp.mapping.confirm({ select = true }),
       ["<C-Space>"] = cmp.mapping.complete(),
@@ -28,12 +45,12 @@ function M.setup()
         end
       end,
     }),
-    sources = {
-      { name = "nvim_lsp" }, -- will become active once an LSP attaches
-      { name = "luasnip" },  -- available immediately
-    },
+    sources = sources
   })
 
+  if not ok_ls then
+    return
+  end
   -- Snippet jump/expand bindings (insert + select mode)
   vim.keymap.set({ "i", "s" }, "<C-k>", function()
     if ls.expand_or_jumpable() then
