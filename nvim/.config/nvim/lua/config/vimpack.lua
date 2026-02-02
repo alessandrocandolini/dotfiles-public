@@ -65,7 +65,6 @@ function M.setup()
     gh("tpope/vim-projectionist"),
     gh("j-hui/fidget.nvim"), -- LSP loader indicator
     gh("stevearc/oil.nvim"),
-    gh("nvim-mini/mini.splitjoin"),
 
     -- completion/snippets
     gh("hrsh7th/nvim-cmp"),

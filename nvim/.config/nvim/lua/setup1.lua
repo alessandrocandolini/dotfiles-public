@@ -14,4 +14,3 @@ require("oil").setup({
     show_hidden = true
   }
 })
-require('mini.splitjoin').setup()
