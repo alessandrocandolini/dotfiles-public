@@ -3,15 +3,13 @@ local M = {}
 function M.setup()
 
   vim.cmd.packadd("nvim-metals")
-  -- Ensure shared LSP behaviour is initialized (on_attach, <leader>ls, etc.)
-  local lsp    = require("config.lsp")
-  lsp.setup()
 
   vim.api.nvim_set_hl(0, "@lsp.type.namespace.scala", { link = "Normal" })
 
   local metals = require("metals")
   local cfg = metals.bare_config()
 
+  local lsp    = require("config.lsp")
   cfg.capabilities = lsp.capabilities()
 
   cfg.settings = {
