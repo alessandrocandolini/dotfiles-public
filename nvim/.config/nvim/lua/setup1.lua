@@ -1,11 +1,11 @@
 vim.loader.enable()
 
 require('config.vimpack').setup()
-require("config.appearance").setup() -- must be after installing the plugins
+require("config.options").setup() -- must be after installing the plugins
 require("config.diagnostics").setup()
 require("config.fzf").setup()
 require("config.cmp").setup()
-require("config.lsp").setup()
+require("config.lsp-config").setup()
 require("config.projectionist").setup()
 
 -- other plugins
