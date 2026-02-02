@@ -29,40 +29,53 @@ function M.setup()
           vim.api.nvim_exec_autocmds("User", { pattern = "UserLuaSnipLoaded" }) -- for async CMP / LSP integration
           require("config.haskell_snippets").setup()
 
-          -- <Tab> expands/jumps snippets, otherwise inserts a literal tab
+          local function feed(keys)
+            local term = vim.api.nvim_replace_termcodes(keys, true, false, true)
+            vim.api.nvim_feedkeys(term, "n", false)
+          end
+
+          -- TAB: if completion menu is open, go next item; else expand/jump; else insert tab
           vim.keymap.set({ "i", "s" }, "<Tab>", function()
+            if vim.fn.pumvisible() == 1 then
+              feed("<C-n>")
+              return
+            end
             if ls.expand_or_jumpable() then
               ls.expand_or_jump()
-              return ""
+              return
             end
-            return "\t"
-          end, { expr = true, silent = true, buffer = ev.buf })
+            feed("<Tab>")
+          end, { silent = true, buffer = ev.buf })
 
-          -- <S-Tab> jumps backwards in snippets (otherwise behaves like Shift-Tab)
+          -- S-TAB: if completion menu is open, prev item; else jump back; else literal S-Tab
           vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+            if vim.fn.pumvisible() == 1 then
+              feed("<C-p>")
+              return
+            end
             if ls.jumpable(-1) then
               ls.jump(-1)
-              return ""
+              return
             end
-            return "<S-Tab>"
-          end, { expr = true, silent = true, buffer = ev.buf })
+            feed("<S-Tab>")
+          end, { silent = true, buffer = ev.buf })
 
-          -- Optional snippet navigation keys that don't steal the keypress
+          -- Optional: keep these as non-expr too
           vim.keymap.set({ "i", "s" }, "<C-k>", function()
             if ls.expand_or_jumpable() then
               ls.expand_or_jump()
-              return ""
+            else
+              feed("<C-k>")
             end
-            return "<C-k>"
-          end, { expr = true, silent = true, buffer = ev.buf })
+          end, { silent = true, buffer = ev.buf })
 
           vim.keymap.set({ "i", "s" }, "<C-j>", function()
             if ls.jumpable(-1) then
               ls.jump(-1)
-              return ""
+            else
+              feed("<C-j>")
             end
-            return "<C-j>"
-          end, { expr = true, silent = true, buffer = ev.buf })
+          end, { silent = true, buffer = ev.buf })
         end,
       })
     end,
