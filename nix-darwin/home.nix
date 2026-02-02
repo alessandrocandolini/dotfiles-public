@@ -60,6 +60,7 @@ let
     ruff
     lua-language-server
   ];
+
   rustPkgs = pkgs.extend inputs.rust-overlay.overlays.default;
 
   rustToolchain = rustPkgs.rust-bin.stable."1.93.0".default.override {
@@ -74,11 +75,15 @@ let
     rustToolchain
     pkgs.cargo-generate
   ];
+
+  llmStuff = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+    codex
+  ];
 in
 {
   home.stateVersion = "25.05";
 
-  home.packages = dockerStuff ++ scalaStuff ++ cliStuff ++ lspStuff ++ rustStuff;
+  home.packages = dockerStuff ++ scalaStuff ++ cliStuff ++ lspStuff ++ rustStuff ++ llmStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
