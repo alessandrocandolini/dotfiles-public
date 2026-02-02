@@ -1,13 +1,12 @@
 local M = {}
 
 local function lsp_setup_per_buffer(client, bufnr)
-
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
   -- Standard LSP keybindings (buffer-local)
-  vim.keymap.set('n', 'grD', vim.lsp.buf.declaration,        buf_opts)
-  vim.keymap.set('n', 'grd', vim.lsp.buf.definition,         buf_opts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,  buf_opts)
+  vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, buf_opts)
+  vim.keymap.set('n', 'grd', vim.lsp.buf.definition, buf_opts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, buf_opts)
 
   -- Code actions and lenses
   vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, buf_opts)
@@ -91,8 +90,8 @@ local function lsp_setup_global()
   end
 
   -- helper for showing attached LSPs
-  vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
-
+  vim.keymap.set('n', '<leader>ls', list_lsp_clients,
+    { noremap = true, silent = true, desc = "List attached LSP clients" })
 end
 
 
@@ -106,7 +105,10 @@ end
 
 function M.setup()
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
+  -- enable servers
+  vim.lsp.enable("lua_ls")
 
+  -- register per-buffer and global operations on LSP attach
   vim.api.nvim_create_autocmd("LspAttach", {
     once = true,
     group = group,
