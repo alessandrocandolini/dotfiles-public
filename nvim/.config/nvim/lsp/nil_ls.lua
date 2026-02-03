@@ -1,3 +1,4 @@
+local lsp = require('config.lsp')
 return {
   cmd = { "nil"},
   settings = {
@@ -7,4 +8,5 @@ return {
   },
   filetypes = { "nix" },
   root_markers = { "flake.nix", "shell.nix", ".git" },
+  capabilities = lsp.capabilities,
 }
