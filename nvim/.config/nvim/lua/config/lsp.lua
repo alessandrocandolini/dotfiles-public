@@ -102,13 +102,16 @@ local function lsp_setup_global()
 end
 
 
-function M.capabilities()
+local function client_capabilities()
+  local base = vim.lsp.protocol.make_client_capabilities()
   local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
   if ok then
-    return cmp_lsp.default_capabilities()
+    return cmp_lsp.default_capabilities(base)
   end
-  return vim.lsp.protocol.make_client_capabilities()
+  return base
 end
+
+M.capabilities = client_capabilities
 
 function M.setup()
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
