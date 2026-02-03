@@ -99,7 +99,7 @@ end, { noremap = true })
 -- Persistent undo (XDG-compliant)
 local undo_dir = vim.fn.expand("~/.local/share/nvim/undo")
 if vim.fn.isdirectory(undo_dir) == 0 then
-  vim.fn.mkdir(undo_dir, "p", "0700")
+  vim.fn.mkdir(undo_dir, "p", 0o700)
 end
 
 vim.opt.undodir = undo_dir
