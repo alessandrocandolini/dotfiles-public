@@ -111,7 +111,7 @@ local function client_capabilities()
   return base
 end
 
-M.capabilities = client_capabilities
+M.capabilities = client_capabilities()
 
 function M.setup()
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })

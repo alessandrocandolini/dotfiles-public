@@ -10,7 +10,7 @@ function M.setup()
   local cfg = metals.bare_config()
 
   local lsp    = require("config.lsp")
-  cfg.capabilities = lsp.capabilities()
+  cfg.capabilities = lsp.capabilities
 
   cfg.settings = {
     showImplicitArguments = true,
