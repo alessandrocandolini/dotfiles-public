@@ -88,9 +88,13 @@ vim.keymap.set("n", "<leader><leader>", "<c-^>", { noremap = true, silent = true
 
 -- Open new file adjacent to current file
 vim.keymap.set("n", "<leader>o", function()
-  local dir = vim.fn.fnameescape(vim.fn.expand("%:p:h") .. "/")
-  vim.cmd("edit " .. dir)
-end, { noremap = true, silent = true })
+  local dir = vim.fn.expand("%:p:h") .. "/"
+  vim.api.nvim_feedkeys(
+    ":edit " .. vim.fn.fnameescape(dir),
+    "n",
+    false
+  )
+end, { noremap = true })
 
 -- Persistent undo (XDG-compliant)
 local undo_dir = vim.fn.expand("~/.local/share/nvim/undo")
