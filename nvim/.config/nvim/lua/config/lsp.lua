@@ -79,14 +79,6 @@ local function list_lsp_clients()
   vim.cmd("lopen")
 end
 
-
-local function lsp_setup_global()
-  require("fidget").setup()
-
-  vim.o.winborder = "rounded"
-end
-
-
 local function client_capabilities()
   local base = vim.lsp.protocol.make_client_capabilities()
   local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
@@ -99,6 +91,8 @@ end
 M.capabilities = client_capabilities()
 
 function M.setup()
+  require("fidget").setup()
+
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
   -- enable servers
   if vim.fn.executable('lua-language-server') == 1 then
@@ -114,14 +108,7 @@ function M.setup()
   -- helper for showing attached LSPs
   vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
 
-  -- register per-buffer and global operations on LSP attach
-  vim.api.nvim_create_autocmd("LspAttach", {
-    once = true,
-    group = group,
-    desc = "Global LSP setup",
-    callback = lsp_setup_global
-  })
-
+  -- register per-buffer operations on LSP attach
   vim.api.nvim_create_autocmd("LspAttach", {
     group = group,
     desc = "Per-buffer LSP setup",

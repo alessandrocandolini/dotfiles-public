@@ -80,6 +80,11 @@ vim.opt.guicursor = ""
 -- Always display sign column by default (to avoid resizing the full buffer area when LSP loads)
 vim.opt.signcolumn = "yes"
 
+-- round borders for popups (useful for LSP, neovim 0.12+)
+if vim.fn.exists("&winborder") == 1 then
+  vim.o.winborder = "rounded"
+end
+
 -- Fix Ctrl-W v asymmetry
 vim.keymap.set("n", "<C-w>v", ":vnew<CR>", { noremap = true, silent = true })
 
