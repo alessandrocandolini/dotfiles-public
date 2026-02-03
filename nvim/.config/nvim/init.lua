@@ -119,7 +119,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- Load Lua setup
-require('config.vimpack').setup()
+require("config.vimpack").setup()
 require("config.diagnostics").setup()
 require("config.fzf").setup()
 require("config.cmp").setup()
