@@ -96,6 +96,11 @@ vim.keymap.set("n", "<leader>o", function()
   )
 end, { noremap = true })
 
+-- toggle to wrap/unwrap long lines
+vim.keymap.set("n", "<leader>wl", function()
+  vim.cmd("setlocal invwrap")
+end, { desc = "Toggle line wrap" })
+
 -- Persistent undo (XDG-compliant)
 local undo_dir = vim.fn.expand("~/.local/share/nvim/undo")
 if vim.fn.isdirectory(undo_dir) == 0 then
