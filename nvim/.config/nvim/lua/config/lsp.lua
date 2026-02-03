@@ -96,9 +96,6 @@ local function lsp_setup_global()
     end
   end
 
-  -- helper for showing attached LSPs
-  vim.keymap.set('n', '<leader>ls', list_lsp_clients,
-    { noremap = true, silent = true, desc = "List attached LSP clients" })
 end
 
 
@@ -122,6 +119,9 @@ function M.setup()
   if vim.fn.executable('nil') == 1 then
     vim.lsp.enable('nil_ls')
   end
+
+  -- helper for showing attached LSPs
+  vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
 
   -- register per-buffer and global operations on LSP attach
   vim.api.nvim_create_autocmd("LspAttach", {
