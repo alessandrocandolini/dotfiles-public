@@ -77,6 +77,9 @@ vim.opt.showcmd = true
 -- Do not change cursor shape in insert mode
 vim.opt.guicursor = ""
 
+-- Always display sign column by default (to avoid resizing the full buffer area when LSP loads)
+vim.opt.signcolumn = "yes"
+
 -- Fix Ctrl-W v asymmetry
 vim.keymap.set("n", "<C-w>v", ":vnew<CR>", { noremap = true, silent = true })
 
