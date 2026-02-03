@@ -27,7 +27,6 @@ local function lsp_setup_per_buffer(client, bufnr)
 
   -- Auto format on save
   if isAutoformatOnSaveEnabled(client) and client.server_capabilities.documentFormattingProvider then
-    vim.api.nvim_clear_autocmds({ group = lsp_format_on_save_group, buffer = bufnr })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_format_on_save_group,
       buffer = bufnr,
