@@ -100,10 +100,6 @@ end
 vim.opt.undodir = undo_dir
 vim.opt.undofile = true
 
--- Colorscheme
-vim.opt.termguicolors = true
-vim.cmd [[colorscheme jellybeans]]
-
 -- Highlight on yank for visual feedback
 local group = vim.api.nvim_create_augroup("UserYankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -132,3 +128,7 @@ require("oil").setup({
     show_hidden = true
   }
 })
+
+-- Colorscheme (must be after vimpack installation)
+vim.opt.termguicolors = true
+vim.cmd [[colorscheme jellybeans]]
