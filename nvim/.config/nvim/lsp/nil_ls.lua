@@ -6,5 +6,5 @@ return {
     }
   },
   filetypes = { "nix" },
-  root_markers = { "flake.nix", "shell.nix" },
+  root_markers = { "flake.nix", "shell.nix", ".git" },
 }
