@@ -1,5 +1,11 @@
 local M = {}
 
+local lsp_format_on_save_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
+
+local function isAutoformatOnSaveEnabled(client)
+  return client.name ~= "lua_ls" -- lua formatter is slow
+end
+
 local function lsp_setup_per_buffer(client, bufnr)
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
@@ -19,12 +25,14 @@ local function lsp_setup_per_buffer(client, bufnr)
     vim.lsp.buf.format { async = true }
   end, buf_opts)
 
-  -- format on save
-  if client.server_capabilities.documentFormattingProvider then
+  -- Auto format on save
+  if isAutoformatOnSaveEnabled(client) and client.server_capabilities.documentFormattingProvider then
+    vim.api.nvim_clear_autocmds({ group = lsp_format_on_save_group, buffer = bufnr })
     vim.api.nvim_create_autocmd("BufWritePre", {
+      group = lsp_format_on_save_group,
       buffer = bufnr,
       callback = function()
-        vim.lsp.buf.format({ bufnr = bufnr })
+        vim.lsp.buf.format({ bufnr = bufnr, filter = function(c) return c.id == client.id end })
       end,
     })
   end
