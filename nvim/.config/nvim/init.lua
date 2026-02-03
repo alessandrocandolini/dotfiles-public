@@ -136,4 +136,4 @@ require("oil").setup({
 
 -- Colorscheme (must be after vimpack installation)
 vim.opt.termguicolors = true
-pcall(vim.cmd.colorscheme, "jellybeans-nvim")
+vim.cmd [[colorscheme jellybeans]]
