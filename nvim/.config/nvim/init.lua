@@ -91,7 +91,7 @@ vim.keymap.set("n", "<leader>o", function()
   local dir = vim.fn.expand("%:p:h") .. "/"
   vim.api.nvim_feedkeys(
     ":edit " .. vim.fn.fnameescape(dir),
-    "n",
+    "ct",
     false
   )
 end, { noremap = true })
@@ -99,7 +99,7 @@ end, { noremap = true })
 -- Persistent undo (XDG-compliant)
 local undo_dir = vim.fn.expand("~/.local/share/nvim/undo")
 if vim.fn.isdirectory(undo_dir) == 0 then
-  vim.fn.mkdir(undo_dir, "p", 0o700)
+  vim.fn.mkdir(undo_dir, "p")
 end
 
 vim.opt.undodir = undo_dir
