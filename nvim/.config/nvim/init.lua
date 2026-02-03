@@ -149,5 +149,5 @@ if not ok then
   vim.notify("Failed to load colorscheme 'jellybeans': " .. tostring(err), vim.log.levels.WARN)
 end
 vim.cmd([[
-  highlight SignColumn guibg=dark
+  highlight SignColumn guibg=NONE
 ]])
