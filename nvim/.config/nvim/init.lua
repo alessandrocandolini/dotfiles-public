@@ -119,7 +119,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- Load Lua setup
-require('config.vimpack').setup()
+require("config.vimpack").setup()
 require("config.diagnostics").setup()
 require("config.fzf").setup()
 require("config.cmp").setup()
@@ -136,4 +136,7 @@ require("oil").setup({
 
 -- Colorscheme (must be after vimpack installation)
 vim.opt.termguicolors = true
-pcall(vim.cmd.colorscheme, "jellybeans-nvim")
+local ok, err = pcall(vim.cmd, "colorscheme jellybeans")
+if not ok then
+  vim.notify("Failed to load colorscheme 'jellybeans': " .. tostring(err), vim.log.levels.WARN)
+end

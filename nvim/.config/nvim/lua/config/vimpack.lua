@@ -55,8 +55,7 @@ function M.setup()
 
   -- Global plugins
   vim.pack.add({
-    gh("rktjmp/lush.nvim"), -- required by jellybeans-nvim
-    gh("metalelf0/jellybeans-nvim"),
+    gh("wtfox/jellybeans.nvim"),
 
     gh("ibhagwan/fzf-lua"),
     gh("nvim-lua/plenary.nvim"),

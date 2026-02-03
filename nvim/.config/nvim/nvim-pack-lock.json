@@ -28,9 +28,9 @@
       "rev": "128a7e36331050603b3145b1efe1a219115464e8",
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
-    "jellybeans-nvim": {
-      "rev": "d5989265b5256cb296b5772c73e57490e84f69b1",
-      "src": "https://github.com/metalelf0/jellybeans-nvim"
+    "jellybeans.nvim": {
+      "rev": "28b80886b54396b13a2a85edf608926333e842b9",
+      "src": "https://github.com/wtfox/jellybeans.nvim"
     },
     "lush.nvim": {
       "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
