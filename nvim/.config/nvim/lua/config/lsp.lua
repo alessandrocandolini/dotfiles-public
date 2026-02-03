@@ -113,7 +113,15 @@ end
 function M.setup()
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
   -- enable servers
-  vim.lsp.enable("lua_ls")
+  if vim.fn.executable('lua-language-server') == 1 then
+    vim.lsp.enable('lua_ls')
+  end
+  if vim.fn.executable('bash-language-server') == 1 then
+    vim.lsp.enable('bashls')
+  end
+  if vim.fn.executable('nil') == 1 then
+    vim.lsp.enable('nil_ls')
+  end
 
   -- register per-buffer and global operations on LSP attach
   vim.api.nvim_create_autocmd("LspAttach", {
