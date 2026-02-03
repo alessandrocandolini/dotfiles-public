@@ -81,7 +81,7 @@ vim.opt.guicursor = ""
 vim.opt.signcolumn = "yes"
 
 -- round borders for popups (useful for LSP, neovim 0.12+)
-if vim.fn.exists("&winborder") == 1 then
+if vim.fn.exists("+winborder") == 1 then
   vim.o.winborder = "rounded"
 end
 
