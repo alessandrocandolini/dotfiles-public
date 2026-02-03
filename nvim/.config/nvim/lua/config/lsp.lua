@@ -2,7 +2,7 @@ local M = {}
 
 local lsp_format_on_save_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
 
-local function isAutoformatOnSaveEnabled(client)
+local function is_autoformat_on_save_enabled(client)
   return client.name ~= "lua_ls" -- lua formatter is slow
 end
 
@@ -26,7 +26,7 @@ local function lsp_setup_per_buffer(client, bufnr)
   end, buf_opts)
 
   -- Auto format on save
-  if isAutoformatOnSaveEnabled(client) and client.server_capabilities.documentFormattingProvider then
+  if is_autoformat_on_save_enabled(client) and client.server_capabilities.documentFormattingProvider then
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_format_on_save_group,
       buffer = bufnr,
