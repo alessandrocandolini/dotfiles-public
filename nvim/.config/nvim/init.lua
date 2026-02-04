@@ -75,9 +75,6 @@ vim.opt.sidescroll = 1
 vim.opt.backup = false
 vim.opt.writebackup = false
 
--- Y to EOL
-vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
-
 -- Show incomplete commands
 vim.opt.showcmd = true
 
@@ -91,6 +88,9 @@ vim.opt.signcolumn = "yes"
 if vim.fn.exists("+winborder") == 1 then
   vim.o.winborder = "rounded"
 end
+
+-- Y to EOL
+vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
 -- Fix Ctrl-W v asymmetry
 vim.keymap.set("n", "<C-w>v", ":vnew<CR>", { noremap = true, silent = true })
