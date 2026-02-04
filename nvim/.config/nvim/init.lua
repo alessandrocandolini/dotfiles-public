@@ -36,6 +36,9 @@ end
 -- No statusline by default
 vim.opt.laststatus = 0
 
+-- Autoreload file changes outside nvim
+vim.opt.autoread = true
+
 -- Do not add empty newline at EOF
 vim.opt.eol = false
 
@@ -52,6 +55,7 @@ vim.opt.ruler = false
 -- Absolute + relative line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.cursorline = true
 
 -- Disable mouse
 vim.opt.mouse = ""
@@ -84,6 +88,9 @@ vim.opt.signcolumn = "yes"
 if vim.fn.exists("+winborder") == 1 then
   vim.o.winborder = "rounded"
 end
+
+-- Y to EOL
+vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
 -- Fix Ctrl-W v asymmetry
 vim.keymap.set("n", "<C-w>v", ":vnew<CR>", { noremap = true, silent = true })
