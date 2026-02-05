@@ -1,4 +1,9 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   dockerStuff = with pkgs; [
@@ -61,8 +66,7 @@ in
 {
   home.stateVersion = "25.05";
 
-  home.packages =
-    dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff;
+  home.packages = dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
