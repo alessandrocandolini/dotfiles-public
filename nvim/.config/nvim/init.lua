@@ -55,7 +55,7 @@ vim.opt.ruler = false
 -- Absolute + relative line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Disable mouse
 vim.opt.mouse = ""
