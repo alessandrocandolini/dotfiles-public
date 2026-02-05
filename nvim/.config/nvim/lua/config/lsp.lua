@@ -50,6 +50,9 @@ local function lsp_setup_per_buffer(client, bufnr)
       end
     end, { buffer = bufnr, silent = true })
   end
+
+  -- No semantics token
+client.server_capabilities.semanticTokensProvider = nil
 end
 
 local function list_lsp_clients()
