@@ -44,7 +44,7 @@ function M.setup()
   })
 
   local function find_files()
-    local cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
+    local cmd = 'fd --color=never --hidden --type f --type l --type d --exclude .git'
     local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
     if base ~= '.' then
       cmd = cmd .. (" | proximity-sort %s"):format(vim.fn.shellescape(vim.fn.expand('%')))
