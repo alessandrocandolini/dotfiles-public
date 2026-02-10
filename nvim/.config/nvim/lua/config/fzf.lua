@@ -44,7 +44,7 @@ function M.setup()
     },
   })
 
-  local function find_filesresume
+  local function find_files(resume)
     local cmd = 'fd --color=never --hidden --type f --type l --type d --exclude .git'
     local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
     if base ~= '.' then
