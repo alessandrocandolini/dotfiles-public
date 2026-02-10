@@ -75,6 +75,7 @@ in
       htop
       macmon
       universal-ctags
+      spacectl
     ];
 
   # Use a custom configuration.nix location.
