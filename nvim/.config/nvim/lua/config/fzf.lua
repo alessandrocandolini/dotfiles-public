@@ -21,8 +21,8 @@ function M.setup()
       git_icons = false,
     },
     fzf_opts = {
-      ["--info"] = "inline",
-      ["--layout"]    = "default",
+      ["--info"]   = "inline",
+      ["--layout"] = "default",
     },
     keymap = {
       fzf = {
@@ -54,13 +54,13 @@ function M.setup()
       cmd = cmd,
       resume = resume,
       fzf_opts = {
-        ['--scheme']    = 'path',
-        ['--tiebreak']  = 'index',
+        ['--scheme']   = 'path',
+        ['--tiebreak'] = 'index',
       }
     })
   end
 
-  vim.keymap.set("n", "<C-p>", function() find_files(true) end, { silent = true, desc = "Find files"})
+  vim.keymap.set("n", "<C-p>", function() find_files(true) end, { silent = true, desc = "Find files" })
   vim.keymap.set("n", "<Leader>r", fzf.live_grep, { silent = true, desc = "Search project (live grep)" })
 
   local function search_word_under_cursor()
