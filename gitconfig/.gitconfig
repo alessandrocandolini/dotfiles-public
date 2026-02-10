@@ -10,7 +10,11 @@
   conflictstyle = zdiff3
 
 [diff]
-    algorithm = histogram
+  algorithm = histogram
+  wordRegex = [^[:space:],(){}.]+
+
+[alias]
+  diffw = diff --word-diff --color-words
 
 [url "git@github.com-acando86:"]
   insteadOf = https://github.com/
