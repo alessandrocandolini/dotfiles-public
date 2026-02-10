@@ -28,6 +28,7 @@ function M.setup()
       fzf = {
         ["ctrl-p"] = "toggle-preview",
         ["ctrl-q"] = "select-all+accept",
+        ["ctrl-l"] = "clear-query",
       },
     },
     grep = {
@@ -43,7 +44,7 @@ function M.setup()
     },
   })
 
-  local function find_files()
+  local function find_files(resume)
     local cmd = 'fd --color=never --hidden --type f --type l --exclude .git'
     local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
     if base ~= '.' then
@@ -51,6 +52,7 @@ function M.setup()
     end
     fzf.files({
       cmd = cmd,
+      resume = resume,
       fzf_opts = {
         ['--scheme']    = 'path',
         ['--tiebreak']  = 'index',
@@ -58,7 +60,7 @@ function M.setup()
     })
   end
 
-  vim.keymap.set("n", "<C-p>", find_files, { silent = true, desc = "Find files"})
+  vim.keymap.set("n", "<C-p>", function() find_files(true) end, { silent = true, desc = "Find files"})
   vim.keymap.set("n", "<Leader>r", fzf.live_grep, { silent = true, desc = "Search project (live grep)" })
 
   local function search_word_under_cursor()
