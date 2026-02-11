@@ -135,6 +135,13 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "highlight yanked text"
 })
 
+-- Enable autoread and set up checking triggers
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+  command = "if mode() != 'c' | checktime | endif",
+  pattern = "*",
+})
+
 -- appearance of popup menu for autocomplete
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
