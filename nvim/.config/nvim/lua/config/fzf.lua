@@ -26,7 +26,8 @@ function M.setup()
     },
     keymap = {
       fzf = {
-        ["ctrl-p"] = "toggle-preview",
+        ["ctrl-_"] = "toggle-preview",
+        ["ctrl-p"] = "abort",
         ["ctrl-q"] = "select-all+accept",
         ["ctrl-l"] = "clear-query",
       },
