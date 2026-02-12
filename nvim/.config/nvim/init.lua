@@ -137,7 +137,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Enable autoread and set up checking triggers
 vim.o.autoread = true
+local autoread_group = vim.api.nvim_create_augroup("UserAutoReadChecktime", { clear = true })
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+  group = autoread_group,
   command = "if mode() != 'c' | checktime | endif",
   pattern = "*",
 })
