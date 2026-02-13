@@ -223,16 +223,9 @@ function M.toggle()
 
   if not enabled then
     -- cancel all inflight root lookups for all buffers
-    -- collect bufnrs first to avoid modifying table during iteration
-    local bufnrs = {}
-    for bufnr in pairs(inflight_root) do
-      bufnrs[#bufnrs + 1] = bufnr
-    end
-    for _, bufnr in ipairs(bufnrs) do
-      if inflight_root[bufnr] then
-        pcall(function() inflight_root[bufnr]:kill(15) end)
-        inflight_root[bufnr] = nil
-      end
+    for bufnr, obj in pairs(inflight_root) do
+      pcall(function() obj:kill(15) end)
+      inflight_root[bufnr] = nil
     end
     if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
     clear(vim.api.nvim_get_current_buf())
