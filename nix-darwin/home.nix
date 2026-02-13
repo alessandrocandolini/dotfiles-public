@@ -64,10 +64,7 @@ let
   ];
   system = pkgs.stdenv.hostPlatform.system;
 
-  rustPkgs = import inputs.nixpkgs {
-    inherit system;
-    overlays = [ inputs.rust-overlay.overlays.default ];
-  };
+  rustPkgs = pkgs.extend inputs.rust-overlay.overlays.default;
 
   rustToolchain = rustPkgs.rust-bin.stable."1.93.0".default.override {
     extensions = [
