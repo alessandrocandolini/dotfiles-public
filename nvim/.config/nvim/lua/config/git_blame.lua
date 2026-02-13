@@ -97,10 +97,11 @@ local function blame()
   local timer = vim.loop.new_timer()
   debounce_timer = timer
   timer:start(100, 0, vim.schedule_wrap(function()
+    -- Clear global reference if this is still the current timer
     if debounce_timer == timer then
       debounce_timer = nil
     end
-    -- Always close this timer since it has completed firing
+    -- Always close this timer object since it has completed firing (local reference)
     pcall(vim.loop.timer_close, timer)
 
     git_root_async(file, bufnr, function(root)
