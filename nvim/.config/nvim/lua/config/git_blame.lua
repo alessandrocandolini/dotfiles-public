@@ -43,9 +43,12 @@ end
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  inflight_root[bufnr] = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
+  local obj = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
-      inflight_root[bufnr] = nil
+      -- only clear if this is still the current request for this buffer
+      if inflight_root[bufnr] == obj then
+        inflight_root[bufnr] = nil
+      end
       if res.code ~= 0 or not res.stdout or res.stdout == "" then
         cb(nil)
       else
@@ -53,6 +56,9 @@ local function git_root_async(bufnr, file, cb)
       end
     end)
   end)
+  
+  inflight_root[bufnr] = obj
+  return obj
 end
 
 local function blame()
@@ -74,9 +80,9 @@ local function blame()
   end
 
   -- cancel previous root lookup for this buffer
-  if inflight_root[bufnr] then
-    pcall(function() inflight_root[bufnr]:kill(15) end)
-    inflight_root[bufnr] = nil
+  local old_root = inflight_root[bufnr]
+  if old_root then
+    pcall(function() old_root:kill(15) end)
   end
 
   git_root_async(bufnr, file, function(root)
