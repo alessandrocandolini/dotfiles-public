@@ -46,9 +46,12 @@ end
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  inflight_root[bufnr] = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
+  local handle = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
-      inflight_root[bufnr] = nil
+      -- Only clear if this is still the current inflight operation
+      if inflight_root[bufnr] == handle then
+        inflight_root[bufnr] = nil
+      end
       if res.code ~= 0 or not res.stdout or res.stdout == "" then
         cb(nil)
       else
@@ -56,6 +59,7 @@ local function git_root_async(bufnr, file, cb)
       end
     end)
   end)
+  inflight_root[bufnr] = handle
 end
 
 local function blame()
