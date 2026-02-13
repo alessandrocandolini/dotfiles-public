@@ -153,6 +153,7 @@ require("config.fzf").setup()
 require("config.cmp").setup()
 require("config.lsp").setup()
 require("config.projectionist").setup()
+require("config.git_blame").setup()
 
 -- other plugins
 require("nvim-autopairs").setup()
