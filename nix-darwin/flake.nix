@@ -19,31 +19,43 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, darwin, home-manager, neovim-nightly-overlay, ... }:
+  outputs =
+    inputs@{
+      nixpkgs,
+      darwin,
+      home-manager,
+      neovim-nightly-overlay,
+      rust-overlay,
+      ...
+    }:
     let
       system = "aarch64-darwin";
       username = "alessandrocandolini";
       homeDirectory = "/Users/alessandrocandolini";
-    in {
-      darwinConfigurations.this-mac =
-        darwin.lib.darwinSystem {
-          inherit system;
-          modules = [
-            ./darwin-configuration.nix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${username} = {
-                imports = [ ./home.nix ];
-                home.username = username;
-                home.homeDirectory = homeDirectory;
-                _module.args = { inherit inputs; };
-              };
-            }
-          ];
-        };
+    in
+    {
+      darwinConfigurations.this-mac = darwin.lib.darwinSystem {
+        inherit system;
+        modules = [
+          ./darwin-configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${username} = {
+              imports = [ ./home.nix ];
+              home.username = username;
+              home.homeDirectory = homeDirectory;
+              _module.args = { inherit inputs; };
+            };
+          }
+        ];
+      };
     };
 }

@@ -62,11 +62,24 @@ let
     ruff
     lua-language-server
   ];
+  system = pkgs.stdenv.hostPlatform.system;
+
+  rustPkgs = pkgs.extend inputs.rust-overlay.overlays.default;
+
+  rustToolchain = rustPkgs.rust-bin.stable."1.93.0".default.override {
+    extensions = [
+      "rust-analyzer"
+      "rust-src"
+      "clippy"
+      "rustfmt"
+    ];
+  };
+  rustStuff = [ rustToolchain ];
 in
 {
   home.stateVersion = "25.05";
 
-  home.packages = dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff;
+  home.packages = dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff ++ rustStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
