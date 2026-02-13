@@ -13,6 +13,13 @@ local function clear(bufnr)
   vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 end
 
+local function clear_debounce_timer()
+  if debounce_timer then
+    pcall(vim.loop.timer_stop, debounce_timer)
+    debounce_timer = nil
+  end
+end
+
 local function set_virt(bufnr, lnum0, msg)
   clear(bufnr)
   vim.api.nvim_buf_set_extmark(bufnr, ns, lnum0, 0, {
@@ -78,19 +85,19 @@ local function blame()
   local lnum0 = line1 - 1
 
   -- Debounce: cancel previous timer and blame request
-  if debounce_timer then
-    pcall(vim.loop.timer_stop, debounce_timer)
-    debounce_timer = nil
-  end
+  clear_debounce_timer()
   if inflight_blame then
     pcall(function() inflight_blame:kill(15) end)
     inflight_blame = nil
   end
 
   -- Start a new debounce timer
-  debounce_timer = vim.loop.new_timer()
-  debounce_timer:start(100, 0, vim.schedule_wrap(function()
-    debounce_timer = nil
+  local timer = vim.loop.new_timer()
+  debounce_timer = timer
+  timer:start(100, 0, vim.schedule_wrap(function()
+    if debounce_timer == timer then
+      debounce_timer = nil
+    end
 
     git_root_async(file, bufnr, function(root)
       if not enabled then return end
@@ -131,7 +138,7 @@ function M.toggle()
   enabled = not enabled
 
   if not enabled then
-    if debounce_timer then pcall(vim.loop.timer_stop, debounce_timer); debounce_timer = nil end
+    clear_debounce_timer()
     if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
     if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
     clear(vim.api.nvim_get_current_buf())
@@ -148,10 +155,11 @@ function M.toggle()
   vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
     group = group,
     callback = function(args)
-      if debounce_timer then pcall(vim.loop.timer_stop, debounce_timer); debounce_timer = nil end
+      clear_debounce_timer()
       if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
       if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
       clear(args.buf)
+      root_cache[args.buf] = nil -- Clear cache entry for this buffer
     end,
   })
 
