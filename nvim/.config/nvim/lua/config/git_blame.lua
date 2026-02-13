@@ -6,6 +6,8 @@ local group = vim.api.nvim_create_augroup("GitBlame", { clear = true })
 local enabled = false
 local inflight_blame
 local inflight_root
+local root_cache = {} -- per-buffer git root cache
+local debounce_timer = nil
 
 local function clear(bufnr)
   vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
@@ -40,17 +42,25 @@ local function parse_porcelain(stdout)
   return string.format("%s %s · %s · %s", hash:sub(1, 8), author, date, summary)
 end
 
-local function git_root_async(file, cb)
+local function git_root_async(file, bufnr, cb)
+  -- Check cache first
+  if root_cache[bufnr] then
+    cb(root_cache[bufnr])
+    return
+  end
+
   local dir = vim.fs.dirname(file)
 
   -- Don't cancel root lookups on every cursor move; just ignore stale results.
   inflight_root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
-      if res.code ~= 0 or not res.stdout or res.stdout == "" then
-        cb(nil)
-      else
-        cb((res.stdout:gsub("%s+$", "")))
+      local root = nil
+      if res.code == 0 and res.stdout and res.stdout ~= "" then
+        root = res.stdout:gsub("%s+$", "")
       end
+      -- Cache the result (even if nil, to avoid repeated lookups for non-git files)
+      root_cache[bufnr] = root
+      cb(root)
     end)
   end)
 end
@@ -67,54 +77,66 @@ local function blame()
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
   local lnum0 = line1 - 1
 
-  -- cancel previous blame request (this one matters)
+  -- Debounce: cancel previous timer and blame request
+  if debounce_timer then
+    pcall(vim.loop.timer_stop, debounce_timer)
+    debounce_timer = nil
+  end
   if inflight_blame then
     pcall(function() inflight_blame:kill(15) end)
     inflight_blame = nil
   end
 
-  git_root_async(file, function(root)
-    if not enabled then return end
-    if not root then
-      clear(bufnr)
-      return
-    end
+  -- Start a new debounce timer
+  debounce_timer = vim.loop.new_timer()
+  debounce_timer:start(100, 0, vim.schedule_wrap(function()
+    debounce_timer = nil
 
-    -- if cursor moved while we were resolving root, don't do stale work
-    if vim.api.nvim_get_current_buf() ~= bufnr then return end
-    if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
+    git_root_async(file, bufnr, function(root)
+      if not enabled then return end
+      if not root then
+        clear(bufnr)
+        return
+      end
 
-    inflight_blame = vim.system({
-      "git", "-C", root,
-      "blame", "--porcelain",
-      "-L", string.format("%d,+1", line1),
-      "--",
-      file,
-    }, { text = true }, function(res)
-      vim.schedule(function()
-        inflight_blame = nil
-        if not enabled then return end
-        if not vim.api.nvim_buf_is_valid(bufnr) then return end
-        if vim.api.nvim_get_current_buf() ~= bufnr then return end
-        if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
-        if res.code ~= 0 then clear(bufnr); return end
+      -- if cursor moved while we were resolving root, don't do stale work
+      if vim.api.nvim_get_current_buf() ~= bufnr then return end
+      if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
 
-        local msg = parse_porcelain(res.stdout)
-        if not msg then clear(bufnr); return end
-        set_virt(bufnr, lnum0, msg)
+      inflight_blame = vim.system({
+        "git", "-C", root,
+        "blame", "--porcelain",
+        "-L", string.format("%d,+1", line1),
+        "--",
+        file,
+      }, { text = true }, function(res)
+        vim.schedule(function()
+          inflight_blame = nil
+          if not enabled then return end
+          if not vim.api.nvim_buf_is_valid(bufnr) then return end
+          if vim.api.nvim_get_current_buf() ~= bufnr then return end
+          if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
+          if res.code ~= 0 then clear(bufnr); return end
+
+          local msg = parse_porcelain(res.stdout)
+          if not msg then clear(bufnr); return end
+          set_virt(bufnr, lnum0, msg)
+        end)
       end)
     end)
-  end)
+  end))
 end
 
 function M.toggle()
   enabled = not enabled
 
   if not enabled then
+    if debounce_timer then pcall(vim.loop.timer_stop, debounce_timer); debounce_timer = nil end
     if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
     if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
     clear(vim.api.nvim_get_current_buf())
     vim.api.nvim_clear_autocmds({ group = group })
+    root_cache = {} -- Clear cache when disabling
     return
   end
 
@@ -126,6 +148,7 @@ function M.toggle()
   vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
     group = group,
     callback = function(args)
+      if debounce_timer then pcall(vim.loop.timer_stop, debounce_timer); debounce_timer = nil end
       if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
       if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
       clear(args.buf)
