@@ -42,7 +42,6 @@ end
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  if not inflight[bufnr] then inflight[bufnr] = {} end
   inflight[bufnr].root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
       if inflight[bufnr] then inflight[bufnr].root = nil end
@@ -67,14 +66,17 @@ local function blame()
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
   local lnum0 = line1 - 1
 
+  -- ensure table exists for this buffer
+  if not inflight[bufnr] then inflight[bufnr] = {} end
+
   -- cancel previous blame request for this buffer
-  if inflight[bufnr] and inflight[bufnr].blame then
+  if inflight[bufnr].blame then
     pcall(function() inflight[bufnr].blame:kill(15) end)
     inflight[bufnr].blame = nil
   end
 
   -- cancel previous root lookup for this buffer
-  if inflight[bufnr] and inflight[bufnr].root then
+  if inflight[bufnr].root then
     pcall(function() inflight[bufnr].root:kill(15) end)
     inflight[bufnr].root = nil
   end
@@ -90,7 +92,9 @@ local function blame()
     if vim.api.nvim_get_current_buf() ~= bufnr then return end
     if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
 
-    if not inflight[bufnr] then inflight[bufnr] = {} end
+    -- buffer entry might have been removed if user toggled off or switched buffers
+    if not inflight[bufnr] then return end
+
     inflight[bufnr].blame = vim.system({
       "git", "-C", root,
       "blame", "--porcelain",
