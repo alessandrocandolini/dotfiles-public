@@ -176,6 +176,7 @@ function M.blame_full()
       "git", "-C", root,
       "blame", "--porcelain",
       "-L", string.format("%d,+1", line1),
+      "--",
       file,
     }, { text = true }, function(res)
       vim.schedule(function()
