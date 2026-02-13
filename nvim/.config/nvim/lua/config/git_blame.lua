@@ -75,13 +75,13 @@ local function blame()
   ensure_buffer_tracking(bufnr)
 
   -- cancel previous blame request for this buffer
-  if inflight[bufnr].blame then
+  if inflight[bufnr] and inflight[bufnr].blame then
     pcall(function() inflight[bufnr].blame:kill(15) end)
     inflight[bufnr].blame = nil
   end
 
   -- cancel previous root lookup for this buffer
-  if inflight[bufnr].root then
+  if inflight[bufnr] and inflight[bufnr].root then
     pcall(function() inflight[bufnr].root:kill(15) end)
     inflight[bufnr].root = nil
   end
