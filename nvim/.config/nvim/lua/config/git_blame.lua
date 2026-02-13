@@ -4,7 +4,7 @@ local ns = vim.api.nvim_create_namespace("git_blame")
 local group = vim.api.nvim_create_augroup("GitBlame", { clear = true })
 
 local enabled = false
-local inflight_blame
+local inflight_blame = {} -- buffer-local: inflight_blame[bufnr] = handle
 local inflight_root = {} -- buffer-local: inflight_root[bufnr] = handle
 
 local function clear(bufnr)
@@ -74,10 +74,10 @@ local function blame()
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
   local lnum0 = line1 - 1
 
-  -- cancel previous blame request
-  if inflight_blame then
-    pcall(function() inflight_blame:kill(15) end)
-    inflight_blame = nil
+  -- cancel previous blame request for this buffer
+  if inflight_blame[bufnr] then
+    pcall(function() inflight_blame[bufnr]:kill(15) end)
+    inflight_blame[bufnr] = nil
   end
 
   -- cancel previous root lookup for this buffer
@@ -97,7 +97,7 @@ local function blame()
     if vim.api.nvim_get_current_buf() ~= bufnr then return end
     if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
 
-    inflight_blame = vim.system({
+    local handle = vim.system({
       "git", "-C", root,
       "blame", "--porcelain",
       "-L", string.format("%d,+1", line1),
@@ -105,7 +105,10 @@ local function blame()
       file,
     }, { text = true }, function(res)
       vim.schedule(function()
-        inflight_blame = nil
+        -- Only clear if this is still the current inflight operation
+        if inflight_blame[bufnr] == handle then
+          inflight_blame[bufnr] = nil
+        end
         if not enabled then return end
         if not vim.api.nvim_buf_is_valid(bufnr) then return end
         if vim.api.nvim_get_current_buf() ~= bufnr then return end
@@ -121,6 +124,7 @@ local function blame()
         set_virt(bufnr, lnum0, msg)
       end)
     end)
+    inflight_blame[bufnr] = handle
   end)
 end
 
@@ -233,9 +237,10 @@ function M.toggle()
       pcall(function() handle:kill(15) end)
     end
     inflight_root = {}
-    if inflight_blame then
-      pcall(function() inflight_blame:kill(15) end); inflight_blame = nil
+    for bufnr, handle in pairs(inflight_blame) do
+      pcall(function() handle:kill(15) end)
     end
+    inflight_blame = {}
     clear(vim.api.nvim_get_current_buf())
     vim.api.nvim_clear_autocmds({ group = group })
     return
@@ -253,8 +258,9 @@ function M.toggle()
         pcall(function() inflight_root[args.buf]:kill(15) end)
         inflight_root[args.buf] = nil
       end
-      if inflight_blame then
-        pcall(function() inflight_blame:kill(15) end); inflight_blame = nil
+      if inflight_blame[args.buf] then
+        pcall(function() inflight_blame[args.buf]:kill(15) end)
+        inflight_blame[args.buf] = nil
       end
       clear(args.buf)
     end,
