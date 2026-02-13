@@ -83,6 +83,7 @@ local function blame()
   local old_root = inflight_root[bufnr]
   if old_root then
     pcall(function() old_root:kill(15) end)
+    inflight_root[bufnr] = nil
   end
 
   git_root_async(bufnr, file, function(root)
@@ -222,10 +223,17 @@ function M.toggle()
 
   if not enabled then
     -- cancel all inflight root lookups for all buffers
-    for bufnr, obj in pairs(inflight_root) do
-      pcall(function() obj:kill(15) end)
+    -- collect bufnrs first to avoid modifying table during iteration
+    local bufnrs = {}
+    for bufnr in pairs(inflight_root) do
+      bufnrs[#bufnrs + 1] = bufnr
     end
-    inflight_root = {}
+    for _, bufnr in ipairs(bufnrs) do
+      if inflight_root[bufnr] then
+        pcall(function() inflight_root[bufnr]:kill(15) end)
+        inflight_root[bufnr] = nil
+      end
+    end
     if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
     clear(vim.api.nvim_get_current_buf())
     vim.api.nvim_clear_autocmds({ group = group })
