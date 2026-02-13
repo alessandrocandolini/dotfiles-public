@@ -112,6 +112,104 @@ local function blame()
   end)
 end
 
+
+local function open_float(lines)
+  local width  = math.min(100, math.floor(vim.o.columns * 0.7))
+  local height = math.min(#lines, math.floor(vim.o.lines * 0.4))
+  height = math.max(height, 3)
+
+  local bufnr = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+  vim.bo[bufnr].bufhidden = "wipe"
+  vim.bo[bufnr].modifiable = false
+
+  local win = vim.api.nvim_open_win(bufnr, false, {
+    relative = "cursor",
+    row = 1,
+    col = 1,
+    width = width,
+    height = height,
+    style = "minimal",
+    border = "rounded",
+  })
+
+  vim.wo[win].wrap = true
+  vim.wo[win].linebreak = true
+
+  local function close()
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+
+  -- close on “any action” that implies you’re done peeking
+  local grp = vim.api.nvim_create_augroup("GitBlamePeekClose", { clear = true })
+
+  vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged", "BufLeave", "WinLeave", "InsertEnter" }, {
+    group = grp,
+    once = true,
+    callback = function()
+      close()
+      -- clean up the augroup so we don't accumulate
+      pcall(vim.api.nvim_del_augroup_by_id, grp)
+    end,
+  })
+end
+
+function M.blame_full()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.bo[bufnr].buftype ~= "" then return end
+
+  local file = vim.api.nvim_buf_get_name(bufnr)
+  if file == "" then return end
+
+  local line1 = vim.api.nvim_win_get_cursor(0)[1]
+
+  git_root_async(file, function(root)
+    if not root then
+      vim.notify("Not a git repo", vim.log.levels.WARN)
+      return
+    end
+
+    -- Step 1: get hash for this line
+    vim.system({
+      "git", "-C", root,
+      "blame", "--porcelain",
+      "-L", string.format("%d,+1", line1),
+      file,
+    }, { text = true }, function(res)
+      vim.schedule(function()
+        if res.code ~= 0 or not res.stdout or res.stdout == "" then
+          vim.notify("git blame failed", vim.log.levels.ERROR)
+          return
+        end
+
+        local first = vim.split(res.stdout, "\n", { plain = true })[1] or ""
+        local hash = first:match("^(%S+)")
+        if not hash or hash == "" then return end
+
+        -- Step 2: show commit title/body like GitHub
+        vim.system({
+          "git", "-C", root,
+          "show", "-s",
+          "--date=short",
+          "--format=%h%n%an · %ad%n%n%s%n%n%b",
+          hash,
+        }, { text = true }, function(res2)
+          vim.schedule(function()
+            if res2.code ~= 0 or not res2.stdout then
+              vim.notify("git show failed", vim.log.levels.ERROR)
+              return
+            end
+
+            local lines = vim.split(res2.stdout, "\n", { plain = true })
+            open_float(lines)
+          end)
+        end)
+      end)
+    end)
+  end)
+end
 function M.toggle()
   enabled = not enabled
 
@@ -144,6 +242,9 @@ function M.setup()
   vim.keymap.set("n", "<leader>gb", function()
     M.toggle()
   end, { desc = "Git blame (minimal async)" })
+  vim.keymap.set("n", "<leader>gB", function()
+    M.blame_full()
+  end, { desc = "Git blame (full overlay)" })
 end
 
 return M
