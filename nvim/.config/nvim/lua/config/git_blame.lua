@@ -218,8 +218,8 @@ function M.toggle()
     -- cancel all inflight root lookups for all buffers
     for bufnr, obj in pairs(inflight_root) do
       pcall(function() obj:kill(15) end)
-      inflight_root[bufnr] = nil
     end
+    inflight_root = {}
     if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
     clear(vim.api.nvim_get_current_buf())
     vim.api.nvim_clear_autocmds({ group = group })
