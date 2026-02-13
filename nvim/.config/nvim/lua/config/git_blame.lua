@@ -227,8 +227,8 @@ function M.toggle()
   if not enabled then
     for bufnr, handle in pairs(inflight_root) do
       pcall(function() handle:kill(15) end)
-      inflight_root[bufnr] = nil
     end
+    inflight_root = {}
     if inflight_blame then
       pcall(function() inflight_blame:kill(15) end); inflight_blame = nil
     end
