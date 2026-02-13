@@ -100,6 +100,7 @@ local function blame()
     if debounce_timer == timer then
       debounce_timer = nil
     end
+    -- Always close this timer since it has completed firing
     pcall(vim.loop.timer_close, timer)
 
     git_root_async(file, bufnr, function(root)
