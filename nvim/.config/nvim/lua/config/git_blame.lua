@@ -4,8 +4,7 @@ local ns = vim.api.nvim_create_namespace("git_blame")
 local group = vim.api.nvim_create_augroup("GitBlame", { clear = true })
 
 local enabled = false
-local inflight_blame
-local inflight_root
+local inflight = {} -- per-buffer tracking: { [bufnr] = { blame = obj, root = obj } }
 
 local function clear(bufnr)
   vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
@@ -40,11 +39,13 @@ local function parse_porcelain(stdout)
   return string.format("%s %s · %s · %s", hash:sub(1, 8), author, date, summary)
 end
 
-local function git_root_async(file, cb)
+local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  inflight_root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
+  if not inflight[bufnr] then inflight[bufnr] = {} end
+  inflight[bufnr].root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
+      if inflight[bufnr] then inflight[bufnr].root = nil end
       if res.code ~= 0 or not res.stdout or res.stdout == "" then
         cb(nil)
       else
@@ -66,19 +67,19 @@ local function blame()
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
   local lnum0 = line1 - 1
 
-  -- cancel previous blame request
-  if inflight_blame then
-    pcall(function() inflight_blame:kill(15) end)
-    inflight_blame = nil
+  -- cancel previous blame request for this buffer
+  if inflight[bufnr] and inflight[bufnr].blame then
+    pcall(function() inflight[bufnr].blame:kill(15) end)
+    inflight[bufnr].blame = nil
   end
 
-  -- cancel previous root lookup
-  if inflight_root then
-    pcall(function() inflight_root:kill(15) end)
-    inflight_root = nil
+  -- cancel previous root lookup for this buffer
+  if inflight[bufnr] and inflight[bufnr].root then
+    pcall(function() inflight[bufnr].root:kill(15) end)
+    inflight[bufnr].root = nil
   end
 
-  git_root_async(file, function(root)
+  git_root_async(bufnr, file, function(root)
     if not enabled then return end
     if not root then
       clear(bufnr)
@@ -89,7 +90,8 @@ local function blame()
     if vim.api.nvim_get_current_buf() ~= bufnr then return end
     if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
 
-    inflight_blame = vim.system({
+    if not inflight[bufnr] then inflight[bufnr] = {} end
+    inflight[bufnr].blame = vim.system({
       "git", "-C", root,
       "blame", "--porcelain",
       "-L", string.format("%d,+1", line1),
@@ -97,7 +99,7 @@ local function blame()
       file,
     }, { text = true }, function(res)
       vim.schedule(function()
-        inflight_blame = nil
+        if inflight[bufnr] then inflight[bufnr].blame = nil end
         if not enabled then return end
         if not vim.api.nvim_buf_is_valid(bufnr) then return end
         if vim.api.nvim_get_current_buf() ~= bufnr then return end
@@ -165,7 +167,7 @@ function M.blame_full()
 
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
 
-  git_root_async(file, function(root)
+  git_root_async(bufnr, file, function(root)
     if not root then
       vim.notify("Not a git repo", vim.log.levels.WARN)
       return
@@ -214,8 +216,12 @@ function M.toggle()
   enabled = not enabled
 
   if not enabled then
-    if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
-    if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
+    -- cleanup all inflight operations for all buffers
+    for bufnr, ops in pairs(inflight) do
+      if ops.root then pcall(function() ops.root:kill(15) end) end
+      if ops.blame then pcall(function() ops.blame:kill(15) end) end
+    end
+    inflight = {}
     clear(vim.api.nvim_get_current_buf())
     vim.api.nvim_clear_autocmds({ group = group })
     return
@@ -229,9 +235,13 @@ function M.toggle()
   vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
     group = group,
     callback = function(args)
-      if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
-      if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
-      clear(args.buf)
+      local bufnr = args.buf
+      if inflight[bufnr] then
+        if inflight[bufnr].root then pcall(function() inflight[bufnr].root:kill(15) end) end
+        if inflight[bufnr].blame then pcall(function() inflight[bufnr].blame:kill(15) end) end
+        inflight[bufnr] = nil
+      end
+      clear(bufnr)
     end,
   })
 
