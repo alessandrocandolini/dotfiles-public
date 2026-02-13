@@ -40,6 +40,14 @@ local function parse_porcelain(stdout)
   return string.format("%s %s · %s · %s", hash:sub(1, 8), author, date, summary)
 end
 
+local function cancel_root_lookup(bufnr)
+  local obj = inflight_root[bufnr]
+  if obj then
+    pcall(function() obj:kill(15) end)
+    inflight_root[bufnr] = nil
+  end
+end
+
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
@@ -80,11 +88,7 @@ local function blame()
   end
 
   -- cancel previous root lookup for this buffer
-  local old_root = inflight_root[bufnr]
-  if old_root then
-    pcall(function() old_root:kill(15) end)
-    inflight_root[bufnr] = nil
-  end
+  cancel_root_lookup(bufnr)
 
   git_root_async(bufnr, file, function(root)
     if not enabled then return end
@@ -223,9 +227,8 @@ function M.toggle()
 
   if not enabled then
     -- cancel all inflight root lookups for all buffers
-    for bufnr, obj in pairs(inflight_root) do
-      pcall(function() obj:kill(15) end)
-      inflight_root[bufnr] = nil
+    for bufnr in pairs(inflight_root) do
+      cancel_root_lookup(bufnr)
     end
     if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
     clear(vim.api.nvim_get_current_buf())
@@ -241,10 +244,7 @@ function M.toggle()
   vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
     group = group,
     callback = function(args)
-      if inflight_root[args.buf] then
-        pcall(function() inflight_root[args.buf]:kill(15) end)
-        inflight_root[args.buf] = nil
-      end
+      cancel_root_lookup(args.buf)
       if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
       clear(args.buf)
     end,
