@@ -43,7 +43,6 @@ end
 local function git_root_async(file, cb)
   local dir = vim.fs.dirname(file)
 
-  -- Don't cancel root lookups on every cursor move; just ignore stale results.
   inflight_root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
       if res.code ~= 0 or not res.stdout or res.stdout == "" then
@@ -67,10 +66,16 @@ local function blame()
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
   local lnum0 = line1 - 1
 
-  -- cancel previous blame request (this one matters)
+  -- cancel previous blame request
   if inflight_blame then
     pcall(function() inflight_blame:kill(15) end)
     inflight_blame = nil
+  end
+
+  -- cancel previous root lookup
+  if inflight_root then
+    pcall(function() inflight_root:kill(15) end)
+    inflight_root = nil
   end
 
   git_root_async(file, function(root)
