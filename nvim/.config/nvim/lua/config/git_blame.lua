@@ -42,6 +42,7 @@ end
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
+  if not inflight[bufnr] then inflight[bufnr] = {} end
   inflight[bufnr].root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
       if inflight[bufnr] then inflight[bufnr].root = nil end
