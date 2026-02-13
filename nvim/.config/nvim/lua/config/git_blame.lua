@@ -56,7 +56,7 @@ local function git_root_async(bufnr, file, cb)
       end
     end)
   end)
-  
+
   inflight_root[bufnr] = obj
   return obj
 end
