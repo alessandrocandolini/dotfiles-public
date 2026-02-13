@@ -242,10 +242,10 @@ end
 function M.setup()
   vim.keymap.set("n", "<leader>gb", function()
     M.toggle()
-  end, { desc = "Git blame (minimal async)" })
+  end, { desc = "Git blame (minimal async)", silent = true })
   vim.keymap.set("n", "<leader>gB", function()
     M.blame_full()
-  end, { desc = "Git blame (full overlay)" })
+  end, { desc = "Git blame (full overlay)", silent = true })
 end
 
 return M
