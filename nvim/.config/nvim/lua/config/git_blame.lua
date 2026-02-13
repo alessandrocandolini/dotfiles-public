@@ -147,6 +147,7 @@ local function open_float(lines)
     height = height,
     style = "minimal",
     border = "rounded",
+    focusable = true,
   })
 
   vim.wo[win].wrap = true
@@ -158,11 +159,10 @@ local function open_float(lines)
     end
   end
 
-  -- IMPORTANT: attach close events to the *source* buffer (the one you’re editing)
   local src_buf = vim.api.nvim_get_current_buf()
   local grp = vim.api.nvim_create_augroup("GitBlamePeekClose", { clear = true })
 
-  vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged", "WinLeave", "BufLeave", "InsertEnter", "WinScrolled" }, {
+  vim.api.nvim_create_autocmd({ "CursorMoved", "InsertEnter", "WinScrolled" }, {
     group = grp,
     buffer = src_buf,
     once = true,
