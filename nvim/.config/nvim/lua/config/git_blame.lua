@@ -39,12 +39,17 @@ local function parse_porcelain(stdout)
   return string.format("%s %s · %s · %s", hash:sub(1, 8), author, date, summary)
 end
 
+local function ensure_buffer_tracking(bufnr)
+  if not inflight[bufnr] then inflight[bufnr] = {} end
+end
+
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  if not inflight[bufnr] then inflight[bufnr] = {} end
+  ensure_buffer_tracking(bufnr)
   inflight[bufnr].root = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
+      -- Entry may be removed by toggle() or BufLeave/WinLeave autocmd
       if inflight[bufnr] then inflight[bufnr].root = nil end
       if res.code ~= 0 or not res.stdout or res.stdout == "" then
         cb(nil)
@@ -67,8 +72,7 @@ local function blame()
   local line1 = vim.api.nvim_win_get_cursor(0)[1]
   local lnum0 = line1 - 1
 
-  -- ensure table exists for this buffer
-  if not inflight[bufnr] then inflight[bufnr] = {} end
+  ensure_buffer_tracking(bufnr)
 
   -- cancel previous blame request for this buffer
   if inflight[bufnr].blame then
@@ -104,6 +108,7 @@ local function blame()
       file,
     }, { text = true }, function(res)
       vim.schedule(function()
+        -- Entry may be removed by toggle() or BufLeave/WinLeave autocmd
         if inflight[bufnr] then inflight[bufnr].blame = nil end
         if not enabled then return end
         if not vim.api.nvim_buf_is_valid(bufnr) then return end
