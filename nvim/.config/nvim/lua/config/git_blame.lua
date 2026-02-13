@@ -143,15 +143,11 @@ local function open_float(lines)
   end
 
   -- close on “any action” that implies you’re done peeking
-  local grp = vim.api.nvim_create_augroup("GitBlamePeekClose", { clear = true })
-
   vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged", "BufLeave", "WinLeave", "InsertEnter" }, {
-    group = grp,
+    buffer = bufnr,
     once = true,
     callback = function()
       close()
-      -- clean up the augroup so we don't accumulate
-      pcall(vim.api.nvim_del_augroup_by_id, grp)
     end,
   })
 end
