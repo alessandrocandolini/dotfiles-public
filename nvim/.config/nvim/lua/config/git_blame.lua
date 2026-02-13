@@ -50,9 +50,10 @@ local function parse_porcelain(stdout)
 end
 
 local function git_root_async(file, bufnr, cb)
-  -- Check cache first
-  if root_cache[bufnr] then
-    cb(root_cache[bufnr])
+  -- Check cache first - use a sentinel value to distinguish cached nil from missing entry
+  local cached = root_cache[bufnr]
+  if cached ~= nil then
+    cb(cached == false and nil or cached)
     return
   end
 
@@ -65,8 +66,8 @@ local function git_root_async(file, bufnr, cb)
       if res.code == 0 and res.stdout and res.stdout ~= "" then
         root = res.stdout:gsub("%s+$", "")
       end
-      -- Cache the result (even if nil, to avoid repeated lookups for non-git files)
-      root_cache[bufnr] = root
+      -- Cache the result (use false as sentinel for nil to distinguish from uncached)
+      root_cache[bufnr] = root or false
       cb(root)
     end)
   end)
@@ -152,7 +153,7 @@ function M.toggle()
     group = group,
     callback = blame,
   })
-  vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
+  vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave", "BufDelete", "BufWipeout" }, {
     group = group,
     callback = function(args)
       clear_debounce_timer()
