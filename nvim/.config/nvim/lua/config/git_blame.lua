@@ -30,9 +30,12 @@ local function parse_porcelain(stdout)
   for i = 2, #lines do
     local l = lines[i]
     if l == "" then break end
-    if l:sub(1, 7) == "author " then author = l:sub(8)
-    elseif l:sub(1, 12) == "author-time " then atime = tonumber(l:sub(13))
-    elseif l:sub(1, 8) == "summary " then summary = l:sub(9)
+    if l:sub(1, 7) == "author " then
+      author = l:sub(8)
+    elseif l:sub(1, 12) == "author-time " then
+      atime = tonumber(l:sub(13))
+    elseif l:sub(1, 8) == "summary " then
+      summary = l:sub(9)
     end
   end
 
@@ -102,10 +105,14 @@ local function blame()
         if not vim.api.nvim_buf_is_valid(bufnr) then return end
         if vim.api.nvim_get_current_buf() ~= bufnr then return end
         if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
-        if res.code ~= 0 then clear(bufnr); return end
+        if res.code ~= 0 then
+          clear(bufnr); return
+        end
 
         local msg = parse_porcelain(res.stdout)
-        if not msg then clear(bufnr); return end
+        if not msg then
+          clear(bufnr); return
+        end
         set_virt(bufnr, lnum0, msg)
       end)
     end)
@@ -114,16 +121,16 @@ end
 
 
 local function open_float(lines)
-  local width  = math.min(100, math.floor(vim.o.columns * 0.7))
-  local height = math.min(#lines, math.floor(vim.o.lines * 0.4))
-  height = math.max(height, 3)
+  local width     = math.min(100, math.floor(vim.o.columns * 0.7))
+  local height    = math.min(#lines, math.floor(vim.o.lines * 0.4))
+  height          = math.max(height, 3)
 
-  local bufnr = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-  vim.bo[bufnr].bufhidden = "wipe"
-  vim.bo[bufnr].modifiable = false
+  local float_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(float_buf, 0, -1, false, lines)
+  vim.bo[float_buf].bufhidden = "wipe"
+  vim.bo[float_buf].modifiable = false
 
-  local win = vim.api.nvim_open_win(bufnr, false, {
+  local win = vim.api.nvim_open_win(float_buf, false, {
     relative = "cursor",
     row = 1,
     col = 1,
@@ -142,12 +149,17 @@ local function open_float(lines)
     end
   end
 
-  -- close on “any action” that implies you’re done peeking
-  vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged", "BufLeave", "WinLeave", "InsertEnter" }, {
-    buffer = bufnr,
+  -- IMPORTANT: attach close events to the *source* buffer (the one you’re editing)
+  local src_buf = vim.api.nvim_get_current_buf()
+  local grp = vim.api.nvim_create_augroup("GitBlamePeekClose", { clear = true })
+
+  vim.api.nvim_create_autocmd({ "CursorMoved", "ModeChanged", "WinLeave", "BufLeave", "InsertEnter", "WinScrolled" }, {
+    group = grp,
+    buffer = src_buf,
     once = true,
     callback = function()
       close()
+      pcall(vim.api.nvim_del_augroup_by_id, grp)
     end,
   })
 end
@@ -207,12 +219,17 @@ function M.blame_full()
     end)
   end)
 end
+
 function M.toggle()
   enabled = not enabled
 
   if not enabled then
-    if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
-    if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
+    if inflight_root then
+      pcall(function() inflight_root:kill(15) end); inflight_root = nil
+    end
+    if inflight_blame then
+      pcall(function() inflight_blame:kill(15) end); inflight_blame = nil
+    end
     clear(vim.api.nvim_get_current_buf())
     vim.api.nvim_clear_autocmds({ group = group })
     return
@@ -226,8 +243,12 @@ function M.toggle()
   vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
     group = group,
     callback = function(args)
-      if inflight_root then pcall(function() inflight_root:kill(15) end); inflight_root = nil end
-      if inflight_blame then pcall(function() inflight_blame:kill(15) end); inflight_blame = nil end
+      if inflight_root then
+        pcall(function() inflight_root:kill(15) end); inflight_root = nil
+      end
+      if inflight_blame then
+        pcall(function() inflight_blame:kill(15) end); inflight_blame = nil
+      end
       clear(args.buf)
     end,
   })
