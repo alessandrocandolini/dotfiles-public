@@ -60,6 +60,10 @@
       "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
+    "vim-nix": {
+      "rev": "7235c7ce2cea530cb6b59bc3e46d4bfe917d15c8",
+      "src": "https://github.com/LnL7/vim-nix"
+    },
     "vim-projectionist": {
       "rev": "5ff7bf79a6ef741036d2038a226bcb5f8b1cd296",
       "src": "https://github.com/tpope/vim-projectionist"
