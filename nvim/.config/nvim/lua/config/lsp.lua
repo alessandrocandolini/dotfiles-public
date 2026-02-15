@@ -107,7 +107,9 @@ function M.setup()
   if vim.fn.executable('nil') == 1 then
     vim.lsp.enable('nil_ls')
   end
-
+  if vim.fn.executable('rust-analyzer') == 1 then
+    vim.lsp.enable('rust-analyzer')
+  end
   -- helper for showing attached LSPs
   vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
 
