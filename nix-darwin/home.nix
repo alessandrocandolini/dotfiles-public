@@ -50,6 +50,8 @@ let
     macmon
     universal-ctags
     # aerc
+    opentofu
+    tflint
   ];
 
   lspStuff = with pkgs; [
