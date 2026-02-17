@@ -33,4 +33,4 @@ Beyond built-in LSP support, neovim is really having a wave of interesting devel
 
 I don't let neovim manage my LSP servers: I manage them through nix, and in the setup of neovim I just assume those are available outside.
 
-Other plugins that I use include: fzf (for fuzzy search), cmp (for autocompletion), and occasionally I use lua snippets. I don't care about git integration in the editor, or fancy UI, or ways to browse the codebase: fzf is my way to browse files based on search. For git brame, i vibe coded a lua function that provides exactly the bespoke minimal experience I'm looking for, and nothing else.
+Other plugins that I use include: fzf (for fuzzy search), cmp (for autocompletion), and occasionally I use lua snippets. I don't care about git integration in the editor, or fancy UI, or ways to browse the codebase: fzf is my way to browse files based on search. For git blame, i vibe coded a lua function that provides exactly the bespoke minimal experience I'm looking for, and nothing else.
