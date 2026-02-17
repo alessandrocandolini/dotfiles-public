@@ -20,9 +20,10 @@ let
     coursier
   ];
 
+  nvimNightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
   vimStuff = with pkgs; [
     # neovim nightly
-    inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
+    nvimNightly
     proximity-sort
   ];
 
@@ -87,6 +88,7 @@ in
   programs.git.enable = true;
   programs.neovim = {
     enable = true;
+    package = nvimNightly;
     viAlias = true;
     vimAlias = true;
   };
