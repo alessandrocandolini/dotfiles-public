@@ -1,4 +1,4 @@
-TASKS=bash stow alacritty gitconfig nvim nix starship tmux vim stack agda rg cargo
+TASKS=bash stow alacritty gitconfig nvim nix starship tmux stack agda rg cargo
 VERBOSITY=1
 FLAGS=--restow --no-folding --verbose $(VERBOSITY) --target ~
 

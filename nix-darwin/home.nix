@@ -21,8 +21,7 @@ let
   ];
 
   vimStuff = with pkgs; [
-    vim
-    # neovim
+    # neovim nightly
     inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
     proximity-sort
   ];
@@ -86,6 +85,10 @@ in
   programs.bash.enable = false;
   programs.starship.enable = true;
   programs.git.enable = true;
-
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+  };
   home.sessionVariables.JAVA_HOME = "${pkgs.jdk21}/";
 }
