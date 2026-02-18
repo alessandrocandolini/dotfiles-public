@@ -29,7 +29,7 @@ However, "intellisense"-like features are a must when programming, for features 
 
 For this reason, I've migrated from vim to neovim, which has built-in support for LSP.
 
-Beyond built-in LSP support, neovim is really having a wave of interesting developments. For instance, the upcoming neovim 0.12 comes with built-in package manager, that i'm already using. This means I don't have to worry about installing a package manager.
+Beyond built-in LSP support, neovim is really having a wave of interesting developments. For instance, the upcoming neovim 0.12 comes with a built-in package manager, that i'm already using. This means I don't have to worry about installing a package manager.
 
 I don't let neovim manage my LSP servers: I manage them through nix, and in the setup of neovim I just assume those are available outside.
 
