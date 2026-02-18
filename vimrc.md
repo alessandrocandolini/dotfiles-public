@@ -6,7 +6,7 @@ I've been using vim for more than twenty years, I love vim, and over this time m
 * minimise the usage of external plugins
 
 Among the practical advantages of this approach:
-* **more robust and portable** setup: vim skills can seemlessly be ported to a different vim installation if/when needed (other workstations, remote servers, etc), i can switch to "factory" settings `vim -u NONE` without encountering too much friction, and other people can use my editor during remote or onsite pairing sessions
+* **more robust and portable** setup: vim skills can seamlessly be ported to a different vim installation if/when needed (other workstations, remote servers, etc), i can switch to "factory" settings `vim -u NONE` without encountering too much friction, and other people can use my editor during remote or onsite pairing sessions
 * **decreased maintenance burden**: less time spent in looking for plugins, keeping them up-to-date, less sensitivity to older plugins becoming unsupported
 * The limited number of plugins ensures also a fast experience: **responsiveness** of the editor is of key importance to me
 * **Less cognitive overhead**
