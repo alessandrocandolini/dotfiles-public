@@ -11,7 +11,7 @@ Among the practical advantages of this approach:
 * The limited number of plugins ensures also a fast experience: **responsiveness** of the editor is of key importance to me
 * **Less cognitive overhead**
 
-Certain default key mappings (eg, C-W for window operations) are arguably not very confortable, but it's just matter of time and practice to become more used to them.
+Certain default key mappings (eg, C-W for window operations) are arguably not very comfortable, but it's just matter of time and practice to become more used to them.
 
 The advent of language server protocol (LSPs) servers has slightly changed the above when I use vim for coding tasks that would benefit from "intellisense".
 
