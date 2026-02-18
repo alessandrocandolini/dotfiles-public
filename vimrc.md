@@ -19,7 +19,7 @@ I personally don't like these huge IDEs that do too many things at once (eg, git
 I tend to use command-line tools for git and build systems and personally I'm more productive that way.
 However, "intellisense"-like features are a must when programming, for features like:
 * smart renaming (not find-and-replace-ish renaming)
-* sematic go to definition/find references (not syntactically ctags-based, in case of duplicated definitions and/or particularly when exploring third party libraries; although tree sitter grammars can help here)
+* semantic go to definition/find references (not syntactically ctags-based, in case of duplicated definitions and/or particularly when exploring third party libraries; although tree sitter grammars can help here)
 * fast inline feedback loop from linters/compilers and
 * assisted refactoring
 * automatic imports
