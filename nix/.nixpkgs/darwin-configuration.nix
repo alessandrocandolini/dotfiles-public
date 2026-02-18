@@ -2,37 +2,38 @@
 
 let
 
-  neovimPkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-  }) {
-    system = pkgs.system;
-    overlays = [
-      (import (builtins.fetchTarball {
-        url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
-      }))
-    ];
-  };
+  neovimPkgs =
+    import
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+      })
+      {
+        system = pkgs.system;
+        overlays = [
+          (import (
+            builtins.fetchTarball {
+              url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
+            }
+          ))
+        ];
+      };
 
   dockerStuff = with pkgs; [
-      colima
-      docker
-      docker-compose
-      aws-iam-authenticator
-      amazon-ecr-credential-helper
-      docker-credential-helpers
+    colima
+    docker
+    docker-compose
+    aws-iam-authenticator
+    amazon-ecr-credential-helper
+    docker-credential-helpers
   ];
 
   scalaStuff = with pkgs; [
-      jdk21
-      (sbt.override { jre = pkgs.jdk21; })
-      coursier # for metals
+    jdk21
+    (sbt.override { jre = pkgs.jdk21; })
+    coursier # for metals
   ];
 
-  vimStuff = with pkgs; [
-      vim
-      neovimPkgs.neovim
-      proximity-sort
-  ];
+  nvimNightly = neovimPkgs.neovim;
 
   lspStuff = with pkgs; [
     bash-language-server
@@ -48,8 +49,13 @@ in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ lspStuff ++
-    [
+  environment.systemPackages =
+    with pkgs;
+    scalaStuff
+    ++ dockerStuff
+    ++ lspStuff
+    ++ [
+      proximity-sort
       jq
       fzf
       ripgrep
@@ -57,15 +63,15 @@ in
       gh
       delta
       awscli2
-#     (gradle.override { java = pkgs.jdk17; })
+      #     (gradle.override { java = pkgs.jdk17; })
       tmux
       unzip
       curl
       nodejs_latest
       starship
-#     texlab
-#     apacheHttpd
-#     postgresql
+      #     texlab
+      #     apacheHttpd
+      #     postgresql
       coreutils
       pigz
       fd
@@ -86,7 +92,12 @@ in
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = false;
   programs.bash.enable = true;
-
+  programs.neovim = {
+    enable = true;
+    package = nvimNightly;
+    viAlias = true;
+    vimAlias = true;
+  };
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
