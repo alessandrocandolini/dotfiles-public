@@ -24,7 +24,7 @@ However, "intellisense"-like features are a must when programming, for features 
 * assisted refactoring
 * automatic imports
 * exploration / signatures from third-party dependencies, etc
-* features like autocomplete an exhaustive pattern match
+* features like autocomplete for exhaustive pattern matching
 * surface compiler diagnostics
 
 For this reason, I've migrated from vim to neovim, which has built-in support for LSP.
