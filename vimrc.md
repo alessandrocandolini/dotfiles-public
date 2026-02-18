@@ -1,7 +1,7 @@
 # neovim
 
 I've been using vim for more than twenty years, I love vim, and over this time my preferences have gradually evolved towards a **minimalistic** approach to vim:
-* be sensible about which default edcitor or plugin's settings to override
+* be sensible about which default editor or plugin's settings to override
 * minimise the number of bespoke key mappings
 * minimise the usage of external plugins
 
