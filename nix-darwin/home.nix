@@ -54,6 +54,7 @@ let
     bash-language-server
     shellcheck
     nil
+    nixfmt
     terraform-ls
     basedpyright
     ruff

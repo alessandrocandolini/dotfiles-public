@@ -1,7 +1,15 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
-
+  unstablePkgs =
+    import
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+      })
+      {
+        system = pkgs.system;
+        config = pkgs.config; # keep unfree / allowBroken etc consistent
+      };
   neovimPkgs =
     import
       (builtins.fetchTarball {
@@ -18,7 +26,7 @@ let
         ];
       };
 
-  dockerStuff = with pkgs; [
+  dockerStuff = with unstablePkgs; [
     colima
     docker
     docker-compose
@@ -27,18 +35,22 @@ let
     docker-credential-helpers
   ];
 
-  scalaStuff = with pkgs; [
+  scalaStuff = with unstablePkgs; [
     jdk21
     (sbt.override { jre = pkgs.jdk21; })
     coursier # for metals
   ];
 
-  nvimNightly = neovimPkgs.neovim;
+  vimStuff = with unstablePkgs; [
+    neovimPkgs.neovim
+    proximity-sort
+  ];
 
-  lspStuff = with pkgs; [
+  lspStuff = with unstablePkgs; [
     bash-language-server
     shellcheck
     nil
+    nixfmt
     terraform-ls
     basedpyright
     ruff
@@ -50,12 +62,12 @@ in
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
-    with pkgs;
-    scalaStuff
+    with unstablePkgs;
+    vimStuff
+    ++ scalaStuff
     ++ dockerStuff
     ++ lspStuff
     ++ [
-      proximity-sort
       jq
       fzf
       ripgrep
@@ -89,15 +101,15 @@ in
 
   nix.package = pkgs.nix;
 
+  # Point vim to neovim
+  environment.shellAliases = {
+    vi = "nvim";
+    vim = "nvim";
+  };
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = false;
   programs.bash.enable = true;
-  programs.neovim = {
-    enable = true;
-    package = nvimNightly;
-    viAlias = true;
-    vimAlias = true;
-  };
+
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
