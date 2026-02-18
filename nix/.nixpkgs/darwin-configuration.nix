@@ -33,10 +33,7 @@ let
     coursier # for metals
   ];
 
-  vimStuff = with pkgs; [
-    neovimPkgs.neovim
-    proximity-sort
-  ];
+  nvimNightly = neovimPkgs.neovim;
 
   lspStuff = with pkgs; [
     bash-language-server
@@ -54,11 +51,11 @@ in
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     with pkgs;
-    vimStuff
-    ++ scalaStuff
+    scalaStuff
     ++ dockerStuff
     ++ lspStuff
     ++ [
+      proximity-sort
       jq
       fzf
       ripgrep
@@ -97,6 +94,7 @@ in
   programs.bash.enable = true;
   programs.neovim = {
     enable = true;
+    package = nvimNightly;
     viAlias = true;
     vimAlias = true;
   };

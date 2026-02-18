@@ -21,11 +21,6 @@ let
   ];
 
   nvimNightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  vimStuff = with pkgs; [
-    # neovim nightly
-    nvimNightly
-    proximity-sort
-  ];
 
   cliStuff = with pkgs; [
     jq
@@ -52,6 +47,7 @@ let
     # aerc
     opentofu
     tflint
+    proximity-sort
   ];
 
   lspStuff = with pkgs; [
@@ -81,7 +77,7 @@ in
 {
   home.stateVersion = "25.05";
 
-  home.packages = dockerStuff ++ scalaStuff ++ vimStuff ++ cliStuff ++ lspStuff ++ rustStuff;
+  home.packages = dockerStuff ++ scalaStuff ++ cliStuff ++ lspStuff ++ rustStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
