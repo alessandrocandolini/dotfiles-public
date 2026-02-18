@@ -1,43 +1,56 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
+  unstablePkgs =
+    import
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+      })
+      {
+        system = pkgs.system;
+        config = pkgs.config; # keep unfree / allowBroken etc consistent
+      };
+  neovimPkgs =
+    import
+      (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+      })
+      {
+        system = pkgs.system;
+        overlays = [
+          (import (
+            builtins.fetchTarball {
+              url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
+            }
+          ))
+        ];
+      };
 
-  neovimPkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-  }) {
-    system = pkgs.system;
-    overlays = [
-      (import (builtins.fetchTarball {
-        url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
-      }))
-    ];
-  };
-
-  dockerStuff = with pkgs; [
-      colima
-      docker
-      docker-compose
-      aws-iam-authenticator
-      amazon-ecr-credential-helper
-      docker-credential-helpers
+  dockerStuff = with unstablePkgs; [
+    colima
+    docker
+    docker-compose
+    aws-iam-authenticator
+    amazon-ecr-credential-helper
+    docker-credential-helpers
   ];
 
-  scalaStuff = with pkgs; [
-      jdk21
-      (sbt.override { jre = pkgs.jdk21; })
-      coursier # for metals
+  scalaStuff = with unstablePkgs; [
+    jdk21
+    (sbt.override { jre = pkgs.jdk21; })
+    coursier # for metals
   ];
 
-  vimStuff = with pkgs; [
-      vim
-      neovimPkgs.neovim
-      proximity-sort
+  vimStuff = with unstablePkgs; [
+    neovimPkgs.neovim
+    proximity-sort
   ];
 
-  lspStuff = with pkgs; [
+  lspStuff = with unstablePkgs; [
     bash-language-server
     shellcheck
     nil
+    nixfmt
     terraform-ls
     basedpyright
     ruff
@@ -48,8 +61,13 @@ in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; vimStuff ++ scalaStuff ++ dockerStuff ++ lspStuff ++
-    [
+  environment.systemPackages =
+    with unstablePkgs;
+    vimStuff
+    ++ scalaStuff
+    ++ dockerStuff
+    ++ lspStuff
+    ++ [
       jq
       fzf
       ripgrep
@@ -57,15 +75,15 @@ in
       gh
       delta
       awscli2
-#     (gradle.override { java = pkgs.jdk17; })
+      #     (gradle.override { java = pkgs.jdk17; })
       tmux
       unzip
       curl
       nodejs_latest
       starship
-#     texlab
-#     apacheHttpd
-#     postgresql
+      #     texlab
+      #     apacheHttpd
+      #     postgresql
       coreutils
       pigz
       fd
@@ -83,6 +101,11 @@ in
 
   nix.package = pkgs.nix;
 
+  # Point vim to neovim
+  environment.shellAliases = {
+    vi = "nvim";
+    vim = "nvim";
+  };
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = false;
   programs.bash.enable = true;
