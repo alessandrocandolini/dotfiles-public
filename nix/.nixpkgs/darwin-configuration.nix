@@ -59,7 +59,8 @@ let
 
   rustOverlay = import (
     builtins.fetchTarball {
-      url = "https://github.com/oxalica/rust-overlay/archive/master.tar.gz";
+      url = "https://github.com/oxalica/rust-overlay/archive/23dd7fa91602a68bd04847ac41bc10af1e6e2fd2.tar.gz";
+      sha256 = "87c4d6a80aaa6e99384aa564e2fb7007156ff41afcc816e5f44efee4673b738e";
     }
   );
 
