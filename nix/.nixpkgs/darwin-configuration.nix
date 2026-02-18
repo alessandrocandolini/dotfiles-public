@@ -57,6 +57,27 @@ let
     lua-language-server
   ];
 
+  rustOverlay = import (
+    builtins.fetchTarball {
+      url = "https://github.com/oxalica/rust-overlay/archive/master.tar.gz";
+    }
+  );
+
+  rustPkgs = unstablePkgs.extend rustOverlay;
+
+  rustToolchain = rustPkgs.rust-bin.stable."1.93.0".default.override {
+    extensions = [
+      "rust-analyzer"
+      "rust-src"
+      "clippy"
+      "rustfmt"
+    ];
+  };
+
+  rustStuff = [
+    rustToolchain
+    unstablePkgs.cargo-generate
+  ];
 in
 {
   # List packages installed in system profile. To search by name, run:
@@ -67,6 +88,7 @@ in
     ++ scalaStuff
     ++ dockerStuff
     ++ lspStuff
+    ++ rustStuff
     ++ [
       jq
       fzf
