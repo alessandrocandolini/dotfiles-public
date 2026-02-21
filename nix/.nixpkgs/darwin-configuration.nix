@@ -79,6 +79,25 @@ let
     rustToolchain
     unstablePkgs.cargo-generate
   ];
+
+  flakeCompat = builtins.fetchTarball {
+    url = "https://github.com/edolstra/flake-compat/archive/master.tar.gz";
+  };
+
+  llmAgentsFlake =
+    (import flakeCompat {
+      src = builtins.fetchTarball {
+        url = "https://github.com/numtide/llm-agents.nix/archive/master.tar.gz";
+      };
+    }).defaultNix;
+
+  # pick the right system key
+  llmAgentsPkgs = llmAgentsFlake.packages.${pkgs.system};
+
+  llmStuff = with llmAgentsPkgs; [
+    codex
+    opencode
+  ];
 in
 {
   # List packages installed in system profile. To search by name, run:
@@ -90,6 +109,7 @@ in
     ++ dockerStuff
     ++ lspStuff
     ++ rustStuff
+    ++ llmStuff
     ++ [
       jq
       fzf
@@ -124,6 +144,11 @@ in
 
   nix.package = pkgs.nix;
 
+  # Add extra cache for LLM artifacts
+  nix.settings.extra-substituters = [ "https://cache.numtide.com" ];
+  nix.settings.extra-trusted-public-keys = [
+    "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+  ];
   # Point vim to neovim
   environment.shellAliases = {
     vi = "nvim";
