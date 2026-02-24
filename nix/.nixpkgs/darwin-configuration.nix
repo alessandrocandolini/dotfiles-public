@@ -97,6 +97,7 @@ let
   llmStuff = with llmAgentsPkgs; [
     codex
     opencode
+    claude-code
   ];
 in
 {
