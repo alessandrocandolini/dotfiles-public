@@ -1,11 +1,6 @@
 if [ -f ~/.bashrc ]; then
-	source ~/.bashrc
+  source ~/.bashrc
 fi
-
-if [ -f ~/.proxyrc ]; then
-	source ~/.proxyrc
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
 fi
-
-export SBT_CREDENTIALS="$HOME/.sbt/.credentials"
-export COURSER_CREDENTIALS="$HOME/.sbt/.credentials"
-eval "$(/opt/homebrew/bin/brew shellenv)"
