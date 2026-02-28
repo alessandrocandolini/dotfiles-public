@@ -21,11 +21,11 @@
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "5921997472574fca3880b62949eb8679dc6f5afc",
+      "rev": "29ee11c06e1b8c354cc5a3212e6d24c9b8ed4f22",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
-      "rev": "52f1438b85c3188c05206e65b1f5fd18b005d931",
+      "rev": "754270182bdd3ce62ed86c97bd8c5de359daefde",
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
     "jellybeans.nvim": {
@@ -53,7 +53,7 @@
       "src": "https://github.com/scalameta/nvim-metals"
     },
     "oil.nvim": {
-      "rev": "f55b25e493a7df76371cfadd0ded5004cb9cd48a",
+      "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
