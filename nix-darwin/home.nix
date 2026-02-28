@@ -48,6 +48,7 @@ let
     opentofu
     tflint
     proximity-sort
+    tree
   ];
 
   lspStuff = with pkgs; [
