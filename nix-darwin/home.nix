@@ -75,6 +75,7 @@ let
   rustStuff = [
     rustToolchain
     pkgs.cargo-generate
+    pkgs.cargo-expand
   ];
 
   llmStuff = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [

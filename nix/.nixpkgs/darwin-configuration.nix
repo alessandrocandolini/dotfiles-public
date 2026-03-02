@@ -78,6 +78,7 @@ let
   rustStuff = [
     rustToolchain
     unstablePkgs.cargo-generate
+    unstablePkgs.cargo-expand
   ];
 
   flakeCompat = builtins.fetchTarball {
