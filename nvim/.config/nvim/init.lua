@@ -154,6 +154,7 @@ require("config.cmp").setup()
 require("config.lsp").setup()
 require("config.projectionist").setup()
 require("config.git_blame").setup()
+require("config.git_line_history").setup()
 
 -- other plugins
 require("nvim-autopairs").setup()
