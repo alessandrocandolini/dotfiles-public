@@ -35,8 +35,6 @@ local function open_history_window(title, lines)
   vim.bo[buf].modified = false
   vim.wo[win].number = false
   vim.wo[win].relativenumber = false
-  vim.wo[win].wrap = true
-  vim.wo[win].linebreak = false
 end
 
 local function git_root_async(bufnr, file, cb)
