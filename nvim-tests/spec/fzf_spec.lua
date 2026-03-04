@@ -49,12 +49,12 @@ describe('fzf', function()
       require('config.fzf').setup()
 
       vim.cmd('edit ' .. vim.fn.fnameescape(root .. '/src/User.txt'))
+      force_close_fzf_picker()
 
-      local wins_before = #vim.api.nvim_list_wins()
       press('<C-p>')
 
       local opened = vim.wait(5000, function()
-        return #vim.api.nvim_list_wins() > wins_before and has_fzf_terminal_window()
+        return has_fzf_terminal_window()
       end, 50)
       assert(opened, 'expected <C-p> to open fzf picker window')
 
