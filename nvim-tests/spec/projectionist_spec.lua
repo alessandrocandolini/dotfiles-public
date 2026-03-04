@@ -5,12 +5,12 @@ local function normalize_path(path)
   return (path:gsub('^/private', ''))
 end
 
-local function leader_lhs(keys)
+local function leader_lhs(rhs)
   local leader = vim.g.mapleader
   if type(leader) ~= 'string' or leader == '' then
     leader = '\\'
   end
-  return leader .. keys
+  return leader .. rhs
 end
 
 local function wait_for_buffer(path)
