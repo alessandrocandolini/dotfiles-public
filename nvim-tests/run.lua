@@ -1,5 +1,6 @@
 local specs = {
   'spec.diagnostics_spec',
+  'spec.fzf_spec',
   'spec.projectionist_spec',
 }
 
