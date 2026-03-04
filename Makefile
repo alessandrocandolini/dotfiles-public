@@ -18,4 +18,8 @@ nvim-test-internal:
 		exit 1; \
 	fi
 	yes | nvim --headless -u nvim-tests/init_test.lua +qa!
-	nvim --headless -u nvim-tests/init_test.lua -c "PlenaryBustedDirectory nvim-tests/spec { minimal_init = 'nvim-tests/init_test.lua' }" -c "qa!"
+	@status=0; \
+	for spec in $$(find nvim-tests/spec -type f -name '*_spec.lua' | sort); do \
+		nvim --headless -u nvim-tests/init_test.lua -c "lua require('plenary.busted').run('$$spec', { minimal_init = 'nvim-tests/init_test.lua' })" -c "qa!" || status=1; \
+	done; \
+	exit $$status
