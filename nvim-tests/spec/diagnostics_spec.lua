@@ -14,6 +14,17 @@ local function message_at_cursor()
   return diags[1].message
 end
 
+local function count_floating_windows()
+  local count = 0
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local cfg = vim.api.nvim_win_get_config(win)
+    if cfg.relative and cfg.relative ~= '' then
+      count = count + 1
+    end
+  end
+  return count
+end
+
 return {
   [']c and [c jump between diagnostics and expose diagnostic messages at destination'] = function()
     package.loaded['config.diagnostics'] = nil
@@ -53,5 +64,12 @@ return {
     press('[c')
     assertx.expect(vim.api.nvim_win_get_cursor(0)[1]).to_equal(1)
     assertx.expect(message_at_cursor()).to_match('diag one')
+
+    -- Diagnostic float should close when cursor moves.
+    press('j')
+    vim.wait(300, function()
+      return count_floating_windows() == 0
+    end, 25)
+    assertx.expect(count_floating_windows()).to_equal(0)
   end,
 }
