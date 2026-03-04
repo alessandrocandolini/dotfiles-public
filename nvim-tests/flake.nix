@@ -29,6 +29,8 @@
         default = pkgs.mkShell {
           packages = [
             neovim-nightly-overlay.packages.${system}.default
+            pkgs.git
+            pkgs.gnumake
             pkgs.fzf
             pkgs.fd
             pkgs.proximity-sort
