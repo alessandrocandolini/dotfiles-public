@@ -53,8 +53,32 @@ local function has_fzf_terminal_window()
   return false
 end
 
+local function force_close_fzf_picker()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].filetype == 'fzf' and vim.bo[buf].buftype == 'terminal' then
+      pcall(vim.api.nvim_win_close, win, true)
+      pcall(vim.api.nvim_buf_delete, buf, { force = true })
+    end
+  end
+end
+
+local function send_ctrl_p_to_fzf_terminal()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].filetype == 'fzf' and vim.bo[buf].buftype == 'terminal' then
+      local ok_job, job_id = pcall(vim.api.nvim_buf_get_var, buf, 'terminal_job_id')
+      if ok_job and job_id then
+        vim.api.nvim_chan_send(job_id, '\x10')
+        return true
+      end
+    end
+  end
+  return false
+end
+
 return {
-  ['<C-p> opens the fzf picker window'] = function()
+  ['<C-p> opens picker, second <C-p> closes it'] = function()
     with_temp_project({
       ['src/User.txt'] = { 'hello' },
       ['src/Other.txt'] = { 'hello' },
@@ -72,6 +96,18 @@ return {
       end, 50)
 
       assertx.expect(opened).to_equal(true)
+
+      local sent = send_ctrl_p_to_fzf_terminal()
+      assertx.expect(sent).to_equal(true)
+      local closed = vim.wait(3000, function()
+        return not has_fzf_terminal_window()
+      end, 50)
+
+      if not closed then
+        force_close_fzf_picker()
+      end
+
+      assertx.expect(closed).to_equal(true)
     end)
   end,
 }
