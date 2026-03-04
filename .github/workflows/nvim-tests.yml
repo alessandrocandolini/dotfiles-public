@@ -18,10 +18,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      XDG_DATA_HOME: ${{ github.workspace }}/.xdg/data
-      XDG_STATE_HOME: ${{ github.workspace }}/.xdg/state
-      XDG_CACHE_HOME: ${{ github.workspace }}/.xdg/cache
 
     steps:
       - uses: actions/checkout@v4
@@ -34,11 +30,6 @@ jobs:
 
       - name: Show Neovim version
         run: nvim --version | head -n 1
-
-      - name: Bootstrap plugins (auto-confirm install)
-        run: |
-          mkdir -p "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME"
-          yes | nvim --headless -u nvim-tests/minimal_init.lua +qa!
 
       - name: Run headless Neovim tests
         run: make nvim-test
