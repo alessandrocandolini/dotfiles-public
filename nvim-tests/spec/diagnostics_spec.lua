@@ -56,7 +56,7 @@ describe('diagnostics', function()
     vim.api.nvim_win_set_cursor(0, { 2, 0 })
 
     press(']c')
-    assert(vim.api.nvim_win_get_cursor(0)[1] == 4, 'expected cursor to jump to line 4')
+    assert(vim.api.nvim_win_get_cursor(0)[1] == 5, 'expected cursor to jump to line 5')
     assert(string.match(message_at_cursor() or '', 'diag two') ~= nil, 'expected diagnostic message "diag two"')
 
     press('[c')
