@@ -1,9 +1,5 @@
 local fs = require('helpers.fs')
-
-local function press(lhs)
-  local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
-  vim.api.nvim_feedkeys(keys, 'mx', false)
-end
+local keys = require('helpers.keys')
 
 local function has_fzf_terminal_window()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -51,7 +47,7 @@ describe('fzf', function()
       vim.cmd('edit ' .. vim.fn.fnameescape(root .. '/src/User.txt'))
       force_close_fzf_picker()
 
-      press('<C-p>')
+      keys.press('<C-p>')
 
       local opened = vim.wait(5000, function()
         return has_fzf_terminal_window()

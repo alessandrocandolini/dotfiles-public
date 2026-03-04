@@ -1,6 +1,11 @@
-local function press(lhs)
-  local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
-  vim.api.nvim_feedkeys(keys, 'mx', false)
+local keys = require('helpers.keys')
+
+local function press_and_wait_for_line(lhs, expected_line)
+  keys.press(lhs)
+  local moved = vim.wait(1000, function()
+    return vim.api.nvim_win_get_cursor(0)[1] == expected_line
+  end, 20)
+  assert(moved, ('expected cursor to jump to line %d'):format(expected_line))
 end
 
 local function message_at_cursor()
@@ -55,15 +60,13 @@ describe('diagnostics', function()
 
     vim.api.nvim_win_set_cursor(0, { 2, 0 })
 
-    press(']c')
-    assert(vim.api.nvim_win_get_cursor(0)[1] == 4, 'expected cursor to jump to line 4')
+    press_and_wait_for_line(']c', 4)
     assert(string.match(message_at_cursor() or '', 'diag two') ~= nil, 'expected diagnostic message "diag two"')
 
-    press('[c')
-    assert(vim.api.nvim_win_get_cursor(0)[1] == 1, 'expected cursor to jump back to line 1')
+    press_and_wait_for_line('[c', 1)
     assert(string.match(message_at_cursor() or '', 'diag one') ~= nil, 'expected diagnostic message "diag one"')
 
-    press('j')
+    keys.press('j')
     vim.wait(300, function()
       return count_floating_windows() == 0
     end, 25)
