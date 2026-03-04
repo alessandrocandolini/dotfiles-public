@@ -41,9 +41,6 @@ describe('fzf', function()
       ['src/User.txt'] = { 'hello' },
       ['src/Other.txt'] = { 'hello' },
     }, function(root)
-      package.loaded['config.fzf'] = nil
-      require('config.fzf').setup()
-
       vim.cmd('edit ' .. vim.fn.fnameescape(root .. '/src/User.txt'))
       force_close_fzf_picker()
 

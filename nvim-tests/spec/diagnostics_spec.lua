@@ -30,9 +30,6 @@ end
 
 describe('diagnostics', function()
   it(']c and [c jump between diagnostics and expose diagnostic messages at destination', function()
-    package.loaded['config.diagnostics'] = nil
-    require('config.diagnostics').setup()
-
     vim.cmd('enew')
     vim.api.nvim_buf_set_lines(0, 0, -1, false, {
       'line 1',

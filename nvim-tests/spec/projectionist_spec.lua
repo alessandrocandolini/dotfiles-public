@@ -31,9 +31,6 @@ describe('projectionist', function()
       ['src/User.hs'] = { 'module User where' },
       ['test/UserSpec.hs'] = { 'module UserSpec where' },
     }, function(root)
-      package.loaded['config.projectionist'] = nil
-      require('config.projectionist').setup()
-
       local src = root .. '/src/User.hs'
       local spec = root .. '/test/UserSpec.hs'
 
