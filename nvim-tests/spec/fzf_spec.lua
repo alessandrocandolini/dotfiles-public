@@ -43,43 +43,35 @@ local function press(lhs)
   vim.api.nvim_feedkeys(keys, 'mx', false)
 end
 
-local function normalize_path(path)
-  return (path:gsub('^/private', ''))
-end
-
-local function leader_lhs(keys)
-  local leader = vim.g.mapleader
-  if type(leader) ~= 'string' or leader == '' then
-    leader = '\\'
+local function has_fzf_terminal_window()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].filetype == 'fzf' and vim.bo[buf].buftype == 'terminal' then
+      return true
+    end
   end
-  return leader .. keys
+  return false
 end
 
 return {
-  ['<leader>gt jumps to alternate and <leader>gt again jumps back'] = function()
+  ['<C-p> opens the fzf picker window'] = function()
     with_temp_project({
-      ['stack.yaml'] = {
-        'resolver: lts-22.34',
-        'packages:',
-        '  - .',
-      },
-      ['src/User.hs'] = { 'module User where' },
-      ['test/UserSpec.hs'] = { 'module UserSpec where' },
+      ['src/User.txt'] = { 'hello' },
+      ['src/Other.txt'] = { 'hello' },
     }, function(root)
-      package.loaded['config.projectionist'] = nil
-      require('config.projectionist').setup()
+      package.loaded['config.fzf'] = nil
+      require('config.fzf').setup()
 
-      local src = root .. '/src/User.hs'
-      local spec = root .. '/test/UserSpec.hs'
+      vim.cmd('edit ' .. vim.fn.fnameescape(root .. '/src/User.txt'))
 
-      vim.cmd('edit ' .. vim.fn.fnameescape(src))
-      assertx.expect(normalize_path(vim.api.nvim_buf_get_name(0))).to_equal(normalize_path(src))
+      local wins_before = #vim.api.nvim_list_wins()
+      press('<C-p>')
 
-      press(leader_lhs('gt'))
-      assertx.expect(normalize_path(vim.api.nvim_buf_get_name(0))).to_equal(normalize_path(spec))
+      local opened = vim.wait(5000, function()
+        return #vim.api.nvim_list_wins() > wins_before and has_fzf_terminal_window()
+      end, 50)
 
-      press(leader_lhs('gt'))
-      assertx.expect(normalize_path(vim.api.nvim_buf_get_name(0))).to_equal(normalize_path(src))
+      assertx.expect(opened).to_equal(true)
     end)
   end,
 }

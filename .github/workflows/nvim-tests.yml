@@ -28,11 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Neovim
-        uses: rhysd/action-setup-vim@v1
-        with:
-          neovim: true
-          version: nightly
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
 
       - name: Run headless Neovim tests
         run: make nvim-test
