@@ -1,5 +1,3 @@
-local assertx = require('helpers.assert')
-
 local function press(lhs)
   local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
   vim.api.nvim_feedkeys(keys, 'mx', false)
@@ -25,8 +23,8 @@ local function count_floating_windows()
   return count
 end
 
-return {
-  [']c and [c jump between diagnostics and expose diagnostic messages at destination'] = function()
+describe('diagnostics', function()
+  it(']c and [c jump between diagnostics and expose diagnostic messages at destination', function()
     package.loaded['config.diagnostics'] = nil
     require('config.diagnostics').setup()
 
@@ -58,18 +56,17 @@ return {
     vim.api.nvim_win_set_cursor(0, { 2, 0 })
 
     press(']c')
-    assertx.expect(vim.api.nvim_win_get_cursor(0)[1]).to_equal(4)
-    assertx.expect(message_at_cursor()).to_match('diag two')
+    assert(vim.api.nvim_win_get_cursor(0)[1] == 4, 'expected cursor to jump to line 4')
+    assert(string.match(message_at_cursor() or '', 'diag two') ~= nil, 'expected diagnostic message "diag two"')
 
     press('[c')
-    assertx.expect(vim.api.nvim_win_get_cursor(0)[1]).to_equal(1)
-    assertx.expect(message_at_cursor()).to_match('diag one')
+    assert(vim.api.nvim_win_get_cursor(0)[1] == 1, 'expected cursor to jump back to line 1')
+    assert(string.match(message_at_cursor() or '', 'diag one') ~= nil, 'expected diagnostic message "diag one"')
 
-    -- Diagnostic float should close when cursor moves.
     press('j')
     vim.wait(300, function()
       return count_floating_windows() == 0
     end, 25)
-    assertx.expect(count_floating_windows()).to_equal(0)
-  end,
-}
+    assert(count_floating_windows() == 0, 'expected no floating diagnostic windows after cursor move')
+  end)
+end)

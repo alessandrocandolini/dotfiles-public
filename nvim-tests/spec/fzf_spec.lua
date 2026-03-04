@@ -1,5 +1,3 @@
-local assertx = require('helpers.assert')
-
 local function write_file(path, lines)
   vim.fn.mkdir(vim.fs.dirname(path), 'p')
   vim.fn.writefile(lines or { '' }, path)
@@ -77,8 +75,8 @@ local function send_ctrl_p_to_fzf_terminal()
   return false
 end
 
-return {
-  ['<C-p> opens picker, second <C-p> closes it'] = function()
+describe('fzf', function()
+  it('opens picker on <C-p> and closes on second Ctrl-p', function()
     with_temp_project({
       ['src/User.txt'] = { 'hello' },
       ['src/Other.txt'] = { 'hello' },
@@ -94,20 +92,19 @@ return {
       local opened = vim.wait(5000, function()
         return #vim.api.nvim_list_wins() > wins_before and has_fzf_terminal_window()
       end, 50)
-
-      assertx.expect(opened).to_equal(true)
+      assert(opened, 'expected <C-p> to open fzf picker window')
 
       local sent = send_ctrl_p_to_fzf_terminal()
-      assertx.expect(sent).to_equal(true)
+      assert(sent, 'expected to find fzf terminal job for second Ctrl-p')
+
       local closed = vim.wait(3000, function()
         return not has_fzf_terminal_window()
       end, 50)
-
       if not closed then
         force_close_fzf_picker()
       end
 
-      assertx.expect(closed).to_equal(true)
+      assert(closed, 'expected second Ctrl-p to close fzf picker window')
     end)
-  end,
-}
+  end)
+end)
