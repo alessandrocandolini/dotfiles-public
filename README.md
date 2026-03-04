@@ -1,3 +1,4 @@
+[![CI](https://github.com/alessandrocandolini/dotfiles-public/actions/workflows/nvim-tests.yml/badge.svg)](https://github.com/alessandrocandolini/dotfiles-public/actions/workflows/nvim-tests.yml)
 # dotfiles
 
 Personal dotfiles managed using `git` and [stow](https://www.gnu.org/software/stow/). 
