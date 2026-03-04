@@ -17,11 +17,17 @@ local function with_temp_project(files, run)
   vim.cmd('cd ' .. vim.fn.fnameescape(root))
 
   local ok, err = pcall(run, root)
-
-  vim.cmd('cd ' .. vim.fn.fnameescape(cwd))
+  local ok_cd, err_cd = pcall(vim.cmd, 'cd ' .. vim.fn.fnameescape(cwd))
+  local ok_rm, err_rm = pcall(vim.fn.delete, root, 'rf')
 
   if not ok then
     error(err, 0)
+  end
+  if not ok_cd then
+    error(err_cd, 0)
+  end
+  if not ok_rm then
+    error(err_rm, 0)
   end
 end
 

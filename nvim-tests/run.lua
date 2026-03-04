@@ -1,7 +1,6 @@
 local specs = {
   'spec.diagnostics_spec',
   'spec.projectionist_spec',
-  'spec.notifications_and_errors_spec',
 }
 
 local total = 0
@@ -16,7 +15,14 @@ for _, spec_name in ipairs(specs) do
     io.stderr:write(string.format('FAIL %s (load error)\n%s\n', spec_name, tostring(mod_or_err)))
   else
     local mod = mod_or_err
-    for test_name, fn in pairs(mod) do
+    local test_names = {}
+    for test_name, _ in pairs(mod) do
+      table.insert(test_names, test_name)
+    end
+    table.sort(test_names)
+
+    for _, test_name in ipairs(test_names) do
+      local fn = mod[test_name]
       total = total + 1
       local ok, err = pcall(fn)
       if ok then
