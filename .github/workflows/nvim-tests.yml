@@ -1,19 +1,25 @@
 name: Neovim Tests
 
 on:
-  pull_request:
-    paths:
-      - 'nvim/**'
-      - 'nvim-tests/**'
-      - '.github/workflows/nvim-tests.yml'
-      - 'Makefile'
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
       - 'nvim/**'
       - 'nvim-tests/**'
       - '.github/workflows/nvim-tests.yml'
       - 'Makefile'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'nvim/**'
+      - 'nvim-tests/**'
+      - '.github/workflows/nvim-tests.yml'
+      - 'Makefile'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -27,9 +33,6 @@ jobs:
         with:
           neovim: true
           version: nightly
-
-      - name: Show Neovim version
-        run: nvim --version | head -n 1
 
       - name: Run headless Neovim tests
         run: make nvim-test
