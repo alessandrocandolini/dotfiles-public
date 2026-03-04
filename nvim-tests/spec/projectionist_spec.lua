@@ -1,5 +1,3 @@
-local assertx = require('helpers.assert')
-
 local function write_file(path, lines)
   vim.fn.mkdir(vim.fs.dirname(path), 'p')
   vim.fn.writefile(lines or { '' }, path)
@@ -55,8 +53,8 @@ local function leader_lhs(keys)
   return leader .. keys
 end
 
-return {
-  ['<leader>gt jumps to alternate and <leader>gt again jumps back'] = function()
+describe('projectionist', function()
+  it('<leader>gt jumps to alternate and <leader>gt again jumps back', function()
     with_temp_project({
       ['stack.yaml'] = {
         'resolver: lts-22.34',
@@ -73,13 +71,22 @@ return {
       local spec = root .. '/test/UserSpec.hs'
 
       vim.cmd('edit ' .. vim.fn.fnameescape(src))
-      assertx.expect(normalize_path(vim.api.nvim_buf_get_name(0))).to_equal(normalize_path(src))
+      assert(
+        normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(src),
+        'expected to start in source file'
+      )
 
       press(leader_lhs('gt'))
-      assertx.expect(normalize_path(vim.api.nvim_buf_get_name(0))).to_equal(normalize_path(spec))
+      assert(
+        normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(spec),
+        'expected <leader>gt to jump to spec file'
+      )
 
       press(leader_lhs('gt'))
-      assertx.expect(normalize_path(vim.api.nvim_buf_get_name(0))).to_equal(normalize_path(src))
+      assert(
+        normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(src),
+        'expected second <leader>gt to jump back to source file'
+      )
     end)
-  end,
-}
+  end)
+end)
