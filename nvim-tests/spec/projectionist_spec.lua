@@ -1,9 +1,5 @@
 local fs = require('helpers.fs')
-
-local function press(lhs)
-  local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
-  vim.api.nvim_feedkeys(keys, 'mx', false)
-end
+local keys = require('helpers.keys')
 
 local function normalize_path(path)
   return (path:gsub('^/private', ''))
@@ -15,6 +11,13 @@ local function leader_lhs(keys)
     leader = '\\'
   end
   return leader .. keys
+end
+
+local function wait_for_buffer(path)
+  local ok = vim.wait(1000, function()
+    return normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(path)
+  end, 20)
+  assert(ok, ('expected current buffer to become %s'):format(path))
 end
 
 describe('projectionist', function()
@@ -40,17 +43,11 @@ describe('projectionist', function()
         'expected to start in source file'
       )
 
-      press(leader_lhs('gt'))
-      assert(
-        normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(spec),
-        'expected <leader>gt to jump to spec file'
-      )
+      keys.press(leader_lhs('gt'))
+      wait_for_buffer(spec)
 
-      press(leader_lhs('gt'))
-      assert(
-        normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(src),
-        'expected second <leader>gt to jump back to source file'
-      )
+      keys.press(leader_lhs('gt'))
+      wait_for_buffer(src)
     end)
   end)
 end)
