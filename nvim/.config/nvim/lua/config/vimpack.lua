@@ -8,7 +8,7 @@ local function runPostInstallationHook(cmd, opts)
   opts = opts or {}
   local cwd = opts.cwd
 
-  vim.system(cmd, { cwd = cwd, text = true }, function(res)
+  local ok, err = pcall(vim.system, cmd, { cwd = cwd, text = true }, function(res)
     vim.schedule(function()
       local cmd_str = table.concat(cmd, " ")
       local message, level
@@ -30,6 +30,15 @@ local function runPostInstallationHook(cmd, opts)
       vim.notify(message, level, { title = "vim.pack" })
     end)
   end)
+
+  if not ok then
+    local cmd_str = table.concat(cmd, " ")
+    vim.notify(
+      ("Post installation hook %s failed to start: %s"):format(cmd_str, tostring(err)),
+      vim.log.levels.ERROR,
+      { title = "vim.pack" }
+    )
+  end
 end
 
 local function postProcessingAfterInstallation(ev)
