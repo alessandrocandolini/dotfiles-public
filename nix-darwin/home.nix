@@ -15,8 +15,8 @@ let
   ];
 
   scalaStuff = with pkgs; [
-    jdk21
-    (pkgs.sbt.override { jre = pkgs.jdk21; })
+    jdk25
+    (pkgs.sbt.override { jre = pkgs.jdk25; })
     coursier
   ];
 
@@ -98,5 +98,5 @@ in
     viAlias = true;
     vimAlias = true;
   };
-  home.sessionVariables.JAVA_HOME = "${pkgs.jdk21}/";
+  home.sessionVariables.JAVA_HOME = "${pkgs.jdk25}/";
 }
