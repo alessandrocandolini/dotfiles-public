@@ -39,6 +39,7 @@ let
     jdk21
     (sbt.override { jre = pkgs.jdk21; })
     coursier # for metals
+    async-profiler
   ];
 
   vimStuff = with unstablePkgs; [
