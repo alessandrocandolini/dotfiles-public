@@ -18,6 +18,7 @@ let
     jdk21
     (pkgs.sbt.override { jre = pkgs.jdk21; })
     coursier
+    async-profiler
   ];
 
   nvimNightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
