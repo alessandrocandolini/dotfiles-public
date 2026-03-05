@@ -27,9 +27,6 @@ table.insert(runtimepath, 1, nvim_root)
 table.insert(runtimepath, nvim_root .. '/after')
 vim.opt.runtimepath = runtimepath
 
-local packpath = filter_paths(vim.opt.packpath:get(), user_config_root)
-vim.opt.packpath = packpath
-
 local lua_dir = nvim_root .. '/lua'
 package.path = table.concat({
   lua_dir .. '/?.lua',
@@ -38,9 +35,6 @@ package.path = table.concat({
   tests_root .. '/?/init.lua',
   package.path,
 }, ';')
-
--- Mark test mode for conditional config if needed.
-vim.g.dotfiles_test_mode = true
 
 -- Load the actual user config.
 dofile(nvim_root .. '/init.lua')
