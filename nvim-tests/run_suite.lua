@@ -38,5 +38,7 @@ end
 
 if status ~= 0 then
   vim.cmd('cquit 1')
+else
+  vim.cmd('qa!')
 end
 
