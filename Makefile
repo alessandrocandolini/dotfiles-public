@@ -2,9 +2,11 @@ TASKS=bash stow alacritty gitconfig nvim nix starship tmux stack agda rg cargo c
 VERBOSITY=1
 FLAGS=--restow --no-folding --verbose $(VERBOSITY) --target ~
 
-.PHONY: all $(TASKS) nvim-test nvim-test-internal
+.PHONY: all $(TASKS) test nvim-test nvim-test-internal
 
 all: $(TASKS)
+
+test: nvim-test
 
 $(TASKS):
 	stow $(FLAGS) $@
@@ -18,8 +20,4 @@ nvim-test-internal:
 		exit 1; \
 	fi
 	yes | nvim --headless -u nvim-tests/init_test.lua +qa!
-	@status=0; \
-	for spec in $$(find nvim-tests/spec -type f -name '*_spec.lua' | sort); do \
-		nvim --headless -u nvim-tests/init_test.lua -c "lua require('plenary.busted').run('$$spec', { minimal_init = 'nvim-tests/init_test.lua' })" -c "qa!" || status=1; \
-	done; \
-	exit $$status
+	nvim --headless -u NONE -l nvim-tests/run_suite.lua
