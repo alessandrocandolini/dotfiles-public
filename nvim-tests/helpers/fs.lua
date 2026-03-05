@@ -18,7 +18,8 @@ function M.with_temp_project(files, run)
 
   local ok_run, err_run = pcall(run, root)
   local ok_cd, err_cd = pcall(vim.cmd, 'cd ' .. vim.fn.fnameescape(cwd))
-  local ok_rm, err_rm = pcall(vim.fn.delete, root, 'rf')
+  local ok_rm_call, rm_result = pcall(vim.fn.delete, root, 'rf')
+  local ok_rm = ok_rm_call and rm_result == 0
 
   if ok_run and ok_cd and ok_rm then
     return
@@ -32,7 +33,11 @@ function M.with_temp_project(files, run)
     table.insert(failures, 'cleanup failed (restore cwd): ' .. tostring(err_cd))
   end
   if not ok_rm then
-    table.insert(failures, 'cleanup failed (delete temp project): ' .. tostring(err_rm))
+    table.insert(
+      failures,
+      'cleanup failed (delete temp project): '
+        .. (ok_rm_call and ('delete() returned ' .. tostring(rm_result)) or tostring(rm_result))
+    )
   end
 
   error(table.concat(failures, '\n'), 0)
