@@ -3,7 +3,7 @@ local M = {}
 local lsp_format_on_save_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
 
 local function is_autoformat_on_save_enabled(client)
-  return client.name ~= "lua_ls" -- lua formatter is slow
+  return client.name ~= "lua_ls"    -- lua formatter is slow
 end
 
 local function lsp_setup_per_buffer(client, bufnr)
@@ -22,17 +22,28 @@ local function lsp_setup_per_buffer(client, bufnr)
 
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
-    vim.lsp.buf.format { async = true }
+    if client.server_capabilities.documentFormattingProvider then
+      vim.lsp.buf.format { async = true }
+    end
   end, buf_opts)
 
   -- Auto format on save
-  if is_autoformat_on_save_enabled(client) and client.server_capabilities.documentFormattingProvider then
+  if client.server_capabilities.documentFormattingProvider then
+    local format_on_save = is_autoformat_on_save_enabled(client)
+
+    vim.keymap.set("n", "<leader>uf", function()
+      format_on_save = not format_on_save
+      print("Format on save: " .. tostring(format_on_save))
+    end)
+
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_format_on_save_group,
       buffer = bufnr,
       callback = function()
-        vim.lsp.buf.format({ bufnr = bufnr, filter = function(c) return c.id == client.id end })
-      end,
+        if format_on_save then
+          vim.lsp.buf.format({ bufnr = bufnr, filter = function(c) return c.id == client.id end })
+        end
+      end
     })
   end
 
@@ -52,7 +63,7 @@ local function lsp_setup_per_buffer(client, bufnr)
   end
 
   -- No semantics token
-client.server_capabilities.semanticTokensProvider = nil
+  client.server_capabilities.semanticTokensProvider = nil
 end
 
 local function list_lsp_clients()
@@ -111,7 +122,8 @@ function M.setup()
     vim.lsp.enable('rust-analyzer')
   end
   -- helper for showing attached LSPs
-  vim.keymap.set('n', '<leader>ls', list_lsp_clients, { noremap = true, silent = true, desc = "List attached LSP clients" })
+  vim.keymap.set('n', '<leader>ls', list_lsp_clients,
+    { noremap = true, silent = true, desc = "List attached LSP clients" })
 
   -- register per-buffer operations on LSP attach
   vim.api.nvim_create_autocmd("LspAttach", {
