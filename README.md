@@ -1,8 +1,18 @@
 # dotfiles
 
-Personal dotfiles managed using `git` and [stow](https://www.gnu.org/software/stow/). 
+This repository contains the configuration for my laptop and the tools I use regularly. It includes:
 
-I use these dotfiles on MACOS, some of them can be used on linux too, but not all of them. 
+* nix-darwin configuration
+  - a legacy setup
+  - a newer setup based on *flakes* and *home-manager*
+* Neovim configuration
+* Dotfiles for tools such as Alacritty, Git, LLM tooling, etc
+
+Dotfiles and nvim configuration are managed using [stow](https://www.gnu.org/software/stow/). 
+This is a deliberate choice: I currently prefer not to manage them with Nix, though they live in this repository in case I decide to migrate them later.
+
+My main development environment is macOS, and some configuration is macOS-specific (e.g., nix-darwin). Other parts (e.g. Neovim) should also work on Linux.
+Hereafter, the guide focuses only on installation on macOS.
 
 See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about specific dotfiles.
 
@@ -10,27 +20,27 @@ See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more 
 
 * `git`
 * GNU `stow` 
+* `make` (recommended)
 
-Git is usually pre-installed with the developer tools (although it can be convenient to update the version using a package manager). 
+On macOS, `git` and `make` are usually installed with the developer tools, although updating them via a package manager can be convenient.
 
 Install `stow` using `nix`
 ```bash
 nix-shell -p stow
 ```
-Alternatively, using `homebrew`
+or using `homebrew`
 ```bash
 brew install stow
 ```
-
-More options [here](https://www.gnu.org/software/stow/)
+More installation options are available [here](https://www.gnu.org/software/stow/).
 
 ## Run
 
-Once `stow` and `make` are available, clone this repo and use the [makefile](Makefile):
+Clone this repo and run:
 ```bash
 make all
 ```
-Phony targets are provided for each specific config, if you want more granularity:
+The [makefile](Makefile) provides phony targets for individual configurations if you want more granularity:
 ```bash
 make bash
 ``` 
@@ -40,22 +50,20 @@ make alacritty
 ```
 make neovim 
 ```
-etc. 
 
 Alternatively, invoke `stow` directly 
 ```bash
 stow --no-folding --verbose --target ~ <name of the folder>
 ```
 
-If you want to run it in dry mode, use the `--simulate` option: 
+To run in dry mode, use the `--simulate` option: 
 ```bash
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
 
 ## Keep Makefile up to date
 
-When adding a new target, update the list of all targets in the Makefile
-
+When adding a new target, remember to update the list of targets in the Makefile.
 ## Why --no-folding?
 
 * For dotfiles placed directly in $HOME (e.g., `.bashrc`, `.gitconfig`), the `--no-folding` flag is redundant and can be omitted.
