@@ -63,7 +63,7 @@ stow --simulate --no-folding --verbose --target ~ <name of the folder>
 
 ## Keep Makefile up to date
 
-When adding a new target, remember update the list of targets in the Makefile.
+When adding a new target, remember to update the list of targets in the Makefile.
 ## Why --no-folding?
 
 * For dotfiles placed directly in $HOME (e.g., `.bashrc`, `.gitconfig`), the `--no-folding` flag is redundant and can be omitted.
