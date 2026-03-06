@@ -22,7 +22,7 @@ See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more 
 * GNU `stow` 
 * `make` (recommended)
 
-On macOS, `git` and `make` are usually pre-installed with developer tools on macOS, although updating it via a package manager can be convenient.
+On macOS, `git` and `make` are usually installed with the developer tools, although updating them via a package manager can be convenient.
 
 Install `stow` using `nix`
 ```bash
