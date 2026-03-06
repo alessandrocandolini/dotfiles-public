@@ -136,7 +136,7 @@ in
       pkg-config
       ollama
       llama-cpp
-      htop
+      btop
       macmon
       universal-ctags
     ];
