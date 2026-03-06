@@ -1,3 +1,4 @@
+[![CI](https://github.com/alessandrocandolini/dotfiles-public/actions/workflows/nvim-tests.yml/badge.svg)](https://github.com/alessandrocandolini/dotfiles-public/actions/workflows/nvim-tests.yml)
 # dotfiles
 
 This repository contains the configuration for my laptop and the tools I use regularly. It includes:
