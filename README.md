@@ -11,7 +11,7 @@ This repository contains the configuration for my laptop and the tools I use reg
 Dotfiles and nvim configuration are managed using [stow](https://www.gnu.org/software/stow/). 
 This is a deliberate choice: I currently prefer not to manage them with Nix, though they live in this repository in case I decide to migrate them later.
 
-My main development environment is macOS, and some configuration is macOS-specific (eg, nix-darwin). Other parts (e.g. Neovim) should also work on Linux.
+My main development environment is macOS, and some configuration is macOS-specific (e.g., nix-darwin). Other parts (e.g. Neovim) should also work on Linux.
 Hereafter, the guide focuses only on installation on macOS.
 
 See [bashrc.md](bashrc.md), [vimrc.md](vimrc.md), and [nix.md](nix.md) for more details about specific dotfiles.
