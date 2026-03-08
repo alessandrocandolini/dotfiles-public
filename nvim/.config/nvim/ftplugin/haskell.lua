@@ -1,3 +1,10 @@
+vim.g.haskell_tools = vim.tbl_deep_extend("force", vim.g.haskell_tools or {}, {
+  tools = {
+    codeLens = {
+      autoRefresh = false,
+    },
+  },
+})
 vim.cmd.packadd("haskell-tools.nvim")
 
 require("config.haskell_snippets").setup()
