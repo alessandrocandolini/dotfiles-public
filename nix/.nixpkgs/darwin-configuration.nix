@@ -168,8 +168,8 @@ in
 
   environment.variables = {
     JAVA_HOME = "${pkgs.jdk21}/";
-    PKG_CONFIG_PATH = lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ unstablePkgs.zlib ];
-    CPATH = lib.makeSearchPathOutput "dev" "include" [ unstablePkgs.zlib ];
-    LIBRARY_PATH = lib.makeLibraryPath [ unstablePkgs.zlib ];
+    PKG_CONFIG_PATH = "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ unstablePkgs.zlib ]}:\${PKG_CONFIG_PATH}";
+    CPATH = "${lib.makeSearchPathOutput "dev" "include" [ unstablePkgs.zlib ]}:\${CPATH}";
+    LIBRARY_PATH = "${lib.makeLibraryPath [ unstablePkgs.zlib ]}:\${LIBRARY_PATH}";
   };
 }
