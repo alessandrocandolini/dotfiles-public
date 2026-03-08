@@ -1,6 +1,13 @@
 -- Minimal bootstrap for tests: validate the real config path and load init.lua unchanged.
 
-local this_file = debug.getinfo(1, 'S').source:sub(2)
+local function absolute_path(path)
+  local absolute = vim.fn.fnamemodify(path, ':p')
+  local uv = vim.uv or vim.loop
+  local real = uv and uv.fs_realpath(absolute) or nil
+  return real or absolute
+end
+
+local this_file = absolute_path(debug.getinfo(1, 'S').source:sub(2))
 local tests_root = vim.fs.dirname(this_file)
 local repo_root = vim.fs.dirname(tests_root)
 local repo_nvim_root = repo_root .. '/nvim/.config/nvim'
