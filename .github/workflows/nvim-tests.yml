@@ -1,0 +1,39 @@
+name: Neovim Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'nvim/**'
+      - 'nvim-tests/**'
+      - '.github/workflows/nvim-tests.yml'
+      - 'Makefile'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'nvim/**'
+      - 'nvim-tests/**'
+      - '.github/workflows/nvim-tests.yml'
+      - 'Makefile'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            extra-substituters = https://nix-community.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+
+      - name: Run headless Neovim tests
+        run: make nvim-test
