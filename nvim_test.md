@@ -41,7 +41,7 @@ Configuration drift between test setup and real setup remains the biggest liabil
 If test config is maintained separately or manually synced, regression confidence is weak.
 
 ## TODO
-- Diagnostics currently does not test that the popup disappears when moving the cursor, because `CursorMoved` is not firing in the test harness; how to fix this is TBC.
+- Diagnostics specs now verify that the diagnostics floating window closes when the cursor moves; future work is to keep these tests in sync with any changes to popup behavior or trigger events.
 
 ## Harness Model
 - `nix develop ./nvim-tests#default` points `XDG_CONFIG_HOME` at the repo's `nvim/.config`, so tests execute the exact same Neovim config that is used outside the harness.
