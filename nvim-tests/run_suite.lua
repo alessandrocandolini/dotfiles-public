@@ -37,8 +37,14 @@ local function run_spec(spec)
   return res.code
 end
 
+local specs = sorted_specs()
+if #specs == 0 then
+  io.stderr:write('No test specs found in nvim-tests/spec\n')
+  vim.cmd('cquit 1')
+end
+
 local status = 0
-for _, spec in ipairs(sorted_specs()) do
+for _, spec in ipairs(specs) do
   if run_spec(spec) ~= 0 then
     status = 1
   end
