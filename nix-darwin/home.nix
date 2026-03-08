@@ -103,8 +103,8 @@ in
   };
   home.sessionVariables = {
     JAVA_HOME = "${pkgs.jdk25}/";
-    PKG_CONFIG_PATH = lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.zlib ];
-    CPATH = lib.makeSearchPathOutput "dev" "include" [ pkgs.zlib ];
-    LIBRARY_PATH = lib.makeLibraryPath [ pkgs.zlib ];
+    PKG_CONFIG_PATH = "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.zlib ]}:$PKG_CONFIG_PATH";
+    CPATH = "${lib.makeSearchPathOutput "dev" "include" [ pkgs.zlib ]}:$CPATH";
+    LIBRARY_PATH = "${lib.makeLibraryPath [ pkgs.zlib ]}:$LIBRARY_PATH";
   };
 }
