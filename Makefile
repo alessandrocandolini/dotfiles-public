@@ -16,7 +16,7 @@ nvim-test:
 
 nvim-test-internal:
 	@if [ -z "$$IN_NIX_SHELL" ]; then \
-		echo "nvim-test-internal must run inside nix develop ./nvim-tests#default"; \
+		echo "nvim-test-internal must run inside nix develop --ignore-environment ./nvim-tests#default"; \
 		exit 1; \
 	fi
 	yes | nvim --headless -u nvim-tests/init_test.lua +qa!
