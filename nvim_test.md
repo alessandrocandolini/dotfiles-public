@@ -4,7 +4,8 @@
 1. Build a Neovim test setup to test the Neovim configuration in this repo using black-box behavioral tests.
 2. Ensure tests run both locally and in CI.
 3. Ensure determinism through Nix flakes (pinned, reproducible environment).
-4. Use the exact same Neovim configuration for tests and real usage.
+4. Use the exact same Neovim configuration for tests and real usage whenever possible.
+5. Use the Nix shell both to isolate mutable runtime state and to provide the external tooling that the Neovim configuration depends on.
 
 Black-box/behavioral means tests validate only what a user can observe while interacting with Neovim.
 They exist to catch regressions automatically instead of manually opening Neovim and discovering breakage.
@@ -12,6 +13,8 @@ They exist to catch regressions automatically instead of manually opening Neovim
 Concretely:
 1. If part of the configuration is no longer loaded from `init.lua`, tests must fail (so tests must not call `require(...)` for config modules directly).
 2. If implementation is reorganized across modules/files/helpers, tests should not need updates and should keep passing, as long as observable behavior remains unchanged.
+3. The preferred setup is for tests to execute the repo configuration directly via `stdpath('config')`; any bootstrap logic should stay minimal and only prepare the environment before loading the real `init.lua`.
+4. Plugin installation MUST start from an empty test data directory on every run, and plugin revisions MUST come from the committed `nvim-pack-lock.json`.
 
 ## Non-Negotiable Constraints
 1. Keep Makefile minimal.
@@ -36,3 +39,9 @@ Concretely:
 ## Current Risk
 Configuration drift between test setup and real setup remains the biggest liability.
 If test config is maintained separately or manually synced, regression confidence is weak.
+
+## Harness Model
+- `nix develop ./nvim-tests#default` points `XDG_CONFIG_HOME` at the repo's `nvim/.config`, so tests execute the exact same Neovim config that is used outside the harness.
+- The shell still creates temporary `HOME`, `XDG_DATA_HOME`, `XDG_STATE_HOME`, and `XDG_CACHE_HOME`, so plugins, undo/history, caches, and other runtime state remain ephemeral.
+- Because `vim.pack` reads `nvim-pack-lock.json` from `stdpath('config')`, plugin installation MUST start from an empty test data directory on every run, and plugin revisions MUST come from the committed `nvim-pack-lock.json`.
+- `nvim-tests/init_test.lua` should remain minimal: it validates the config/data paths, adds test helpers to `package.path`, and loads `stdpath('config')/init.lua`.

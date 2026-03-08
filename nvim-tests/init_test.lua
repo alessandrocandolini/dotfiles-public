@@ -1,40 +1,50 @@
--- Test bootstrap that loads the real user init.lua from this repo.
+-- Minimal bootstrap for tests: validate the real config path and load init.lua unchanged.
 
 local this_file = debug.getinfo(1, 'S').source:sub(2)
 local tests_root = vim.fs.dirname(this_file)
 local repo_root = vim.fs.dirname(tests_root)
-local nvim_root = repo_root .. '/nvim/.config/nvim'
-local user_config_root = vim.fs.normalize(vim.fn.stdpath('config'))
+local repo_nvim_root = repo_root .. '/nvim/.config/nvim'
+local config_root = vim.fs.normalize(vim.fn.stdpath('config'))
+local data_root = vim.fs.normalize(vim.fn.stdpath('data'))
 
-local function is_under(path, root)
-  local p = vim.fs.normalize(path)
-  local r = vim.fs.normalize(root)
-  return p == r or p:sub(1, #r + 1) == (r .. '/')
-end
-
-local function filter_paths(paths, blocked_root)
-  local out = {}
-  for _, path in ipairs(paths) do
-    if not is_under(path, blocked_root) then
-      table.insert(out, path)
-    end
-  end
-  return out
-end
-
-local runtimepath = filter_paths(vim.opt.runtimepath:get(), user_config_root)
-table.insert(runtimepath, 1, nvim_root)
-table.insert(runtimepath, nvim_root .. '/after')
-vim.opt.runtimepath = runtimepath
-
-local lua_dir = nvim_root .. '/lua'
 package.path = table.concat({
-  lua_dir .. '/?.lua',
-  lua_dir .. '/?/init.lua',
   tests_root .. '/?.lua',
   tests_root .. '/?/init.lua',
   package.path,
 }, ';')
 
--- Load the actual user config.
-dofile(nvim_root .. '/init.lua')
+local function assert_true(ok, message)
+  if not ok then
+    error(message, 0)
+  end
+end
+
+local function normalize(path)
+  return vim.fs.normalize(path)
+end
+
+local function is_under(path, root)
+  local normalized_path = normalize(path)
+  local normalized_root = normalize(root)
+  return normalized_path == normalized_root or normalized_path:sub(1, #normalized_root + 1) == (normalized_root .. '/')
+end
+
+local config_init = vim.fs.joinpath(config_root, 'init.lua')
+local config_lockfile = vim.fs.joinpath(config_root, 'nvim-pack-lock.json')
+
+assert_true(vim.fn.filereadable(config_init) == 1, 'Test bootstrap expected init.lua in stdpath("config")')
+assert_true(
+  normalize(config_root) == normalize(repo_nvim_root),
+  'Test bootstrap expected stdpath("config") to be the repo Neovim config'
+)
+assert_true(
+  vim.fn.filereadable(config_lockfile) == 1,
+  'Test bootstrap expected nvim-pack-lock.json in stdpath("config")'
+)
+assert_true(
+  not is_under(data_root, repo_root),
+  'Test bootstrap expected stdpath("data") to stay outside the repo for ephemeral plugin installs'
+)
+
+-- Test helpers live outside stdpath("config"), but the actual config code should load from it unchanged.
+dofile(config_init)
