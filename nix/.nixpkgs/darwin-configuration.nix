@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   unstablePkgs =
@@ -133,6 +133,7 @@ in
       coreutils
       pigz
       fd
+      zlib
       pkg-config
       ollama
       llama-cpp
@@ -165,5 +166,10 @@ in
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-  environment.variables.JAVA_HOME = "${pkgs.jdk21}/";
+  environment.variables = {
+    JAVA_HOME = "${pkgs.jdk21}/";
+    PKG_CONFIG_PATH = lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ unstablePkgs.zlib ];
+    CPATH = lib.makeSearchPathOutput "dev" "include" [ unstablePkgs.zlib ];
+    LIBRARY_PATH = lib.makeLibraryPath [ unstablePkgs.zlib ];
+  };
 }
