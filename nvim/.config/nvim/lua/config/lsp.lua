@@ -16,7 +16,9 @@ local function lsp_setup_per_buffer(client, bufnr)
 
   -- Code actions and lenses
   vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, buf_opts)
-  vim.keymap.set('n', '<leader>cL', vim.lsp.codelens.refresh, buf_opts)
+  vim.keymap.set('n', '<leader>cL', function()
+    vim.lsp.codelens.enable(true, { bufnr = bufnr })
+  end, buf_opts)
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
   vim.keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, buf_opts)
 
