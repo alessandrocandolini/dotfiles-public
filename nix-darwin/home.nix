@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   inputs,
   ...
 }:
@@ -39,6 +40,7 @@ let
     # nodejs_latest
     starship
     coreutils
+    zlib
     pkg-config
     ollama
     llama-cpp
@@ -99,5 +101,10 @@ in
     viAlias = true;
     vimAlias = true;
   };
-  home.sessionVariables.JAVA_HOME = "${pkgs.jdk25}/";
+  home.sessionVariables = {
+    JAVA_HOME = "${pkgs.jdk25}/";
+    PKG_CONFIG_PATH = "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.zlib ]}:$PKG_CONFIG_PATH";
+    CPATH = "${lib.makeSearchPathOutput "dev" "include" [ pkgs.zlib ]}:$CPATH";
+    LIBRARY_PATH = "${lib.makeLibraryPath [ pkgs.zlib ]}:$LIBRARY_PATH";
+  };
 }
