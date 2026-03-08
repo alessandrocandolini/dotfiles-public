@@ -153,20 +153,31 @@ export PATH=$HOME/.local/bin:$PATH
 # NIX added by Nix installer
 # =============================================================================
 function sourceAllIfExist {
-  local -r arr=$1
-  for i in "${arr[@]}"; do
-    if [ -e $i ]; then
-      echo $i
-      source $i
+  local file
+  for file in "$@"; do
+    if [ -e "$file" ]; then
+      source "$file"
     fi
   done
 }
 
-nixfiles=(
-  "$HOME/.nix-profile/etc/profile.d/nix.sh"
+function sourceFirstThatExists {
+  local file
+  for file in "$@"; do
+    if [ -e "$file" ]; then
+      source "$file"
+      return 0
+    fi
+  done
+  return 1
+}
+
+sourceAllIfExist "$HOME/.nix-profile/etc/profile.d/nix.sh"
+
+sourceFirstThatExists \
+  "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" \
+  "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" \
   "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-)
-sourceAllIfExist nixfiles
 
 # =============================================================================
 # FZF (fuzzy search in history)
