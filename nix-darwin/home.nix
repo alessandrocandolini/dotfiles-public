@@ -6,6 +6,8 @@
 }:
 
 let
+  fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+
   dockerStuff = with pkgs; [
     colima
     docker
@@ -42,8 +44,6 @@ let
     coreutils
     zlib
     pkg-config
-    ollama
-    llama-cpp
     btop
     macmon
     universal-ctags
@@ -52,6 +52,11 @@ let
     tflint
     proximity-sort
     tree
+  ];
+
+  fastMovingStuff = with fastPkgs; [
+    ollama
+    llama-cpp
   ];
 
   lspStuff = with pkgs; [
@@ -90,7 +95,7 @@ in
 {
   home.stateVersion = "25.05";
 
-  home.packages = dockerStuff ++ scalaStuff ++ cliStuff ++ lspStuff ++ rustStuff ++ llmStuff;
+  home.packages = dockerStuff ++ scalaStuff ++ cliStuff ++ fastMovingStuff ++ lspStuff ++ rustStuff ++ llmStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
