@@ -155,7 +155,7 @@ export PATH=$HOME/.local/bin:$PATH
 function sourceAllIfExist {
   local file
   for file in "$@"; do
-    if [ -e "$file" ]; then
+    if [ -f "$file" ]; then
       source "$file"
     fi
   done
@@ -164,7 +164,7 @@ function sourceAllIfExist {
 function sourceFirstThatExists {
   local file
   for file in "$@"; do
-    if [ -e "$file" ]; then
+    if [ -f "$file" ]; then
       source "$file"
       return $?
     fi
