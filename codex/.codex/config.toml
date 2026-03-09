@@ -8,6 +8,6 @@ name = "Ollama"
 base_url = "http://localhost:11434/v1"
 wire_api = "responses"
 
-[profiles.qwen_coder_30b]
+[profiles.qwen3_coder_30b]
 model_provider = "ollama"
 model = "qwen3-coder:30b"
