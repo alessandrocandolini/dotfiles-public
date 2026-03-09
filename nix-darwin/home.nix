@@ -8,14 +8,15 @@
 let
   fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 
-  dockerStuff = with pkgs; [
-    colima
+  dockerStuff = [
+    fastPkgs.colima
+  ] ++ (with pkgs; [
     docker
     docker-compose
     aws-iam-authenticator
     amazon-ecr-credential-helper
     docker-credential-helpers
-  ];
+  ]);
 
   scalaStuff = with pkgs; [
     jdk25
