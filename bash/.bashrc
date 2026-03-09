@@ -166,7 +166,7 @@ function sourceFirstThatExists {
   for file in "$@"; do
     if [ -e "$file" ]; then
       source "$file"
-      return 0
+      return $?
     fi
   done
   return 1
