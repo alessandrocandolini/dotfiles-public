@@ -29,11 +29,11 @@ function M.setup()
   }
 
   heuristics["build.sbt&app/&conf/routes"] = {
-    ["app/*.scala"] = {
+    ["app/**/*.scala"] = {
       alternate = "test/{}Spec.scala",
       type = "source",
     },
-    ["test/*Spec.scala"] = {
+    ["test/**/*Spec.scala"] = {
       alternate = "app/{}.scala",
       type = "test",
     },
