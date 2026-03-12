@@ -17,13 +17,24 @@ function M.setup()
     },
   }
 
-  heuristics["build.sbt"] = {
+  heuristics["build.sbt&src/main/scala/&src/test/scala/"] = {
     ["src/main/scala/*.scala"] = {
       alternate = "src/test/scala/{}Spec.scala",
       type = "source",
     },
     ["src/test/scala/*Spec.scala"] = {
       alternate = "src/main/scala/{}.scala",
+      type = "test",
+    },
+  }
+
+  heuristics["build.sbt&app/&conf/routes"] = {
+    ["app/*.scala"] = {
+      alternate = "test/{}Spec.scala",
+      type = "source",
+    },
+    ["test/*Spec.scala"] = {
+      alternate = "app/{}.scala",
       type = "test",
     },
   }

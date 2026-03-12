@@ -47,4 +47,28 @@ describe('projectionist', function()
       wait_for_buffer(src)
     end)
   end)
+
+  it('jumps between play app and test files', function()
+    fs.with_temp_project({
+      ['build.sbt'] = { 'ThisBuild / scalaVersion := "2.13.16"' },
+      ['conf/routes'] = { 'GET / controllers.HomeController.index()' },
+      ['app/controllers/HomeController.scala'] = { 'package controllers' },
+      ['test/controllers/HomeControllerSpec.scala'] = { 'package controllers' },
+    }, function(root)
+      local src = root .. '/app/controllers/HomeController.scala'
+      local spec = root .. '/test/controllers/HomeControllerSpec.scala'
+
+      vim.cmd('edit ' .. vim.fn.fnameescape(src))
+      assert(
+        normalize_path(vim.api.nvim_buf_get_name(0)) == normalize_path(src),
+        'expected to start in play source file'
+      )
+
+      keys.press(leader_lhs('gt'))
+      wait_for_buffer(spec)
+
+      keys.press(leader_lhs('gt'))
+      wait_for_buffer(src)
+    end)
+  end)
 end)
