@@ -7,6 +7,10 @@
 
 let
   fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  # Upstream mactop 2.0.5 currently fails tests in the Nix sandbox by writing under $HOME.
+  mactopNoTests = fastPkgs.mactop.overrideAttrs (_: {
+    doCheck = false;
+  });
 
   dockerStuff = with pkgs; [
     docker
@@ -57,6 +61,7 @@ let
     ollama
     llama-cpp
     colima
+    mactopNoTests
   ];
 
   lspStuff = with pkgs; [
