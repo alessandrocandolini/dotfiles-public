@@ -7,16 +7,18 @@
 
 let
   fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  # Upstream mactop 2.0.5 currently fails tests in the Nix sandbox by writing under $HOME.
+  mactopNoTests = fastPkgs.mactop.overrideAttrs (_: {
+    doCheck = false;
+  });
 
-  dockerStuff = [
-    fastPkgs.colima
-  ] ++ (with pkgs; [
+  dockerStuff = with pkgs; [
     docker
     docker-compose
     aws-iam-authenticator
     amazon-ecr-credential-helper
     docker-credential-helpers
-  ]);
+  ];
 
   scalaStuff = with pkgs; [
     jdk25
@@ -58,6 +60,8 @@ let
   fastMovingStuff = with fastPkgs; [
     ollama
     llama-cpp
+    colima
+    mactopNoTests
   ];
 
   lspStuff = with pkgs; [
@@ -96,7 +100,8 @@ in
 {
   home.stateVersion = "25.05";
 
-  home.packages = dockerStuff ++ scalaStuff ++ cliStuff ++ fastMovingStuff ++ lspStuff ++ rustStuff ++ llmStuff;
+  home.packages =
+    dockerStuff ++ scalaStuff ++ cliStuff ++ fastMovingStuff ++ lspStuff ++ rustStuff ++ llmStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
@@ -109,7 +114,9 @@ in
   };
   home.sessionVariables = {
     JAVA_HOME = "${pkgs.jdk25}/";
-    PKG_CONFIG_PATH = "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.zlib ]}:$PKG_CONFIG_PATH";
+    PKG_CONFIG_PATH = "${
+      lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.zlib ]
+    }:$PKG_CONFIG_PATH";
     CPATH = "${lib.makeSearchPathOutput "dev" "include" [ pkgs.zlib ]}:$CPATH";
     LIBRARY_PATH = "${lib.makeLibraryPath [ pkgs.zlib ]}:$LIBRARY_PATH";
   };
