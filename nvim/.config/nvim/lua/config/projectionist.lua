@@ -17,7 +17,7 @@ function M.setup()
     },
   }
 
-  heuristics["build.sbt&src/main/scala/&src/test/scala/"] = {
+  heuristics["build.sbt&src/main/scala/"] = {
     ["src/main/scala/*.scala"] = {
       alternate = "src/test/scala/{}Spec.scala",
       type = "source",
