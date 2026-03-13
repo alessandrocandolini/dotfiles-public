@@ -125,7 +125,7 @@ in
       tmux
       unzip
       curl
-      nodejs_latest
+      # nodejs_latest
       starship
       #     texlab
       #     apacheHttpd
