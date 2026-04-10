@@ -1,5 +1,30 @@
 local M = {}
 
+local function open_selection(selected, opts)
+  local actions = require("fzf-lua.actions")
+
+  if #selected ~= 1 then
+    return actions.file_edit_or_qf(selected, opts)
+  end
+
+  local target = require("fzf-lua.path").entry_to_file(selected[1], opts, opts._uri).path
+
+  if not target then
+    return actions.file_edit(selected, opts)
+  end
+
+  target = vim.fn.fnamemodify(target, ":p")
+
+  if vim.fn.isdirectory(target) == 1 then
+    vim.schedule(function()
+      require("oil").open(target)
+    end)
+    return
+  end
+
+  return actions.file_edit(selected, opts)
+end
+
 function M.setup()
   local ok, fzf = pcall(require, "fzf-lua")
   if not ok then
@@ -54,6 +79,9 @@ function M.setup()
     fzf.files({
       cmd = cmd,
       resume = resume,
+      actions = {
+        ["enter"] = open_selection,
+      },
       fzf_opts = {
         ['--scheme']   = 'path',
         ['--tiebreak'] = 'index',
