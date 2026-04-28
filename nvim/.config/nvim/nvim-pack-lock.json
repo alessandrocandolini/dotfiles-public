@@ -21,11 +21,11 @@
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "a755aba8e85c10455a7bae2c334e11089c8ec9d0",
+      "rev": "2e29d5f233defe3c5587df0e4dd29af2bd95a5a7",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
-      "rev": "2018d7c4123a75b54001d862f1825027a99034f2",
+      "rev": "be9f0a3349d1d9af7f0d2d252227f0b69ebf789d",
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
     "jellybeans.nvim": {
@@ -49,7 +49,7 @@
       "src": "https://github.com/neovimhaskell/nvim-hs.vim"
     },
     "nvim-metals": {
-      "rev": "6970d6036218db6545f3c295d0106cc8de6d7161",
+      "rev": "b914d3b963582109371d0949424c3cc6758d99b8",
       "src": "https://github.com/scalameta/nvim-metals"
     },
     "oil.nvim": {
@@ -69,7 +69,7 @@
       "src": "https://github.com/tpope/vim-projectionist"
     },
     "vim-strip-trailing-whitespace": {
-      "rev": "59385775cbe416b2797ec5e2c7eb445a3398dd46",
+      "rev": "4da5f5ab7cedf43345f9b540580babb48322a7ed",
       "src": "https://github.com/axelf4/vim-strip-trailing-whitespace"
     },
     "vim-textobj-user": {
