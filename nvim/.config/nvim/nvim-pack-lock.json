@@ -21,7 +21,7 @@
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "a755aba8e85c10455a7bae2c334e11089c8ec9d0",
+      "rev": "3ff77862f6c62f7b850668435ae43aa026de8758",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/rktjmp/lush.nvim"
     },
     "nvim-autopairs": {
-      "rev": "59bce2eef357189c3305e25bc6dd2d138c1683f5",
+      "rev": "7b9923abad60b903ece7c52940e1321d39eccc79",
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-cmp": {
@@ -49,7 +49,7 @@
       "src": "https://github.com/neovimhaskell/nvim-hs.vim"
     },
     "nvim-metals": {
-      "rev": "6970d6036218db6545f3c295d0106cc8de6d7161",
+      "rev": "4cc98f07ec96bb748a8796831767538e0e4f9be4",
       "src": "https://github.com/scalameta/nvim-metals"
     },
     "oil.nvim": {
@@ -69,7 +69,7 @@
       "src": "https://github.com/tpope/vim-projectionist"
     },
     "vim-strip-trailing-whitespace": {
-      "rev": "59385775cbe416b2797ec5e2c7eb445a3398dd46",
+      "rev": "4da5f5ab7cedf43345f9b540580babb48322a7ed",
       "src": "https://github.com/axelf4/vim-strip-trailing-whitespace"
     },
     "vim-textobj-user": {
