@@ -1,4 +1,10 @@
-model = "gpt-5.4"
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 approval_policy = "untrusted"
+
+[projects."/Users/alessandrocandolini/dotfiles-public"]
+trust_level = "trusted"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
