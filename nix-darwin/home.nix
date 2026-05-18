@@ -83,8 +83,6 @@ let
     opencode
     claude-code
     ccusage
-    ccusage-codex
-    ccusage-opencode
   ];
 
   fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
