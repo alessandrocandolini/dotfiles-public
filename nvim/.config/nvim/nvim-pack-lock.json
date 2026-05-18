@@ -32,10 +32,6 @@
       "rev": "29f4c17981f70c0919c2f3f918da9a89f906bf37",
       "src": "https://github.com/wtfox/jellybeans.nvim"
     },
-    "lush.nvim": {
-      "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
-      "src": "https://github.com/rktjmp/lush.nvim"
-    },
     "nvim-autopairs": {
       "rev": "7b9923abad60b903ece7c52940e1321d39eccc79",
       "src": "https://github.com/windwp/nvim-autopairs"
