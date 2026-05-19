@@ -1,28 +1,56 @@
 { pkgs, lib, ... }:
 
 let
+  fetchGitHubTarball =
+    { owner, repo, rev }:
+    builtins.fetchTarball {
+      url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
+    };
+
+  # Keep the legacy setup aligned with nix-darwin/flake.lock for fast-moving inputs.
+  pinnedSources = {
+    nixpkgsDarwin = fetchGitHubTarball {
+      owner = "NixOS";
+      repo = "nixpkgs";
+      rev = "e0e08612300f19308b83668861c2fabaceba8967";
+    };
+    nixpkgsFast = fetchGitHubTarball {
+      owner = "NixOS";
+      repo = "nixpkgs";
+      rev = "d233902339c02a9c334e7e593de68855ad26c4cb";
+    };
+    neovimNightlyOverlay = fetchGitHubTarball {
+      owner = "nix-community";
+      repo = "neovim-nightly-overlay";
+      rev = "6a82d456281eb3d9b5baf56ed62b829965519a76";
+    };
+    rustOverlay = fetchGitHubTarball {
+      owner = "oxalica";
+      repo = "rust-overlay";
+      rev = "2a77b5b1dc952f214e8102acdef1622b68515560";
+    };
+    llmAgents = fetchGitHubTarball {
+      owner = "numtide";
+      repo = "llm-agents.nix";
+      rev = "c8d9f6e4d1b7548b0d4dfcf8f6fd0f841a4949ef";
+    };
+  };
+
   unstablePkgs =
     import
-      (builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-      })
+      pinnedSources.nixpkgsFast
       {
         system = pkgs.system;
         config = pkgs.config; # keep unfree / allowBroken etc consistent
       };
   neovimPkgs =
     import
-      (builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-      })
+      pinnedSources.nixpkgsDarwin
       {
         system = pkgs.system;
+        config = pkgs.config; # keep unfree / allowBroken etc consistent
         overlays = [
-          (import (
-            builtins.fetchTarball {
-              url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
-            }
-          ))
+          (import pinnedSources.neovimNightlyOverlay)
         ];
       };
 
@@ -58,12 +86,7 @@ let
     lua-language-server
   ];
 
-  rustOverlay = import (
-    builtins.fetchTarball {
-      url = "https://github.com/oxalica/rust-overlay/archive/23dd7fa91602a68bd04847ac41bc10af1e6e2fd2.tar.gz";
-      sha256 = "0z323h9h8xdi2bp0zzakp0hrjc7hq7gs045prpqf1f1vw18s7y9a";
-    }
-  );
+  rustOverlay = import pinnedSources.rustOverlay;
 
   rustPkgs = unstablePkgs.extend rustOverlay;
 
@@ -88,9 +111,7 @@ let
 
   llmAgentsFlake =
     (import flakeCompat {
-      src = builtins.fetchTarball {
-        url = "https://github.com/numtide/llm-agents.nix/archive/master.tar.gz";
-      };
+      src = pinnedSources.llmAgents;
     }).defaultNix;
 
   # pick the right system key
@@ -169,7 +190,9 @@ in
 
   environment.variables = {
     JAVA_HOME = "${pkgs.jdk21}/";
-    PKG_CONFIG_PATH = "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ unstablePkgs.zlib ]}:\${PKG_CONFIG_PATH}";
+    PKG_CONFIG_PATH = "${
+      lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ unstablePkgs.zlib ]
+    }:\${PKG_CONFIG_PATH}";
     CPATH = "${lib.makeSearchPathOutput "dev" "include" [ unstablePkgs.zlib ]}:\${CPATH}";
     LIBRARY_PATH = "${lib.makeLibraryPath [ unstablePkgs.zlib ]}:\${LIBRARY_PATH}";
   };
