@@ -101,8 +101,6 @@ let
     opencode
     claude-code
     ccusage
-    ccusage-codex
-    ccusage-opencode
   ];
 in
 {
