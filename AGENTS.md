@@ -9,7 +9,8 @@
 ## Stow conventions
 
 - Top-level folders such as `nvim`, `gitconfig`, `alacritty`, `bash`, `tmux`, `starship`, `codex`, and `nix` are stow packages.
-- Use `stow --no-folding --target ~ <package>` semantics consistently. The repo intentionally avoids folding nested config directories into one symlink.
+- Use `stow --no-folding --target ~ <package>` semantics consistently. The `Makefile` is configured this way, and this should not change. If invoking `stow` directly, always pass `--no-folding`.
+- The repo intentionally avoids folding nested config directories into one symlink. Managed files should be linked as individual leaf symlinks inside real local directories, so runtime-owned directories can keep untracked state next to the managed files. For example, `codex/.codex/config.toml` should become `~/.codex/config.toml`, while `~/.codex/` itself remains a real local directory that can contain Codex-owned files such as `auth.json`, logs, caches, skills, and other runtime state outside this repo.
 - When adding a new top-level stow package, update `TASKS` in `Makefile`.
 
 ## Nix layout
