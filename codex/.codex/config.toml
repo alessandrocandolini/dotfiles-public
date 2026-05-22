@@ -9,3 +9,6 @@ writable_roots = [
   "/Users/alessandrocandolini/.ivy2",
   "/Users/alessandrocandolini/.cache/coursier"
 ]
+
+[tui]
+animations=false
