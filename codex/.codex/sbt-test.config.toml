@@ -1,0 +1,29 @@
+default_permissions = "sbt-test"
+
+[permissions.sbt-test]
+description = "Workspace write profile for running sbt test with SBT/Coursier caches and Unix sockets."
+extends = ":workspace"
+
+[permissions.sbt-test.filesystem]
+":tmpdir" = "write"
+"/Users/alessandrocandolini/.cache/coursier" = "read"
+"/Users/alessandrocandolini/.ivy2" = "read"
+"/Users/alessandrocandolini/.ivy2/.sbt.ivy.lock" = "write"
+"/Users/alessandrocandolini/.ivy2/exclude_classifiers.lock" = "write"
+"/Users/alessandrocandolini/.sbt/boot" = "write"
+"/Users/alessandrocandolini/.sbt/1.0" = "read"
+"/Users/alessandrocandolini/.sbt/1.0/staging" = "write"
+
+[permissions.sbt-test.network]
+enabled = true
+mode = "limited"
+allow_local_binding = false
+allow_upstream_proxy = false
+
+[permissions.sbt-test.network.domains]
+"localhost" = "allow"
+"127.0.0.1" = "allow"
+"::1" = "allow"
+
+[permissions.sbt-test.network.unix_sockets]
+"/Users/alessandrocandolini/.sbt/1.0/server/**" = "allow"
