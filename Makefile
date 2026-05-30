@@ -2,6 +2,7 @@ TASKS=bash stow alacritty gitconfig nvim nix starship tmux stack agda rg cargo c
 VERBOSITY=1
 FLAGS=--restow --no-folding --verbose $(VERBOSITY) --target ~
 NIX_UPDATE_INPUTS=nixpkgs nixpkgs-fast darwin home-manager neovim-nightly-overlay rust-overlay llm-agents
+CODEX_CONFIG_FILES=codex/.codex/config.toml codex/.codex/sbt-test.config.toml codex/.codex/with-mcp.config.toml
 
 .PHONY: all $(TASKS) test help nvim-test nvim-test-internal nix-update nix-inputs codex-lock codex-unlock
 
@@ -32,10 +33,10 @@ nix-inputs:
 	@printf '%s\n' $(NIX_UPDATE_INPUTS)
 
 codex-lock:
-	chflags uchg codex/.codex/config.toml
+	chflags uchg $(CODEX_CONFIG_FILES)
 
 codex-unlock:
-	chflags nouchg codex/.codex/config.toml
+	chflags nouchg $(CODEX_CONFIG_FILES)
 
 help:
 	@printf '%s\n' 'Stow targets:'
@@ -46,6 +47,6 @@ help:
 	@printf '  %-14s %s\n' nvim-test 'Run the Neovim test suite inside nix develop'
 	@printf '  %-14s %s\n' nix-update 'Update all nix-darwin flake inputs, or pass INPUTS="nixpkgs darwin" to limit'
 	@printf '  %-14s %s\n' nix-inputs 'List supported nix flake input names'
-	@printf '  %-14s %s\n' codex-lock 'Protect codex/.codex/config.toml with chflags uchg'
-	@printf '  %-14s %s\n' codex-unlock 'Remove uchg protection from codex/.codex/config.toml'
+	@printf '  %-14s %s\n' codex-lock 'Protect tracked Codex config files with chflags uchg'
+	@printf '  %-14s %s\n' codex-unlock 'Remove uchg protection from tracked Codex config files'
 	@printf '  %-14s %s\n' help 'Show available targets'

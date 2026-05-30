@@ -1,14 +1,7 @@
 model = "gpt-5.5"
 model_reasoning_effort = "high"
-sandbox_mode = "read-only"
+default_permissions = ":read-only"
 approval_policy = "untrusted"
-
-[sandbox_workspace_write]
-writable_roots = [
-  "/Users/alessandrocandolini/.sbt",
-  "/Users/alessandrocandolini/.ivy2",
-  "/Users/alessandrocandolini/.cache/coursier"
-]
 
 [tui]
 animations=false
