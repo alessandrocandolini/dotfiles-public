@@ -33,10 +33,22 @@ nix-inputs:
 	@printf '%s\n' $(NIX_UPDATE_INPUTS)
 
 codex-lock:
-	chflags uchg $(CODEX_CONFIG_FILES)
+	@for file in $(CODEX_CONFIG_FILES); do \
+		if [ ! -e "$$file" ]; then \
+			printf 'Skipping missing Codex config: %s\n' "$$file"; \
+			continue; \
+		fi; \
+		chflags uchg "$$file" || printf 'Warning: failed to lock %s\n' "$$file" >&2; \
+	done
 
 codex-unlock:
-	chflags nouchg $(CODEX_CONFIG_FILES)
+	@for file in $(CODEX_CONFIG_FILES); do \
+		if [ ! -e "$$file" ]; then \
+			printf 'Skipping missing Codex config: %s\n' "$$file"; \
+			continue; \
+		fi; \
+		chflags nouchg "$$file" || printf 'Warning: failed to unlock %s\n' "$$file" >&2; \
+	done
 
 help:
 	@printf '%s\n' 'Stow targets:'
