@@ -12,27 +12,27 @@ let
     nixpkgsDarwin = fetchGitHubTarball {
       owner = "NixOS";
       repo = "nixpkgs";
-      rev = "45a1ddc2fb777171278e791fd43e772774f493d2";
+      rev = "6d6863fd6e5c1c9347470e24746a259a23d57a58";
     };
     nixpkgsFast = fetchGitHubTarball {
       owner = "NixOS";
       repo = "nixpkgs";
-      rev = "d233902339c02a9c334e7e593de68855ad26c4cb";
+      rev = "331800de5053fcebacf6813adb5db9c9dca22a0c";
     };
     neovimNightlyOverlay = fetchGitHubTarball {
       owner = "nix-community";
       repo = "neovim-nightly-overlay";
-      rev = "4c2644c8ae9d038a132b24ad86335b7ce0391d3f";
+      rev = "67bba3d09c8f823f4791363f729db01b92f3458b";
     };
     rustOverlay = fetchGitHubTarball {
       owner = "oxalica";
       repo = "rust-overlay";
-      rev = "672fa5fc5608d5cd82286a6f69aaf84a40b4fe41";
+      rev = "51390d0bfca0a68a8c337d215a4bbeddc2ca616e";
     };
     llmAgents = fetchGitHubTarball {
       owner = "numtide";
       repo = "llm-agents.nix";
-      rev = "7865e8d429c3cbc10d484cba7b25bf4374ec9c97";
+      rev = "0030e3c712f6914dd8e5d59f31afebacbeec5a19";
     };
   };
 
@@ -56,7 +56,7 @@ let
 
   dockerStuff = with unstablePkgs; [
     colima
-    docker
+    docker_29
     docker-compose
     aws-iam-authenticator
     amazon-ecr-credential-helper
@@ -71,7 +71,10 @@ let
   ];
 
   vimStuff = with unstablePkgs; [
-    neovimPkgs.neovim
+    (neovimPkgs.neovim.override {
+      withRuby = false;
+      withPython3 = false;
+    })
     proximity-sort
   ];
 
@@ -158,7 +161,7 @@ in
       zlib
       pkg-config
       ollama
-      llama-cpp
+      # llama-cpp
       btop
       macmon
       universal-ctags
