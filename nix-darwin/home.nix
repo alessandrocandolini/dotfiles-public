@@ -8,7 +8,7 @@
 let
 
   dockerStuff = with pkgs; [
-    docker
+    docker_29
     docker-compose
     aws-iam-authenticator
     amazon-ecr-credential-helper
@@ -92,7 +92,7 @@ let
   });
   fastMovingStuff = with fastPkgs; [
     ollama
-    llama-cpp
+    # llama-cpp
     colima
     mactopNoTests
     gh
@@ -112,6 +112,8 @@ in
     package = nvimNightly;
     viAlias = true;
     vimAlias = true;
+    withRuby = false;
+    withPython3 = false;
   };
   home.sessionVariables = {
     JAVA_HOME = "${pkgs.jdk25}/";
