@@ -51,6 +51,14 @@ let
         config = pkgs.config; # keep unfree / allowBroken etc consistent
         overlays = [
           (import pinnedSources.neovimNightlyOverlay)
+          (_final: prev: {
+            neovim = prev.neovim.overrideAttrs (_: {
+              doCheck = false;
+            });
+            neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (_: {
+              doCheck = false;
+            });
+          })
         ];
       };
 
@@ -71,10 +79,7 @@ let
   ];
 
   vimStuff = with unstablePkgs; [
-    (neovimPkgs.neovim.override {
-      withRuby = false;
-      withPython3 = false;
-    })
+    neovimPkgs.neovim
     proximity-sort
   ];
 
