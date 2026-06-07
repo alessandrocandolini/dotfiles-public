@@ -1,7 +1,7 @@
 default_permissions = "sbt-test"
 
 [permissions.sbt-test]
-description = "Read-only workspace profile for running sbt test with SBT/Coursier caches and Unix sockets."
+description = "Read-only workspace profile for running sbt test with writable target outputs, SBT/Coursier caches, and Unix sockets."
 extends = ":read-only"
 
 [permissions.sbt-test.filesystem]
@@ -14,6 +14,15 @@ extends = ":read-only"
 "/Users/alessandrocandolini/.sbt/boot" = "write"
 "/Users/alessandrocandolini/.sbt/1.0" = "read"
 "/Users/alessandrocandolini/.sbt/1.0/staging" = "write"
+
+[permissions.sbt-test.filesystem.":workspace_roots"]
+"." = "read"
+"target" = "write"
+"target/**" = "write"
+"project/target" = "write"
+"project/target/**" = "write"
+"project/project/target" = "write"
+"project/project/target/**" = "write"
 
 [permissions.sbt-test.network]
 enabled = true
