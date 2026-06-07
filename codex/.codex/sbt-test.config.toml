@@ -1,8 +1,8 @@
 default_permissions = "sbt-test"
 
 [permissions.sbt-test]
-description = "Read-only workspace profile for running sbt test with SBT/Coursier caches and Unix sockets."
-extends = ":read-only"
+description = "Workspace write profile for running sbt test with SBT/Coursier caches and Unix sockets."
+extends = ":workspace"
 
 [permissions.sbt-test.filesystem]
 ":tmpdir" = "write"
