@@ -1,4 +1,7 @@
 default_permissions = "sbt-test"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+service_tier = "default"
 
 [permissions.sbt-test]
 description = "Read-only workspace profile for running sbt test with writable target outputs, SBT/Coursier caches, and Unix sockets."
@@ -19,6 +22,8 @@ extends = ":read-only"
 "." = "read"
 "target" = "write"
 "target/**" = "write"
+"it/target" = "write"
+"it/target/**" = "write"
 "project/target" = "write"
 "project/target/**" = "write"
 "project/project/target" = "write"
