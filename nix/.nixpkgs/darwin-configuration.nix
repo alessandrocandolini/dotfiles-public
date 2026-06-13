@@ -32,7 +32,7 @@ let
     llmAgents = fetchGitHubTarball {
       owner = "numtide";
       repo = "llm-agents.nix";
-      rev = "0030e3c712f6914dd8e5d59f31afebacbeec5a19";
+      rev = "24ec6b7b1ddf8896ac8df3b65dc564575e0a1928";
     };
   };
 
