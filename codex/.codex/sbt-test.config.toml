@@ -14,6 +14,8 @@ extends = ":read-only"
 "/Users/alessandrocandolini/.sbt/boot" = "write"
 "/Users/alessandrocandolini/.sbt/1.0" = "read"
 "/Users/alessandrocandolini/.sbt/1.0/staging" = "write"
+"/Users/alessandrocandolini/.config/sbt/2" = "read"
+"/Users/alessandrocandolini/.config/sbt/2/staging" = "write"
 
 [permissions.sbt-test.filesystem.":workspace_roots"]
 "." = "read"
@@ -37,3 +39,4 @@ allow_upstream_proxy = false
 
 [permissions.sbt-test.network.unix_sockets]
 "/Users/alessandrocandolini/.sbt/1.0/server/**" = "allow"
+"/Users/alessandrocandolini/.config/sbt/2/server/**" = "allow"
