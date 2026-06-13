@@ -35,6 +35,7 @@
   - `llm-agents`
 - Common task mapping: if the user says "port the flake update", "sync the legacy config", "update legacy pins", or similar, do only a `pinnedSources` revision sync. The expected diff for that task must only change `rev = "...";` lines.
 - Any change outside `pinnedSources` for a legacy pin-sync task requires explicit user approval first.
+- For `llm-agents` pin updates intended to update Codex, do not rely on commit dates, PR titles, or "latest main" alone. Before recommending or running a rebuild, verify the pinned source's packaged Codex version directly, for example by reading `packages/codex/hashes.json` from the candidate `llm-agents.nix` revision and confirming `version` is the expected Codex version.
 - Do not refactor the legacy config, introduce new package groups such as `cliStuff` or `fastMovingStuff`, move packages between package sets, change Java versions or `JAVA_HOME`, alter environment variables, or otherwise mirror `home.nix` package/layout changes unless the user explicitly asks for that broader migration.
 - The important subtlety is that the legacy Neovim build should track the Darwin-pinned `nixpkgs` lineage, not a random floating unstable revision, otherwise `neovim-unwrapped` can diverge and fail upstream tests.
 
