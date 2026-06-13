@@ -1,7 +1,7 @@
 {
   "plugins": {
     "LuaSnip": {
-      "rev": "a62e1083a3cfe8b6b206e7d3d33a51091df25357",
+      "rev": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24",
       "src": "https://github.com/L3MON4D3/LuaSnip"
     },
     "cmp-nvim-lsp": {
@@ -13,15 +13,15 @@
       "src": "https://github.com/saadparwaiz1/cmp_luasnip"
     },
     "cornelis": {
-      "rev": "8401538b8d5056571827679658331136c38f11be",
+      "rev": "f6db4a8e0993276557cc59b8e720d04e73138ded",
       "src": "https://github.com/agda/cornelis"
     },
     "fidget.nvim": {
-      "rev": "889e2e96edef4e144965571d46f7a77bcc4d0ddf",
+      "rev": "82404b196e73a00b1727a91903beef5ddc319d22",
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "3ff77862f6c62f7b850668435ae43aa026de8758",
+      "rev": "988416cc782dfe28bff3f0da9b8c943b236cd86a",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
@@ -49,7 +49,7 @@
       "src": "https://github.com/scalameta/nvim-metals"
     },
     "oil.nvim": {
-      "rev": "0fcc83805ad11cf714a949c98c605ed717e0b83e",
+      "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
