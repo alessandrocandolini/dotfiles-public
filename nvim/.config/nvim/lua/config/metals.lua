@@ -14,7 +14,7 @@ function M.setup()
 
   cfg.settings = {
     showImplicitArguments = true,
-    serverVersion = "1.6.5",
+    serverVersion = "1.6.7",
     excludedPackages = {
       "akka.actor.typed.javadsl",
       "com.github.swagger.akka.javadsl",
