@@ -43,6 +43,7 @@
 
 - The real config lives in `nvim/.config/nvim`.
 - Plugin versions are locked in `nvim/.config/nvim/nvim-pack-lock.json`. Treat lockfile changes as intentional.
+- The Scala Metals LSP server version is pinned in `nvim/.config/nvim/lua/config/metals.lua` via `cfg.settings.serverVersion`. To update Metals, change that version string to the desired Metals release, then restart Neovim/open a Scala or sbt buffer and explicitly trigger a `:MetalsUpdate`
 - Neovim tests live in `nvim-tests/` and are part of the normal maintenance path for this repo.
 - `make nvim-test` is the canonical test command. It enters `./nvim-tests#default` and then runs the internal test suite.
 - The test shell sets isolated `HOME` and `XDG_*` directories. Tests are expected to load the real repo config from `nvim/.config/nvim` while keeping plugin installs and runtime state outside the repo.
