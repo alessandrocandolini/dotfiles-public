@@ -13,15 +13,15 @@
       "src": "https://github.com/saadparwaiz1/cmp_luasnip"
     },
     "cornelis": {
-      "rev": "f6db4a8e0993276557cc59b8e720d04e73138ded",
+      "rev": "cddeac119a2fb3ecb093a28e35426b014c0963dd",
       "src": "https://github.com/agda/cornelis"
     },
     "fidget.nvim": {
-      "rev": "82404b196e73a00b1727a91903beef5ddc319d22",
+      "rev": "6f793b2bcd2d35e201c09520f698bb763220908a",
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "988416cc782dfe28bff3f0da9b8c943b236cd86a",
+      "rev": "05e44d38de0a79c11fba5f7bf8138791b1dbdd1e",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
@@ -29,7 +29,7 @@
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
     "jellybeans.nvim": {
-      "rev": "29f4c17981f70c0919c2f3f918da9a89f906bf37",
+      "rev": "66c6ae6ebd977dcdd386ee0c30557c023c326a37",
       "src": "https://github.com/wtfox/jellybeans.nvim"
     },
     "nvim-autopairs": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-cmp": {
-      "rev": "a1d504892f2bc56c2e79b65c6faded2fd21f3eca",
+      "rev": "2ffe79f1f021def8dd1fcd81deb16f1bb0d989f3",
       "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-hs.vim": {
@@ -45,7 +45,7 @@
       "src": "https://github.com/neovimhaskell/nvim-hs.vim"
     },
     "nvim-metals": {
-      "rev": "4cc98f07ec96bb748a8796831767538e0e4f9be4",
+      "rev": "a4b20656bf1014404dd63bf9fd5f22fcc50fee52",
       "src": "https://github.com/scalameta/nvim-metals"
     },
     "oil.nvim": {
