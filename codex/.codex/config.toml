@@ -1,7 +1,6 @@
 model = "gpt-5.5"
 model_reasoning_effort = "high"
 default_permissions = "read-only-tmp"
-approval_policy = "untrusted"
 
 [permissions.read-only-tmp]
 description = "Read-only profile with temp-directory writes for local tool cache and lock files."

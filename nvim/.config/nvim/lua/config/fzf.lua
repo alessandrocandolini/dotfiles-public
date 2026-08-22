@@ -26,6 +26,10 @@ local function open_selection(selected, opts)
 end
 
 function M.setup()
+  -- Neovim 0.13-nightly suffixes relative server names; reuse the existing RPC
+  -- server to avoid overlong Unix socket paths on macOS.
+  vim.g.fzf_lua_server = vim.v.servername
+
   local ok, fzf = pcall(require, "fzf-lua")
   if not ok then
     vim.notify(
