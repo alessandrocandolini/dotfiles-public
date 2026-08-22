@@ -101,20 +101,20 @@ in
 {
   home.stateVersion = "25.05";
 
-  home.packages =
-    dockerStuff ++ scalaStuff ++ cliStuff ++ fastMovingStuff ++ lspStuff ++ rustStuff ++ llmStuff;
+  home.packages = [
+    nvimNightly
+  ]
+  ++ dockerStuff
+  ++ scalaStuff
+  ++ cliStuff
+  ++ fastMovingStuff
+  ++ lspStuff
+  ++ rustStuff
+  ++ llmStuff;
 
   programs.bash.enable = false;
   programs.starship.enable = true;
   programs.git.enable = true;
-  programs.neovim = {
-    enable = true;
-    package = nvimNightly;
-    viAlias = true;
-    vimAlias = true;
-    withRuby = false;
-    withPython3 = false;
-  };
   home.sessionVariables = {
     JAVA_HOME = "${pkgs.jdk25}/";
     PKG_CONFIG_PATH = "${

@@ -26,6 +26,11 @@
 
   programs.bash.enable = true;
 
+  environment.shellAliases = {
+    vi = "nvim";
+    vim = "nvim";
+  };
+
   users.users.alessandrocandolini = {
     home = "/Users/alessandrocandolini";
   };
