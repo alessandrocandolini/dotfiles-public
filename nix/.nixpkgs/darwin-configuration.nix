@@ -22,7 +22,7 @@ let
     neovimNightlyOverlay = fetchGitHubTarball {
       owner = "nix-community";
       repo = "neovim-nightly-overlay";
-      rev = "67bba3d09c8f823f4791363f729db01b92f3458b";
+      rev = "9f379da3a958d09abeb2b884b1e6c3f42f0c4233";
     };
     rustOverlay = fetchGitHubTarball {
       owner = "oxalica";
@@ -32,7 +32,7 @@ let
     llmAgents = fetchGitHubTarball {
       owner = "numtide";
       repo = "llm-agents.nix";
-      rev = "24ec6b7b1ddf8896ac8df3b65dc564575e0a1928";
+      rev = "c488706e4879318cfdbfd2e62f7331b14971ecad";
     };
   };
 
@@ -126,8 +126,6 @@ let
   llmAgentsPkgs = llmAgentsFlake.packages.${pkgs.system};
 
   llmStuff = with llmAgentsPkgs; [
-    codex
-    opencode
     claude-code
     ccusage
   ];
