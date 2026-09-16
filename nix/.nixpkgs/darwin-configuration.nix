@@ -125,9 +125,21 @@ let
   # pick the right system key
   llmAgentsPkgs = llmAgentsFlake.packages.${pkgs.system};
 
+  agentopSrc = builtins.fetchTarball {
+    url = "https://github.com/leboiko/claude-codex-pid-inspector/archive/refs/heads/master.tar.gz";
+  };
+  agentop = rustPkgs.rustPlatform.buildRustPackage {
+    pname = "agentop";
+    version = "unstable";
+    src = agentopSrc;
+    cargoLock.lockFile = agentopSrc + "/Cargo.lock";
+    cargoTestFlags = [ "--lib" "--bins" ];
+  };
+
   llmStuff = with llmAgentsPkgs; [
     claude-code
     ccusage
+    agentop
   ];
 in
 {
