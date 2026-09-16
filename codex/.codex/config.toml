@@ -1,5 +1,5 @@
-model = "gpt-5.5"
-model_reasoning_effort = "high"
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
 default_permissions = "read-only-tmp"
 
 [permissions.read-only-tmp]
@@ -11,3 +11,12 @@ extends = ":read-only"
 
 [tui]
 animations=false
+
+[tui.model_availability_nux]
+gpt-6-astra = 4
+
+[projects."/Users/alessandrocandolini/haskell-incentives-dsl"]
+trust_level = "trusted"
+
+[projects."/Users/alessandrocandolini/dotfiles-public"]
+trust_level = "trusted"
