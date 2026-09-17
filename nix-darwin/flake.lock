@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "agentop": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776798151,
+        "narHash": "sha256-haxWUxMeIEUNBMxvjhSSUy1XhpD1wPl/rLISZzHsXP0=",
+        "owner": "leboiko",
+        "repo": "claude-codex-pid-inspector",
+        "rev": "93fea49ff7101ec99bb192136a505eaf371128f3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "leboiko",
+        "ref": "master",
+        "repo": "claude-codex-pid-inspector",
+        "type": "github"
+      }
+    },
     "bun2nix": {
       "inputs": {
         "flake-parts": [
@@ -228,6 +245,7 @@
     },
     "root": {
       "inputs": {
+        "agentop": "agentop",
         "darwin": "darwin",
         "home-manager": "home-manager",
         "llm-agents": "llm-agents",

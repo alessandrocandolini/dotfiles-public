@@ -35,6 +35,11 @@
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
     };
+
+    agentop = {
+      url = "github:leboiko/claude-codex-pid-inspector/master";
+      flake = false;
+    };
   };
 
   outputs =
