@@ -78,10 +78,22 @@ let
     pkgs.cargo-expand
   ];
 
+  agentop = rustPkgs.rustPlatform.buildRustPackage {
+    pname = "agentop";
+    version = "unstable";
+    src = inputs.agentop;
+    cargoLock.lockFile = inputs.agentop + "/Cargo.lock";
+    cargoTestFlags = [
+      "--lib"
+      "--bins"
+    ];
+  };
+
   llmStuff = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
     codex
     claude-code
     ccusage
+    agentop
   ];
 
   fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
