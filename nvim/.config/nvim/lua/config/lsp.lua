@@ -52,18 +52,11 @@ local function lsp_setup_per_buffer(client, bufnr)
     })
   end
 
-  -- Enable inlay hints by default if supported (requires Neovim >= 0.11)
-  if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
-    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-  end
-
   -- Expose a key binding to hide / show inlay hints if supported
   if client.server_capabilities.inlayHintProvider then
     vim.keymap.set("n", "<leader>uh", function()
-      if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
-        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-        vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
-      end
+      local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+      vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
     end, { buffer = bufnr, silent = true })
   end
 
@@ -111,6 +104,9 @@ M.capabilities = client_capabilities()
 
 function M.setup()
   require("fidget").setup()
+
+  -- Set the default once; buffer toggles survive later attachments and restarts.
+  vim.lsp.inlay_hint.enable(true)
 
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
   -- enable servers
