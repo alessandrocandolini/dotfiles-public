@@ -21,18 +21,10 @@ function M.setup()
     },
   }
 
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "scala", "sbt" },
-    callback = function()
-      metals.initialize_or_attach(cfg)
-    end,
-  })
-
-  -- if setup() runs after a scala buffer is already open
+  -- The Scala ftplugin (also inherited by sbt) calls setup for each buffer.
   if vim.bo.filetype == "scala" or vim.bo.filetype == "sbt" then
     metals.initialize_or_attach(cfg)
   end
 end
 
 return M
-
