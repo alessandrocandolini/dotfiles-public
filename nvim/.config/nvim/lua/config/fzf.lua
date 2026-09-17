@@ -97,12 +97,14 @@ function M.setup()
 
   vim.keymap.set("n", "<C-p>", function() find_files(false) end, { silent = true, desc = "Find files" })
   vim.keymap.set("n", "<Leader>p", function() find_files(true) end, { silent = true, desc = "Resume file search" })
+  vim.keymap.set("n", "<Leader>f", fzf.live_grep, { silent = true, desc = "Search project (live grep)" })
   vim.keymap.set("n", "<Leader>r", fzf.live_grep, { silent = true, desc = "Search project (live grep)" })
 
   local function search_word_under_cursor()
     local w = vim.fn.expand("<cword>")
     if w and w ~= "" then
-      fzf.grep_cword()
+      -- fzf.grep_cword()
+      fzf.live_grep({ search = vim.fn.expand("<cword>") })
     end
   end
 
