@@ -31,6 +31,7 @@
             pkgs.gnumake
             pkgs.fzf
             pkgs.fd
+            pkgs.ripgrep
             pkgs.proximity-sort
           ];
 

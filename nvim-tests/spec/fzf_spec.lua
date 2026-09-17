@@ -57,7 +57,37 @@ local function fzf_terminal_contains(text)
   return table.concat(lines, '\n'):find(text, 1, true) ~= nil
 end
 
+local function grep_output(root, query)
+  local opts = require('fzf-lua.config').normalize_opts({}, 'grep')
+  local cmd = require('fzf-lua.make_entry').get_grep_cmd(opts, query, true)
+  local result = vim.system({ 'sh', '-c', cmd }, { cwd = root, text = true }):wait(5000)
+  assert.equals(0, result.code, result.stderr)
+  return result.stdout
+end
+
 describe('fzf', function()
+  it('searches leading-hyphen text in hidden files while excluding Git metadata', function()
+    fs.with_temp_project({
+      ['.hidden/build.txt'] = { '-Xfatal-warnings' },
+      ['.git/review-marker'] = { '-Xfatal-warnings' },
+    }, function(root)
+      local output = grep_output(root, '-Xfatal-warnings')
+      assert(output:find('.hidden/build.txt', 1, true), 'expected a match in the hidden file')
+      assert(not output:find('review-marker', 1, true), 'expected Git metadata to be excluded')
+    end)
+  end)
+
+  it('limits long matching lines without losing ordinary matches', function()
+    fs.with_temp_project({
+      ['short.txt'] = { 'needle' },
+      ['long.txt'] = { 'needle ' .. string.rep('x', 10000) },
+    }, function(root)
+      local output = grep_output(root, 'needle')
+      assert(output:find('short.txt', 1, true), 'expected the ordinary match')
+      assert(#output < 1000, 'expected long matching lines to be omitted from picker output')
+    end)
+  end)
+
   it('opens picker on <C-p> and closes on second Ctrl-p', function()
     fs.with_temp_project({
       ['src/User.txt'] = { 'hello' },
