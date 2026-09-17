@@ -25,26 +25,28 @@ local function lsp_setup_per_buffer(client, bufnr)
 
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
-    if client.server_capabilities.documentFormattingProvider then
-      vim.lsp.buf.format { async = true }
-    end
+    vim.lsp.buf.format({ async = true })
   end, buf_opts)
 
   -- Auto format on save
-  if client.server_capabilities.documentFormattingProvider then
-    local format_on_save = is_autoformat_on_save_enabled(client)
+  if client:supports_method('textDocument/formatting', bufnr) then
+    if vim.b[bufnr].lsp_format_on_save == nil then
+      vim.b[bufnr].lsp_format_on_save = is_autoformat_on_save_enabled(client)
+    end
 
     vim.keymap.set("n", "<leader>uf", function()
-      format_on_save = not format_on_save
-      print("Format on save: " .. tostring(format_on_save))
-    end)
+      vim.b[bufnr].lsp_format_on_save = not vim.b[bufnr].lsp_format_on_save
+      print("Format on save: " .. tostring(vim.b[bufnr].lsp_format_on_save))
+    end, buf_opts)
 
+    -- One callback per buffer, with no captured client ID or reset on restart.
+    vim.api.nvim_clear_autocmds({ group = lsp_format_on_save_group, buffer = bufnr })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = lsp_format_on_save_group,
       buffer = bufnr,
       callback = function()
-        if format_on_save then
-          vim.lsp.buf.format({ bufnr = bufnr, filter = function(c) return c.id == client.id end })
+        if vim.b[bufnr].lsp_format_on_save then
+          vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 1000 })
         end
       end
     })
