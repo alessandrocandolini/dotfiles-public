@@ -68,8 +68,10 @@ function M.setup()
         "--no-heading",
         "--color=always",
         "--smart-case",
+        "--max-columns=4096",
         "--hidden",
         "--glob=!.git/*",
+        "-e",
       }, " "),
     },
   })
