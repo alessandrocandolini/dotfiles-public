@@ -89,14 +89,8 @@ if vim.fn.exists("+winborder") == 1 then
   vim.o.winborder = "rounded"
 end
 
--- Y to EOL
-vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
-
 -- Fix Ctrl-W v asymmetry
 vim.keymap.set("n", "<C-w>v", ":vnew<CR>", { noremap = true, silent = true })
-
--- Clear search highlights with Ctrl-L
-vim.keymap.set("n", "<C-l>", ":nohlsearch<CR>", { noremap = true, silent = true })
 
 -- <leader><leader> toggles between buffers
 vim.keymap.set("n", "<leader><leader>", "<c-^>", { noremap = true, silent = true })
@@ -116,13 +110,8 @@ vim.keymap.set("n", "<leader>wl", function()
   vim.cmd("setlocal invwrap")
 end, { desc = "Toggle line wrap" })
 
--- Persistent undo (XDG-compliant)
-local undo_dir = vim.fn.expand("~/.local/share/nvim/undo")
-if vim.fn.isdirectory(undo_dir) == 0 then
-  vim.fn.mkdir(undo_dir, "p")
-end
-
-vim.opt.undodir = undo_dir
+-- Persistent undo
+vim.opt.undodir = vim.fn.expand("~/.local/share/nvim/undo")
 vim.opt.undofile = true
 
 -- Highlight on yank for visual feedback
@@ -130,7 +119,7 @@ local group = vim.api.nvim_create_augroup("UserYankHighlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = group,
   callback = function()
-    vim.highlight.on_yank({ timeout = 150 })
+    vim.hl.hl_op({ timeout = 150 })
   end,
   desc = "highlight yanked text"
 })
