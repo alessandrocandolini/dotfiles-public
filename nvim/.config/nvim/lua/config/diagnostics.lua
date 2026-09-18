@@ -1,12 +1,18 @@
 local M = {}
 
+local function show_jump_diagnostic(diagnostic, bufnr)
+  if diagnostic then
+    vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor', focus = false })
+  end
+end
+
 function M.setup()
   vim.keymap.set("n", "[c", function()
-    vim.diagnostic.jump({ count = -1, float = true })
+    vim.diagnostic.jump({ count = -1, on_jump = show_jump_diagnostic })
   end, { silent = true, desc = "Diagnostics: previous (float)" })
 
   vim.keymap.set("n", "]c", function()
-    vim.diagnostic.jump({ count = 1, float = true })
+    vim.diagnostic.jump({ count = 1, on_jump = show_jump_diagnostic })
   end, { silent = true, desc = "Diagnostics: next (float)" })
 
   vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics: buffer (loclist)" })
