@@ -21,6 +21,9 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
+# Allow more open files, sockets, and watchers for Neovim and language servers.
+ulimit -Sn 8192
+
 # Trim the working directory path (this option is ignored in bash < 4)
 PROMPT_DIRTRIM=3
 
