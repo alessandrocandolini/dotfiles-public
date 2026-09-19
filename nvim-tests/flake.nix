@@ -33,6 +33,7 @@
             pkgs.fd
             pkgs.ripgrep
             pkgs.proximity-sort
+            pkgs.cargo
           ];
 
           shellHook = ''
