@@ -11,13 +11,19 @@ function M.setup()
   local f  = ls.function_node
 
   local function module_name()
-    local name = vim.fn.expand("%:r")
+    local name = vim.fn.expand("%:p:r")
     name = name:gsub("^.*/src/", "")
     name = name:gsub("^.*/test/", "")
-    name = name:gsub("^src/", "")
-    name = name:gsub("^test/", "")
     name = name:gsub("/", ".")
     return name
+  end
+
+  local function in_source()
+    return vim.fn.expand("%:p"):match("/src/") ~= nil
+  end
+
+  local function in_test()
+    return vim.fn.expand("%:p"):match("/test/") ~= nil
   end
 
   local snippets = {
@@ -31,9 +37,8 @@ function M.setup()
         i(0),
       },
       {
-        condition = function()
-          return vim.fn.expand("%:p"):match("/src/") ~= nil
-        end,
+        condition = in_source,
+        show_condition = in_source,
       }
     ),
 
@@ -51,9 +56,8 @@ function M.setup()
         i(0),
       },
       {
-        condition = function()
-          return vim.fn.expand("%:p"):match("/test/") ~= nil
-        end,
+        condition = in_test,
+        show_condition = in_test,
       }
     ),
 
