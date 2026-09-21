@@ -19,10 +19,6 @@ local function lsp_setup_per_buffer(client, bufnr)
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
   vim.keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, buf_opts)
 
-  if client:supports_method('textDocument/codeLens') then
-    vim.lsp.codelens.enable(true, { bufnr = bufnr })
-  end
-
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
     vim.lsp.buf.format({ async = true })
@@ -59,9 +55,6 @@ local function lsp_setup_per_buffer(client, bufnr)
       vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
     end, { buffer = bufnr, silent = true })
   end
-
-  -- No semantics token
-  client.server_capabilities.semanticTokensProvider = nil
 end
 
 local function list_lsp_clients()
@@ -107,6 +100,8 @@ function M.setup()
 
   -- Set the default once; buffer toggles survive later attachments and restarts.
   vim.lsp.inlay_hint.enable(true)
+  vim.lsp.semantic_tokens.enable(false)
+  vim.lsp.codelens.enable(true)
 
   local group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true })
   -- enable servers
