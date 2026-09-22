@@ -117,6 +117,36 @@ describe('fzf', function()
     end)
   end)
 
+  it('initially selects the current file even when opened by absolute path', function()
+    fs.with_temp_project({
+      ['.first.txt'] = { 'root file' },
+      ["src/near by/Current's file.txt"] = { 'current' },
+      ['src/near by/Other.txt'] = { 'neighbor' },
+      ['elsewhere/Distant.txt'] = { 'distant' },
+    }, function(root)
+      local current = root .. "/src/near by/Current's file.txt"
+      vim.cmd('edit ' .. vim.fn.fnameescape(current))
+      assert.equals(current, vim.fn.expand('%'))
+      force_close_fzf_picker()
+
+      keys.press('<C-p>')
+      local ready = vim.wait(5000, function()
+        return fzf_terminal_contains("Current's file.txt")
+          and fzf_terminal_contains('.first.txt')
+      end, 50)
+      if not ready then force_close_fzf_picker() end
+      assert(ready, 'expected the unfiltered picker to contain local and root files')
+
+      assert(send_to_fzf_terminal('\r'), 'expected to accept the initial selection')
+      local closed = vim.wait(3000, function()
+        return not has_fzf_terminal_window()
+      end, 50)
+      if not closed then force_close_fzf_picker() end
+      assert(closed, 'expected Enter to close the picker')
+      assert.equals(vim.uv.fs_realpath(current), vim.uv.fs_realpath(vim.api.nvim_buf_get_name(0)))
+    end)
+  end)
+
   it('keeps multi-select quickfix behavior', function()
     fs.with_temp_project({
       ['src/current.txt'] = { 'hello' },

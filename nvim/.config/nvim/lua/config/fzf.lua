@@ -80,7 +80,9 @@ function M.setup()
     local cmd = 'fd --color=never --hidden --type f --type l --type d --exclude .git'
     local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
     if base ~= '.' then
-      cmd = cmd .. (" | proximity-sort %s"):format(vim.fn.shellescape(vim.fn.expand('%')))
+      -- Match fd's relative paths, including directory aliases such as /tmp on macOS.
+      local file = vim.fn.resolve(vim.fn.expand('%:p:h')) .. '/' .. vim.fn.expand('%:t')
+      cmd = cmd .. (" | proximity-sort %s"):format(vim.fn.shellescape(vim.fn.fnamemodify(file, ':.')))
     end
     fzf.files({
       cmd = cmd,
