@@ -11,6 +11,8 @@ describe('native autoread', function()
 
   before_each(function()
     initial_buffer = vim.api.nvim_get_current_buf()
+    -- :edit can reuse the current unnamed buffer; keep the original buffer intact for cleanup.
+    vim.api.nvim_set_current_buf(vim.api.nvim_create_buf(true, false))
     root = vim.fn.tempname()
     path = root .. '/watched.txt'
     fs.write_file(path, { 'original' })
@@ -20,7 +22,9 @@ describe('native autoread', function()
 
   after_each(function()
     vim.api.nvim_set_current_buf(initial_buffer)
-    vim.api.nvim_buf_delete(buf, { force = true })
+    if vim.api.nvim_buf_is_valid(buf) then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
     assert.equals(0, vim.fn.delete(root, 'rf'))
   end)
 
