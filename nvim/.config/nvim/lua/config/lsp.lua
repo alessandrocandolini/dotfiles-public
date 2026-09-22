@@ -9,6 +9,10 @@ end
 local function lsp_setup_per_buffer(client, bufnr)
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
+  if client:supports_method('textDocument/completion', bufnr) then
+    vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+  end
+
   -- Standard LSP keybindings (buffer-local)
   vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, buf_opts)
   vim.keymap.set('n', 'grd', vim.lsp.buf.definition, buf_opts)
@@ -83,17 +87,6 @@ local function list_lsp_clients()
   vim.fn.setloclist(0, {}, "r", { title = "LSP Clients", items = items })
   vim.cmd("lopen")
 end
-
-local function client_capabilities()
-  local base = vim.lsp.protocol.make_client_capabilities()
-  local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-  if ok then
-    return cmp_lsp.default_capabilities(base)
-  end
-  return base
-end
-
-M.capabilities = client_capabilities()
 
 function M.setup()
   require("fidget").setup()

@@ -37,9 +37,6 @@ function M.setup()
   local metals = require("metals")
   local cfg = metals.bare_config()
 
-  local lsp    = require("config.lsp")
-  cfg.capabilities = lsp.capabilities
-
   cfg.settings = {
     showImplicitArguments = true,
     serverVersion = "1.6.8",

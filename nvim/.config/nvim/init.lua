@@ -132,21 +132,18 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   pattern = "*",
 })
 
--- appearance of popup menu for autocomplete
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
-
 -- Load Lua setup
 require("config.vimpack").setup()
 require("config.diagnostics").setup()
 require("config.fzf").setup()
-require("config.cmp").setup()
+require("config.completion").setup()
 require("config.lsp").setup()
 require("config.projectionist").setup()
 require("config.git_blame").setup()
 require("config.git_line_history").setup()
 
 -- other plugins
-require("nvim-autopairs").setup()
+require("nvim-autopairs").setup({ map_cr = false }) -- completion owns Enter
 require("oil").setup({
   view_options = {
     show_hidden = true

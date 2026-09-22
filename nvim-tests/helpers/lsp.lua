@@ -2,7 +2,7 @@ local M = {}
 
 -- An in-process LSP transport: exercise Neovim's actual initialization,
 -- attachment, requests and restart without launching a language server.
-function M.server(capabilities)
+function M.server(capabilities, handlers)
   local server = { connections = {}, requests = {} }
   server.cmd = function(dispatchers)
     local connection = { closing = false }
@@ -19,6 +19,14 @@ function M.server(capabilities)
         local id = request_id
         table.insert(server.requests, { method = method, params = params })
         vim.schedule(function()
+          local function reply(result)
+            callback(nil, result)
+            if notify_reply then notify_reply(id) end
+          end
+          if handlers and handlers[method] then
+            handlers[method](params, reply)
+            return
+          end
           local result
           if method == 'initialize' then
             result = { capabilities = capabilities or {} }
@@ -28,8 +36,7 @@ function M.server(capabilities)
               newText = '// formatted\n',
             } }
           end
-          callback(nil, result)
-          if notify_reply then notify_reply(id) end
+          reply(result)
         end)
         return true, id
       end,

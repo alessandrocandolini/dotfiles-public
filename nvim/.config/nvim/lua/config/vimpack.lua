@@ -75,12 +75,6 @@ function M.setup()
     gh("stevearc/oil.nvim"),
     gh("LnL7/vim-nix"),
 
-    -- completion/snippets
-    gh("hrsh7th/nvim-cmp"),
-    gh("hrsh7th/cmp-nvim-lsp"),
-    gh("L3MON4D3/LuaSnip"),
-    gh("saadparwaiz1/cmp_luasnip"),
-
   })
 
   -- Optional plugins (they are loaded on specific buffers in ftplugin)

@@ -1,4 +1,3 @@
-local lsp    = require("config.lsp")
 return {
     on_init = function(client)
       if client.workspace_folders then
@@ -52,7 +51,6 @@ return {
       "selene.yml",
       ".git",
     },
-    capabilities = lsp.capabilities,
     settings = {
       Lua = {
         codeLens = { enable = true },
@@ -60,4 +58,3 @@ return {
       }
     }
   }
-
