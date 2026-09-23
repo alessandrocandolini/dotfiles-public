@@ -62,7 +62,7 @@ function M.setup()
     callback = postProcessingAfterInstallation,
   })
 
-  -- Global plugins
+  -- Global plugins: use the normal startup pass to source their plugin scripts once.
   vim.pack.add({
     gh("wtfox/jellybeans.nvim"),
 
@@ -81,7 +81,7 @@ function M.setup()
     gh("L3MON4D3/LuaSnip"),
     gh("saadparwaiz1/cmp_luasnip"),
 
-  }, { load = true })
+  })
 
   -- Optional plugins (they are loaded on specific buffers in ftplugin)
   vim.pack.add({
