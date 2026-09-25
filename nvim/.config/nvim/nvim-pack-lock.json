@@ -1,17 +1,5 @@
 {
   "plugins": {
-    "LuaSnip": {
-      "rev": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24",
-      "src": "https://github.com/L3MON4D3/LuaSnip"
-    },
-    "cmp-nvim-lsp": {
-      "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
-      "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
-    },
-    "cmp_luasnip": {
-      "rev": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90",
-      "src": "https://github.com/saadparwaiz1/cmp_luasnip"
-    },
     "cornelis": {
       "rev": "cddeac119a2fb3ecb093a28e35426b014c0963dd",
       "src": "https://github.com/agda/cornelis"
@@ -35,10 +23,6 @@
     "nvim-autopairs": {
       "rev": "430522f95fe4fb7c511ec64f8c1a90cc6a66c05c",
       "src": "https://github.com/windwp/nvim-autopairs"
-    },
-    "nvim-cmp": {
-      "rev": "2ffe79f1f021def8dd1fcd81deb16f1bb0d989f3",
-      "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-hs.vim": {
       "rev": "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342",

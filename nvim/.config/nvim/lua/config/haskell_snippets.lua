@@ -1,84 +1,47 @@
 local M = {}
 
-function M.setup()
-  local ok, ls = pcall(require, "luasnip")
-  if not ok then
-    return
-  end
-  local s  = ls.snippet
-  local t  = ls.text_node
-  local i  = ls.insert_node
-  local f  = ls.function_node
-
-  local function module_name()
-    local name = vim.fn.expand("%:r")
-    name = name:gsub("^.*/src/", "")
-    name = name:gsub("^.*/test/", "")
-    name = name:gsub("^src/", "")
-    name = name:gsub("^test/", "")
-    name = name:gsub("/", ".")
-    return name
-  end
-
-  local snippets = {
-    -- 1) Module header for src/ files
-    s(
-      { trig = "module", name = "Haskell module header (src)" },
-      {
-        t("module "),
-        f(module_name, {}),
-        t({ " where", "", "" }),
-        i(0),
-      },
-      {
-        condition = function()
-          return vim.fn.expand("%:p"):match("/src/") ~= nil
-        end,
-      }
-    ),
-
-    -- 2) Module header for test/ files
-    s(
-      { trig = "module", name = "Hspec test module (test)" },
-      {
-        t("module "),
-        f(module_name, {}),
-        t({ " where", "", "" }),
-        t("import Test.Hspec"),
-        t({ "", "import Test.Hspec.QuickCheck", "import Test.QuickCheck", "", "" }),
-        t("spec :: Spec"),
-        t({ "", "spec = do", "  " }),
-        i(0),
-      },
-      {
-        condition = function()
-          return vim.fn.expand("%:p"):match("/test/") ~= nil
-        end,
-      }
-    ),
-
-    -- 3) it-block
-    s(
-      { trig = "it", name = "Hspec it block" },
-      {
-        t("it \""), i(1, "description"), t("\" $"),
-        t({ "", "  " }), i(2, "actual"),
-        t(" `shouldBe` "), i(3, "expected"),
-      }
-    ),
-
-    -- 4) prop-block
-    s(
-      { trig = "prop", name = "QuickCheck prop block" },
-      {
-        t("prop \""), i(1, "description"), t("\" $"),
-        t({ "", "  " }), i(2, "actual"),
-        t(" `shouldBe` "), i(3, "expected"),
-      }
-    ),
+local function snippets()
+  local items = {
+    {
+      trigger = "it",
+      description = "Hspec it block",
+      body = [[it "${1:description}" \$
+  ${2:actual} `shouldBe` ${3:expected}$0]],
+    },
+    {
+      trigger = "prop",
+      description = "QuickCheck prop block",
+      body = [[prop "${1:description}" \$
+  ${2:actual} `shouldBe` ${3:expected}$0]],
+    },
   }
+  local path = vim.fn.expand("%:p")
+  local name = vim.fn.expand("%:r")
+    :gsub("^.*/src/", ""):gsub("^.*/test/", "")
+    :gsub("^src/", ""):gsub("^test/", ""):gsub("/", ".")
+  if path:match("/src/") then
+    items[#items + 1] = {
+      trigger = "module",
+      description = "Haskell module header (src)",
+      body = "module " .. name .. " where\n\n$0",
+    }
+  elseif path:match("/test/") then
+    items[#items + 1] = {
+      trigger = "module",
+      description = "Hspec test module (test)",
+      body = "module " .. name .. " where\n\n"
+        .. "import Test.Hspec\nimport Test.Hspec.QuickCheck\nimport Test.QuickCheck\n\n"
+        .. "spec :: Spec\nspec = do\n  $0",
+    }
+  end
+  return items
+end
 
-  ls.add_snippets("haskell", snippets, { key = "user_haskell_snippets" })
+function M.setup()
+  vim.bo.completefunc = function(findstart, base)
+    return require("config.completion").complete_snippets(findstart, base, snippets())
+  end
+  vim.b.undo_ftplugin = (vim.b.undo_ftplugin or "") .. " | setlocal completefunc<"
 end
 
 return M

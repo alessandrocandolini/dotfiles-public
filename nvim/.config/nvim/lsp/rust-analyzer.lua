@@ -1,6 +1,4 @@
-local lsp = require("config.lsp")
 return {
-  capabilities = lsp.capabilities,
   cmd = { "rust-analyzer" },
   filetypes = { "rust" },
   root_dir = function(bufnr, on_dir)
