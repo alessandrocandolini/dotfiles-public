@@ -28,6 +28,7 @@ nvim-test-internal:
 
 nix-update:
 	nix flake update $(INPUTS) --flake ./nix-darwin
+	nix flake update --flake ./nvim-tests
 
 nix-inputs:
 	@printf '%s\n' $(NIX_UPDATE_INPUTS)
