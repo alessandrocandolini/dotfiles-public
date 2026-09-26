@@ -147,6 +147,10 @@ require("nvim-autopairs").setup({ map_cr = false }) -- completion owns Enter
 require("oil").setup({
   view_options = {
     show_hidden = true
+  },
+  lsp_file_methods = {
+    timeout_ms = 10000,
+    autosave_changes = false -- use :wa
   }
 })
 
