@@ -62,6 +62,26 @@ To run in dry mode, use the `--simulate` option:
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
 
+## Update the flake-based nix-darwin setup
+
+From the repository root, update the lockfiles and rebuild:
+
+```bash
+make nix-update
+sudo darwin-rebuild switch --option accept-flake-config true --flake ./nix-darwin#this-mac
+```
+
+`make nix-update` updates both the `nix-darwin` and `nvim-tests` lockfiles.
+`darwin-rebuild switch` builds the configured packages, including the local Codex
+package, before activating the system; a separate `nix build` is optional.
+
+Use `--option accept-flake-config true` with `darwin-rebuild` to accept the
+flake's binary-cache settings. The shorthand `--accept-flake-config` works with
+`nix build`, but this version of `darwin-rebuild` rejects it as an unknown option.
+
+See the [nix-darwin guide](nix-darwin/nix-darwin.md) for the temporary Codex fix
+and instructions for returning to upstream.
+
 ## Keep Makefile up to date
 
 When adding a new target, remember to update the list of targets in the Makefile.
@@ -77,5 +97,4 @@ By default, stow creates symbolic links for all files except those matching patt
 This repository includes a predefined `.stow-global-ignore file`, which can be installed via stow.
 
 Note: `.gitignore` is excluded by default. If you intend to apply stow git, ensure your `.stow-global-ignore` file does not exclude gitignore. You can use the one provided in this repository.
-
 
