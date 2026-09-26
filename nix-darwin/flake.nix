@@ -33,7 +33,9 @@
     };
 
     llm-agents = {
-      url = "github:numtide/llm-agents.nix";
+      # Temporary Codex daemon packaging fix: https://github.com/numtide/llm-agents.nix/pull/9889
+      # Restore the upstream URL once the fix is merged.
+      url = "github:numtide/llm-agents.nix/c27a13893df72acf585d79d95d177bfe2e7a31cd";
     };
 
     agentop = {
@@ -58,6 +60,10 @@
       homeDirectory = "/Users/alessandrocandolini";
     in
     {
+      packages.${system}.codex = import ./codex.nix {
+        codex = llm-agents.packages.${system}.codex;
+      };
+
       darwinConfigurations.this-mac = darwin.lib.darwinSystem {
         inherit system;
         modules = [
