@@ -12,27 +12,32 @@ let
     nixpkgsDarwin = fetchGitHubTarball {
       owner = "NixOS";
       repo = "nixpkgs";
-      rev = "6d6863fd6e5c1c9347470e24746a259a23d57a58";
+      rev = "2e032a04454b525daa6c6651264aaa5d3e98cf54";
     };
     nixpkgsFast = fetchGitHubTarball {
       owner = "NixOS";
       repo = "nixpkgs";
-      rev = "331800de5053fcebacf6813adb5db9c9dca22a0c";
+      rev = "e554fab72f81915600f3f449b786fd9af40439a5";
     };
     neovimNightlyOverlay = fetchGitHubTarball {
       owner = "nix-community";
       repo = "neovim-nightly-overlay";
-      rev = "9f379da3a958d09abeb2b884b1e6c3f42f0c4233";
+      rev = "2b2023e394f1d3f6508d2d7be73bb6d57d937077";
     };
     rustOverlay = fetchGitHubTarball {
       owner = "oxalica";
       repo = "rust-overlay";
-      rev = "51390d0bfca0a68a8c337d215a4bbeddc2ca616e";
+      rev = "26a71e661c47bd21a05d06fec749f3f7c75e9d12";
     };
     llmAgents = fetchGitHubTarball {
       owner = "numtide";
       repo = "llm-agents.nix";
-      rev = "c488706e4879318cfdbfd2e62f7331b14971ecad";
+      rev = "bffbfec7ef13d6f4b925ad20046133d6b49ac9e0";
+    };
+    agentop = fetchGitHubTarball {
+      owner = "leboiko";
+      repo = "claude-codex-pid-inspector";
+      rev = "93fea49ff7101ec99bb192136a505eaf371128f3";
     };
   };
 
@@ -125,14 +130,11 @@ let
   # pick the right system key
   llmAgentsPkgs = llmAgentsFlake.packages.${pkgs.system};
 
-  agentopSrc = builtins.fetchTarball {
-    url = "https://github.com/leboiko/claude-codex-pid-inspector/archive/refs/heads/master.tar.gz";
-  };
   agentop = rustPkgs.rustPlatform.buildRustPackage {
     pname = "agentop";
     version = "unstable";
-    src = agentopSrc;
-    cargoLock.lockFile = agentopSrc + "/Cargo.lock";
+    src = pinnedSources.agentop;
+    cargoLock.lockFile = pinnedSources.agentop + "/Cargo.lock";
     cargoTestFlags = [ "--lib" "--bins" ];
   };
 
@@ -175,7 +177,6 @@ in
       fd
       zlib
       pkg-config
-      ollama
       # llama-cpp
       btop
       macmon
