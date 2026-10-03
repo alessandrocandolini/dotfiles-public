@@ -1,5 +1,8 @@
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+approval_policy = "on-request"
+approvals_reviewer = "user"
 
 [tui]
 animations = false
