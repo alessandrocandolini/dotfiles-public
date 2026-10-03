@@ -4,7 +4,7 @@ FLAGS=--restow --no-folding --verbose $(VERBOSITY) --target ~
 NIX_UPDATE_INPUTS=nixpkgs nixpkgs-fast darwin home-manager neovim-nightly-overlay rust-overlay llm-agents
 CODEX_CONFIG_FILES=codex/.codex/config.toml codex/.codex/sbt-test.config.toml codex/.codex/with-mcp.config.toml
 
-.PHONY: all $(TASKS) test help nvim-test nvim-test-internal nix-update nix-inputs codex-lock codex-unlock
+.PHONY: all $(TASKS) test help nvim-update nvim-sync nvim-test nvim-test-internal nix-update nix-inputs codex-lock codex-unlock
 
 all:
 all: $(TASKS)
@@ -15,6 +15,12 @@ $(TASKS):
 test:
 test: nvim-test
 
+nvim-update:
+	nvim --headless -u NONE -i NONE -l scripts/nvim-pack.lua update
+
+nvim-sync:
+	nvim --headless -u NONE -i NONE -l scripts/nvim-pack.lua sync
+
 nvim-test:
 	nix develop --ignore-environment ./nvim-tests#default -c make nvim-test-internal
 
@@ -23,7 +29,9 @@ nvim-test-internal:
 		echo "nvim-test-internal must run inside nix develop --ignore-environment ./nvim-tests#default"; \
 		exit 1; \
 	fi
-	yes | nvim --headless -u nvim-tests/init_test.lua +qa!
+	nvim --headless -u NONE -i NONE -l nvim-tests/update_packages_test.lua
+	$(MAKE) nvim-sync
+	nvim --headless -u nvim-tests/init_test.lua +qa!
 	nvim --headless -u NONE -l nvim-tests/run_suite.lua
 
 nix-update:
@@ -57,6 +65,8 @@ help:
 	@for task in $(TASKS); do printf '  %-14s %s\n' "$$task" "Stow ./$$task into ~"; done
 	@printf '\n%s\n' 'Utility targets:'
 	@printf '  %-14s %s\n' test 'Run the test suite'
+	@printf '  %-14s %s\n' nvim-update 'Resolve newer Neovim revisions into the lockfile in isolation'
+	@printf '  %-14s %s\n' nvim-sync 'Apply locked Neovim revisions and build hooks; fail on errors'
 	@printf '  %-14s %s\n' nvim-test 'Run the Neovim test suite inside nix develop'
 	@printf '  %-14s %s\n' nix-update 'Update all nix-darwin flake inputs, or pass INPUTS="nixpkgs darwin" to limit'
 	@printf '  %-14s %s\n' nix-inputs 'List supported nix flake input names'

@@ -1,91 +1,173 @@
 local M = {}
 
-local function gh(repo)
-  return "https://github.com/" .. repo
+local function gh(repo, optional)
+  return { src = "https://github.com/" .. repo, name = repo:match("([^/]+)$"), optional = optional }
 end
 
-local function runPostInstallationHook(cmd, opts)
-  opts = opts or {}
-  local cwd = opts.cwd
+M.specs = {
+  gh("wtfox/jellybeans.nvim"),
+  gh("ibhagwan/fzf-lua"),
+  gh("nvim-lua/plenary.nvim"),
+  gh("axelf4/vim-strip-trailing-whitespace"),
+  gh("windwp/nvim-autopairs"),
+  gh("tpope/vim-projectionist"),
+  gh("j-hui/fidget.nvim"),
+  gh("stevearc/oil.nvim"),
+  gh("LnL7/vim-nix"),
+  gh("scalameta/nvim-metals", true),
+  gh("Mrcjkb/haskell-tools.nvim", true),
+  gh("kana/vim-textobj-user", true), -- required by cornelis
+  gh("neovimhaskell/nvim-hs.vim", true), -- required by cornelis
+  gh("agda/cornelis", true),
+}
 
-  local ok, err = pcall(vim.system, cmd, { cwd = cwd, text = true }, function(res)
-    vim.schedule(function()
-      local cmd_str = table.concat(cmd, " ")
-      local message, level
-      if res.code == 0 then
-        message = ("✅ Post installation hook %s succeeded"):format(cmd_str)
-        level = vim.log.levels.INFO
-      else
-        message = string.format(
-          "❌ Post installation hook %s failed\ncwd: %s\nexit: %s\n\nstdout:\n%s\n\nstderr:\n%s",
-          cmd_str,
-          cwd or "(nil)",
-          tostring(res.code),
-          res.stdout or "",
-          res.stderr or ""
-        )
-        level = vim.log.levels.ERROR
+M.build_hooks = { cornelis = { "stack", "build" } }
+
+local function read(path)
+  local file = assert(io.open(path, "rb"), "Cannot read " .. path)
+  local contents = file:read("*a")
+  file:close()
+  return contents
+end
+
+local function write(path, contents)
+  vim.fn.mkdir(vim.fs.dirname(path), "p")
+  local file = assert(io.open(path, "wb"))
+  assert(file:write(contents))
+  assert(file:close())
+end
+
+local function encode(value)
+  return vim.json.encode(value, { indent = "  ", sort_keys = true }) .. "\n"
+end
+
+local function plugin_path(name)
+  return vim.fn.stdpath("data") .. "/site/pack/core/opt/" .. name
+end
+
+local function receipt_path()
+  return vim.fn.stdpath("state") .. "/nvim-pack-sync"
+end
+
+local function fingerprint(lock)
+  return vim.fn.sha256(lock .. encode(M.specs) .. encode(M.build_hooks) .. vim.fn.stdpath("data"))
+end
+
+local function command(cmd, cwd)
+  local result = vim.system(cmd, { cwd = cwd, text = true }):wait()
+  assert(result.code == 0 and result.signal == 0, string.format(
+    "%s failed (exit %s, signal %s)\ncwd: %s\n%s\n%s",
+    table.concat(cmd, " "), result.code, result.signal, cwd, result.stdout or "", result.stderr or ""
+  ))
+  return vim.trim(result.stdout or "")
+end
+
+-- Startup only loads prepared packages. It never invokes vim.pack's installation
+-- or lockfile-repair machinery, and does not need Git or network access.
+function M.setup()
+  local lock = read(vim.fn.stdpath("config") .. "/nvim-pack-lock.json")
+  local ok, receipt = pcall(read, receipt_path())
+  assert(ok and receipt == fingerprint(lock), "Neovim packages need syncing: run make nvim-sync")
+  local plugins = vim.json.decode(lock).plugins
+  for _, spec in ipairs(M.specs) do
+    local head_ok, head = pcall(read, plugin_path(spec.name) .. "/.git/HEAD")
+    assert(head_ok and vim.trim(head) == plugins[spec.name].rev,
+      spec.name .. " differs from the lockfile: run make nvim-sync")
+    vim.cmd.packadd({ spec.name, bang = spec.optional or vim.v.vim_did_init == 0 })
+  end
+end
+
+-- Run in a fresh headless process, before any vim.pack calls.
+function M.manage(mode, lock_path)
+  assert(mode == "sync" or mode == "update", "Expected sync or update")
+  lock_path = vim.uv.fs_realpath(lock_path) or lock_path
+  local original = read(lock_path)
+  local desired = vim.json.decode(original)
+  local names, specs, seed = {}, {}, { plugins = {} }
+  for _, spec in ipairs(M.specs) do
+    local entry = desired.plugins[spec.name]
+    if mode == "sync" then
+      assert(entry and entry.src == spec.src and type(entry.rev) == "string",
+        spec.name .. " is missing or differs from the lockfile: run make nvim-update first")
+    end
+    names[#names + 1] = spec.name
+    specs[#specs + 1] = { src = spec.src, name = spec.name, version = spec.version }
+    seed.plugins[spec.name] = entry
+  end
+
+  local temp = vim.fn.tempname()
+  vim.fn.mkdir(temp, "p")
+  local original_lock_option = vim.o.packlockfile
+  local env = {}
+  for _, key in ipairs({ "XDG_DATA_HOME", "XDG_STATE_HOME", "XDG_CACHE_HOME" }) do
+    env[key] = vim.env[key]
+  end
+  local original_packpath = vim.o.packpath
+  local ok, err = xpcall(function()
+    if mode == "update" then
+      -- Resolve updates without touching this machine's installed plugins or builds.
+      vim.env.XDG_DATA_HOME = temp .. "/data"
+      vim.env.XDG_STATE_HOME = temp .. "/state"
+      vim.env.XDG_CACHE_HOME = temp .. "/cache"
+      vim.opt.packpath:prepend(vim.fn.stdpath("data") .. "/site")
+    else
+      -- A failed sync must never leave a previous success receipt in place.
+      vim.fn.delete(receipt_path())
+    end
+    local scratch_lock = temp .. "/nvim-pack-lock.json"
+    write(scratch_lock, encode(seed))
+    vim.o.packlockfile = scratch_lock
+    vim.pack.add(specs, { load = false, confirm = false })
+
+    local targets = seed.plugins
+    if mode == "update" then
+      -- A failed fetch leaves rev_to unset. Check it explicitly instead of parsing logs.
+      targets = {}
+      for _, plugin in ipairs(vim.pack.get(names, { offline = false })) do
+        assert(plugin.rev_to, "Could not resolve update for " .. plugin.spec.name)
+        targets[plugin.spec.name] = { rev = plugin.rev_to }
       end
+    end
+    vim.pack.update(names, { force = true, target = mode == "sync" and "lockfile" or "version",
+      offline = mode == "update" })
+    for _, name in ipairs(names) do
+      local actual = command({ "git", "rev-parse", "HEAD" }, plugin_path(name))
+      assert(actual == targets[name].rev, name .. " did not reach the requested revision")
+    end
 
-      vim.notify(message, level, { title = "vim.pack" })
-    end)
-  end)
-
-  if not ok then
-    local cmd_str = table.concat(cmd, " ")
-    vim.notify(
-      ("Post installation hook %s failed to start: %s"):format(cmd_str, tostring(err)),
-      vim.log.levels.ERROR,
-      { title = "vim.pack" }
-    )
-  end
-end
-
-local function postProcessingAfterInstallation(ev)
-  if not ev.data or not ev.data.kind or not ev.data.spec or not ev.data.spec.name then
-    return
-  end
-  local kind = ev.data.kind
-  local name = ev.data.spec.name
-  local path = ev.data.path
-  if kind == "install" or kind == "update" then
-    if name == "cornelis" then
-      runPostInstallationHook({ "stack", "build" }, { cwd = path })
+    if mode == "sync" then
+      -- Run even on unchanged checkouts: builds are incremental, and failed builds
+      -- must be retried rather than skipped because no PackChanged event occurred.
+      for _, name in ipairs(names) do
+        if M.build_hooks[name] then
+          print("Building " .. name)
+          command(M.build_hooks[name], plugin_path(name))
+        end
+      end
+      assert(read(lock_path) == original, "Lockfile changed during sync; run make nvim-sync again")
+      write(receipt_path(), fingerprint(original))
+    else
+      local resolved = vim.json.decode(read(scratch_lock))
+      local output = { plugins = {} }
+      for _, name in ipairs(names) do
+        output.plugins[name] = assert(resolved.plugins[name])
+      end
+      -- Publish only a fully resolved update, preserving a stowed lockfile symlink.
+      assert(read(lock_path) == original, "Lockfile changed while resolving updates")
+      write(lock_path .. ".tmp", encode(output))
+      assert(vim.uv.fs_rename(lock_path .. ".tmp", lock_path))
+    end
+  end, debug.traceback)
+  vim.o.packlockfile = original_lock_option
+  vim.o.packpath = original_packpath
+  if mode == "update" then
+    for _, key in ipairs({ "XDG_DATA_HOME", "XDG_STATE_HOME", "XDG_CACHE_HOME" }) do
+      vim.env[key] = env[key]
     end
   end
-end
-
-function M.setup()
-  local packchanged_group = vim.api.nvim_create_augroup("PackChangedPostInstall", { clear = true })
-  vim.api.nvim_create_autocmd("PackChanged", {
-    group = packchanged_group,
-    callback = postProcessingAfterInstallation,
-  })
-
-  -- Global plugins: use the normal startup pass to source their plugin scripts once.
-  vim.pack.add({
-    gh("wtfox/jellybeans.nvim"),
-
-    gh("ibhagwan/fzf-lua"),
-    gh("nvim-lua/plenary.nvim"),
-    gh("axelf4/vim-strip-trailing-whitespace"),
-    gh("windwp/nvim-autopairs"),
-    gh("tpope/vim-projectionist"),
-    gh("j-hui/fidget.nvim"), -- LSP loader indicator
-    gh("stevearc/oil.nvim"),
-    gh("LnL7/vim-nix"),
-
-  })
-
-  -- Optional plugins (they are loaded on specific buffers in ftplugin)
-  vim.pack.add({
-    { src = gh("scalameta/nvim-metals"), name = "nvim-metals" },
-    { src = gh("Mrcjkb/haskell-tools.nvim"), name = "haskell-tools.nvim" },
-    { src = gh("kana/vim-textobj-user"), name = "vim-textobj-user" }, -- required by cornelis
-    { src = gh("neovimhaskell/nvim-hs.vim"), name = "nvim-hs.vim" }, -- required by cornelis
-    { src = gh("agda/cornelis"), name = "cornelis" },
-  }, { load = false })
-
+  vim.fn.delete(temp, "rf")
+  if not ok then error(err, 0) end
+  print(mode == "sync" and "Neovim packages synced successfully" or "Neovim lockfile updated; run make nvim-sync to apply")
 end
 
 return M

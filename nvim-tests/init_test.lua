@@ -1,4 +1,5 @@
--- Minimal bootstrap for tests: validate the real config path and load init.lua unchanged.
+-- Packages are prepared by make nvim-sync in the isolated test shell.
+-- Validate the real config path and load init.lua unchanged.
 
 local function absolute_path(path)
   local absolute = vim.fn.fnamemodify(path, ':p')

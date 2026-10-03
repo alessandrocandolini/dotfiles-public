@@ -34,3 +34,9 @@ Beyond built-in LSP support, neovim is really having a wave of interesting devel
 I don't let neovim manage my LSP servers: I manage them through nix, and in the setup of neovim I just assume those are available outside.
 
 Other plugins that I use include: fzf (for fuzzy search), cmp (for autocompletion), and occasionally I use lua snippets. I don't care about git integration in the editor, or fancy UI, or ways to browse the codebase: fzf is my way to browse files based on search. For git blame, i vibe coded a lua function that provides exactly the bespoke minimal experience I'm looking for, and nothing else.
+
+## Managing plugin versions
+
+From the repo root, run `make nvim-update` to generate a lockfile change without changing installed plugins, then review, test, and commit it. CI can use the same command.
+After pulling changes (or first running `make nvim`), run `make nvim-sync` to apply the locked revisions and wait for build hooks. It preserves the lockfile and fails on errors; fix the cause and rerun to retry builds.
+Both require Neovim and Git; sync also needs Stack for Cornelis. Restart Neovim afterward; normal startup only loads prepared plugins.
