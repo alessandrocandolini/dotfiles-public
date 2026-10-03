@@ -23,6 +23,11 @@ M.specs = {
 
 M.build_hooks = { cornelis = { "stack", "build" } }
 
+local excluded = vim.split(vim.env.NVIM_PACK_EXCLUDE or "", ",", { trimempty = true })
+M.specs = vim.tbl_filter(function(spec)
+  return not vim.tbl_contains(excluded, spec.name)
+end, M.specs)
+
 local function read(path)
   local file = assert(io.open(path, "rb"), "Cannot read " .. path)
   local contents = file:read("*a")

@@ -46,5 +46,5 @@ If test config is maintained separately or manually synced, regression confidenc
 ## Harness Model
 - `nix develop ./nvim-tests#default` points `XDG_CONFIG_HOME` at the repo's `nvim/.config`, so tests execute the exact same Neovim config that is used outside the harness.
 - The shell still creates temporary `HOME`, `XDG_DATA_HOME`, `XDG_STATE_HOME`, and `XDG_CACHE_HOME`, so plugins, undo/history, caches, and other runtime state remain ephemeral.
-- `make nvim-test-internal` runs the package lifecycle tests, then `make nvim-sync` before loading the real editor configuration. Installation starts in an empty test data directory and applies the committed lockfile without modifying it.
+- `make nvim-test-internal` runs the package lifecycle tests, then `make nvim-sync` before loading the real editor configuration, with Cornelis excluded. Installation starts in an empty test data directory and applies the committed lockfile without modifying it.
 - `nvim-tests/init_test.lua` should remain minimal: it validates the config/data paths, adds test helpers to `package.path`, and loads `stdpath('config')/init.lua`.

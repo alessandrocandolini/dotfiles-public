@@ -34,7 +34,6 @@
             pkgs.ripgrep
             pkgs.proximity-sort
             pkgs.cargo
-            pkgs.stack
           ];
 
           shellHook = ''
@@ -47,6 +46,7 @@
             export XDG_DATA_HOME="$NVIM_TEST_ROOT/xdg/data"
             export XDG_STATE_HOME="$NVIM_TEST_ROOT/xdg/state"
             export XDG_CACHE_HOME="$NVIM_TEST_ROOT/xdg/cache"
+            export NVIM_PACK_EXCLUDE="cornelis"
             mkdir -p "$HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME"
 
             if [ ! -d "$REPO_NVIM_CONFIG" ]; then

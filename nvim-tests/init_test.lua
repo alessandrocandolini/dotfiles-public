@@ -53,6 +53,10 @@ assert_true(
   not is_under(data_root, repo_root),
   'Test bootstrap expected stdpath("data") to stay outside the repo for ephemeral plugin installs'
 )
+assert_true(
+  vim.fn.isdirectory(data_root .. '/site/pack/core/opt/cornelis') == 0,
+  'Cornelis should be excluded from editor tests'
+)
 
 -- Test helpers live outside stdpath("config"), but the actual config code should load from it unchanged.
 dofile(config_init)

@@ -2,7 +2,7 @@
 local repo, root = vim.fn.getcwd(), vim.fn.tempname()
 local config, source = root .. '/config/nvim', root .. '/source'
 local lock_path = config .. '/nvim-pack-lock.json'
-local installed = root .. '/data/nvim/site/pack/core/opt/cornelis'
+local installed = root .. '/data/nvim/site/pack/core/opt/build-fixture'
 
 local function write(path, contents)
   vim.fn.mkdir(vim.fs.dirname(path), 'p')
@@ -51,14 +51,15 @@ local ok, err = xpcall(function()
   local new_rev = commit('new')
   write(config .. '/lua/config/vimpack.lua', string.format([[
 local M = dofile(%q)
-M.specs = {{ name = 'cornelis', src = %q, optional = true }}
+M.specs = {{ name = 'build-fixture', src = %q, optional = true }}
+M.build_hooks = { ['build-fixture'] = { 'build-hook' } }
 return M
 ]], repo .. '/nvim/.config/nvim/lua/config/vimpack.lua', 'file://' .. source))
-  local lock = { plugins = { cornelis = { src = 'file://' .. source, rev = old_rev } } }
+  local lock = { plugins = { ['build-fixture'] = { src = 'file://' .. source, rev = old_rev } } }
   local original = vim.json.encode(lock) .. '\n'
   write(lock_path, original)
-  write(root .. '/bin/stack', '#!/bin/sh\nsleep 0.1\necho build >> "$HOOK_MARKER"\ntest ! -f "$HOOK_FAIL"\n')
-  vim.fn.setfperm(root .. '/bin/stack', 'rwx------')
+  write(root .. '/bin/build-hook', '#!/bin/sh\nsleep 0.1\necho build >> "$HOOK_MARKER"\ntest ! -f "$HOOK_FAIL"\n')
+  vim.fn.setfperm(root .. '/bin/build-hook', 'rwx------')
   for _, tool in ipairs({ 'git', 'sleep' }) do
     assert(vim.uv.fs_symlink(vim.fn.exepath(tool), root .. '/bin/' .. tool))
   end
@@ -68,7 +69,7 @@ return M
   assert(read(lock_path) == original)
   invoke('update', true)
   local updated = read(lock_path)
-  assert(vim.json.decode(updated).plugins.cornelis.rev == new_rev)
+  assert(vim.json.decode(updated).plugins['build-fixture'].rev == new_rev)
   assert(git({ 'rev-parse', 'HEAD' }, installed) == old_rev)
   assert(read(root .. '/hooks') == 'build\n', 'update ran a build')
   commit('future')
@@ -87,7 +88,7 @@ return M
   assert(#vim.fn.readfile(root .. '/hooks') == 5, 'failed builds were not retried')
   print('PASS: failed builds fail sync and retry on unchanged checkouts')
 
-  lock.plugins.cornelis.rev = string.rep('0', 40)
+  lock.plugins['build-fixture'].rev = string.rep('0', 40)
   local invalid = vim.json.encode(lock) .. '\n'
   write(lock_path, invalid)
   invoke('sync', false)
