@@ -49,7 +49,7 @@ make bash
 make alacritty 
 ```
 ```
-make neovim 
+make nvim
 ```
 
 Alternatively, invoke `stow` directly 
@@ -61,6 +61,14 @@ To run in dry mode, use the `--simulate` option:
 ```bash
 stow --simulate --no-folding --verbose --target ~ <name of the folder>
 ```
+
+## Neovim packages
+
+- `make nvim-update`: update the plugin lockfile in isolation; review and commit it (locally or in CI).
+- `make nvim-sync`: apply the locked revisions and build hooks after pulling; failures exit nonzero and can be retried.
+- `make nvim-test`: test the configuration in isolation.
+
+Normal startup loads prepared plugins. See [requirements and usage](vimrc.md#managing-plugin-versions).
 
 ## Update the flake-based nix-darwin setup
 
@@ -97,4 +105,3 @@ By default, stow creates symbolic links for all files except those matching patt
 This repository includes a predefined `.stow-global-ignore file`, which can be installed via stow.
 
 Note: `.gitignore` is excluded by default. If you intend to apply stow git, ensure your `.stow-global-ignore` file does not exclude gitignore. You can use the one provided in this repository.
-
