@@ -90,7 +90,7 @@ let
   };
 
   llmStuff = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    codex
     claude-code
     ccusage
     agentop
