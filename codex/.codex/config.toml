@@ -29,3 +29,6 @@ title = false
 
 [notice]
 hide_rate_limit_model_nudge = true
+
+[projects."/Users/alessandrocandolini/dotfiles-public"]
+trust_level = "trusted"
