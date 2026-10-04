@@ -10,6 +10,19 @@ vim.cmd("filetype plugin indent on")
 -- Switch syntax highlighting on
 vim.cmd("syntax on")
 
+-- Spell-check prose. 'spell' is window-local, so refresh it on buffer switches.
+local spelling_group = vim.api.nvim_create_augroup("UserProseSpelling", { clear = true })
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+  group = spelling_group,
+  callback = function()
+    local prose = vim.tbl_contains({ "tex", "plaintex", "markdown" }, vim.bo.filetype)
+    vim.opt_local.spell = prose
+    if prose then
+      vim.opt_local.spelllang = "en"
+    end
+  end,
+})
+
 -- Encoding
 vim.opt.encoding = "utf-8"
 vim.opt.bomb = false

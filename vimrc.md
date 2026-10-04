@@ -35,6 +35,29 @@ I don't let neovim manage my LSP servers: I manage them through nix, and in the 
 
 Other plugins that I use include: fzf (for fuzzy search), cmp (for autocompletion), and occasionally I use lua snippets. I don't care about git integration in the editor, or fancy UI, or ways to browse the codebase: fzf is my way to browse files based on search. For git blame, i vibe coded a lua function that provides exactly the bespoke minimal experience I'm looking for, and nothing else.
 
+## Quick guide
+
+### Spell checking (LaTeX and Markdown)
+
+English spell checking is enabled automatically for LaTeX (`tex`), plain TeX
+(`plaintex`), and Markdown (`markdown`) buffers. It uses Neovim's built-in spell
+checker and English dictionary; no external spell-checking tool is required.
+
+Use these keys in normal mode:
+
+| Key | Action |
+| --- | --- |
+| `]s` | Jump to the next spelling mistake. |
+| `[s` | Jump to the previous spelling mistake. |
+| `z=` | Show spelling suggestions for the word under the cursor. |
+| `zg` | Accept the word under the cursor and save it in your personal dictionary. |
+| `zug` | Undo accepting a word with `zg`. |
+
+Use `:setlocal nospell` to temporarily hide spelling highlights, or
+`:setlocal spell` to enable them in the current window. The automatic setting is
+reapplied when entering a buffer or changing its filetype, so switching to code
+turns spelling highlights off. Use `:help spell` for the full reference.
+
 ## Managing plugin versions
 
 From the repo root, run `make nvim-update` to generate a lockfile change without changing installed plugins, then review, test, and commit it. CI can use the same command.
