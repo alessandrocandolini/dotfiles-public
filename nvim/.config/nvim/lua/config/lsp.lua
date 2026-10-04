@@ -110,6 +110,9 @@ function M.setup()
   if vim.fn.executable('rust-analyzer') == 1 then
     vim.lsp.enable('rust-analyzer')
   end
+  if vim.fn.executable('ltex-ls-plus') == 1 then
+    vim.lsp.enable('ltex_plus')
+  end
   -- helper for showing attached LSPs
   vim.keymap.set('n', '<leader>ls', list_lsp_clients,
     { noremap = true, silent = true, desc = "List attached LSP clients" })

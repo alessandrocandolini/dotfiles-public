@@ -60,6 +60,7 @@ let
     basedpyright
     ruff
     lua-language-server
+    ltex-ls-plus
   ];
 
   rustPkgs = pkgs.extend inputs.rust-overlay.overlays.default;
