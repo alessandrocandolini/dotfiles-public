@@ -37,11 +37,49 @@ Other plugins that I use include: fzf (for fuzzy search), cmp (for autocompletio
 
 ## Quick guide
 
-### Spell checking (LaTeX and Markdown)
+### Grammar and spelling (LaTeX and Markdown)
 
-English spell checking is enabled automatically for LaTeX (`tex`), plain TeX
-(`plaintex`), and Markdown (`markdown`) buffers. It uses Neovim's built-in spell
-checker and English dictionary; no external spell-checking tool is required.
+LaTeX (`tex`), plain TeX (`plaintex`), and Markdown (`markdown`) use
+[LTeX+](https://github.com/ltex-plus/ltex-ls-plus) for local grammar and spelling
+diagnostics in British English (`en-GB`). Built-in spelling is disabled for these filetypes.
+
+Both Nix setups include `ltex-ls-plus`. After rebuilding your active Nix setup, run
+`make nvim` to link the config and restart Neovim. The server starts automatically
+for TeX and Markdown files when `ltex-ls-plus` is on `PATH`, including files outside Git projects.
+
+| Key | Action |
+| --- | --- |
+| `]c` / `[c` | Next / previous diagnostic, with an explanation. |
+| `<leader>a` | Code actions, including suggested spelling and grammar corrections. |
+| `<leader>dl` | List diagnostics for the current buffer. |
+| `<leader>ls` | List attached servers; look for `ltex_plus`. |
+
+The default leader is `\`. Language and parser settings live in
+[`lsp/ltex_plus.lua`](nvim/.config/nvim/lsp/ltex_plus.lua). Asymptote paths and
+`dmath` environments are excluded from checking. The existing TeX syntax extension
+still handles their visual highlighting; LTeX+ has its own parser.
+
+The English comma-spacing rule (`COMMA_PARENTHESIS_WHITESPACE`) is disabled:
+removing an ignored `dmath` equation makes LTeX+ see whitespace before its trailing
+comma and underline the whole equation. This also suppresses genuine comma-spacing
+warnings in both LaTeX and Markdown. Other grammar and spelling checks remain enabled.
+
+`zg` only teaches Neovim's built-in spell checker. LTeX+ uses its own
+`settings.ltex.dictionary` (keyed by language, e.g. `["en-GB"] = { "Asymptote" }`).
+Dictionary and rule-management code actions require additional client support;
+use the settings file for these customisations.
+
+### Built-in spell checking (plain text)
+
+Plain-text buffers (`filetype=text`, normally `.txt` files) automatically use
+Neovim's built-in British English spelling (`en_gb`). For a buffer with no detected
+filetype, use `:setfiletype text` to opt in. No external tool is needed.
+
+Use `:setlocal nospell` to temporarily disable it, or
+`:setlocal spell spelllang=en_gb` to enable it manually in another buffer. The
+automatic setting is reapplied when entering a buffer or changing its filetype,
+so spelling highlights do not carry over into code, LaTeX, or Markdown.
+Built-in spelling uses highlights and spelling commands, not LSP diagnostics.
 
 Use these keys in normal mode:
 
@@ -53,10 +91,8 @@ Use these keys in normal mode:
 | `zg` | Accept the word under the cursor and save it in your personal dictionary. |
 | `zug` | Undo accepting a word with `zg`. |
 
-Use `:setlocal nospell` to temporarily hide spelling highlights, or
-`:setlocal spell` to enable them in the current window. The automatic setting is
-reapplied when entering a buffer or changing its filetype, so switching to code
-turns spelling highlights off. Use `:help spell` for the full reference.
+These shortcuts apply only to built-in spelling; use the diagnostic shortcuts
+above for LTeX+. Use `:help spell` for the full reference.
 
 ## Managing plugin versions
 
