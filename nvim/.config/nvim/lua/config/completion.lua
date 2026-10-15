@@ -18,7 +18,9 @@ end
 -- A local 'completefunc' source; no server, cache, or asynchronous work.
 function M.complete_snippets(findstart, base, snippets)
   if findstart == 1 then
-    return vim.api.nvim_win_get_cursor(0)[2] - #word_before_cursor()
+    local word = word_before_cursor()
+    if word == "" then return -2 end
+    return vim.api.nvim_win_get_cursor(0)[2] - #word
   end
   local items = {}
   for _, snippet in ipairs(snippets) do
