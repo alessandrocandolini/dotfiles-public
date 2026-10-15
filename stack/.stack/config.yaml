@@ -1,0 +1,5 @@
+build:
+  haddock-deps: true
+
+ghc-options:
+  "$everything": -haddock
