@@ -6,11 +6,27 @@ local function is_autoformat_on_save_enabled(client)
   return client.name ~= "lua_ls"   -- lua formatter is slow
 end
 
+local function blank_before_cursor()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  return col == 0 or vim.api.nvim_get_current_line():sub(col, col):match("%s") ~= nil
+end
+
+function M.omnifunc(findstart, base)
+  if findstart == 1 and blank_before_cursor() then return -2 end
+  return vim.lsp.omnifunc(findstart, base)
+end
+
+local lsp_completion_get = vim.lsp.completion.get
+vim.lsp.completion.get = function(opts)
+  if not blank_before_cursor() then lsp_completion_get(opts) end
+end
+
 local function lsp_setup_per_buffer(client, bufnr)
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
   if client:supports_method('textDocument/completion', bufnr) then
     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+    vim.bo[bufnr].omnifunc = "v:lua.require'config.lsp'.omnifunc"
   end
 
   -- Standard LSP keybindings (buffer-local)
