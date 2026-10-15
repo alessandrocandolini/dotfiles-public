@@ -22,7 +22,7 @@ let
     neovimNightlyOverlay = fetchGitHubTarball {
       owner = "nix-community";
       repo = "neovim-nightly-overlay";
-      rev = "3c57b1c732ea61a1ed2370c639fbac93c5e7881c";
+      rev = "7bf3d61b3c3a914c55d717205b5a2f039bf2f864";
     };
     rustOverlay = fetchGitHubTarball {
       owner = "oxalica";
