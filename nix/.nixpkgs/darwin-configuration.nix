@@ -189,6 +189,11 @@ in
 
   nix.package = pkgs.nix;
 
+  nix.gc = {
+    automatic = true;
+    options = "--delete-older-than 60d";
+  };
+
   # Add extra cache for LLM artifacts
   nix.settings.extra-substituters = [ "https://cache.numtide.com" ];
   nix.settings.extra-trusted-public-keys = [
