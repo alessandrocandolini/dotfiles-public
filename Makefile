@@ -19,7 +19,7 @@ nvim-update:
 	nvim --headless -u NONE -i NONE -l scripts/nvim-pack.lua update
 
 nvim-sync:
-	nvim --headless -u NONE -i NONE -l scripts/nvim-pack.lua sync
+	STACK_CONFIG=$(CURDIR)/scripts/stack-plain.yaml nvim --headless -u NONE -i NONE -l scripts/nvim-pack.lua sync
 
 nvim-test:
 	nix develop --ignore-environment ./nvim-tests#default -c make nvim-test-internal
