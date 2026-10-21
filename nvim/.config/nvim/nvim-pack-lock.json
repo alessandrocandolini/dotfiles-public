@@ -9,11 +9,11 @@
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "9405672f62767695d5f20db171336f7f4911ce86",
+      "rev": "a306c293b37bd7c8c1e8e1e6c0d7d3d9c3de3f21",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
-      "rev": "705f7cd1108d5fb626a3660d6d1177953adef57f",
+      "rev": "cdbe5acbe78c96568a103a0a29f6416aef869d7a",
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
     "jellybeans.nvim": {
