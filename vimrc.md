@@ -99,3 +99,7 @@ above for LTeX+. Use `:help spell` for the full reference.
 From the repo root, run `make nvim-update` to generate a lockfile change without changing installed plugins, then review, test, and commit it. CI can use the same command.
 After pulling changes (or first running `make nvim`), run `make nvim-sync` to apply the locked revisions and wait for build hooks. It preserves the lockfile and fails on errors; fix the cause and rerun to retry builds.
 Both require Neovim and Git; sync also needs Stack for Cornelis. Restart Neovim afterward; normal startup only loads prepared plugins.
+
+### Cornelis and the global Stack config
+
+The nvim-hs pinned by Cornelis (2.3.2.4) cannot parse the parameter metadata of current Neovim nightlies; 2.3.2.6 can, so this ends when Cornelis updates. Until then nvim-hs must come prebuilt from Cornelis's snapshot, which Stack only reuses when no global settings alter it. `make nvim-sync` therefore runs with `STACK_CONFIG=scripts/stack-plain.yaml`, an empty config, so the `haddock-deps` and `-haddock` settings in `stack/.stack/config.yaml` do not apply to plugin builds.
