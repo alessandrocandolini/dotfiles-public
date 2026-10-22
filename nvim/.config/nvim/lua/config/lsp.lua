@@ -6,19 +6,34 @@ local function is_autoformat_on_save_enabled(client)
   return client.name ~= "lua_ls"   -- lua formatter is slow
 end
 
-local function blank_before_cursor()
+local function completion_prefix_present()
   local col = vim.api.nvim_win_get_cursor(0)[2]
-  return col == 0 or vim.api.nvim_get_current_line():sub(col, col):match("%s") ~= nil
+  local before = vim.api.nvim_get_current_line():sub(1, col)
+  if vim.fn.matchstr(before, [[\k$]]) ~= "" then return true end
+  local last = before:sub(-1)
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+    local provider = client.server_capabilities.completionProvider
+    if provider and vim.tbl_contains(provider.triggerCharacters or {}, last) then return true end
+  end
+  return false
 end
 
+local skip_lsp_completion = false
+
 function M.omnifunc(findstart, base)
-  if findstart == 1 and blank_before_cursor() then return -2 end
+  if findstart == 1 then
+    local completion = require("config.completion")
+    skip_lsp_completion = not (completion.manual or (completion.typing and completion_prefix_present()))
+    if skip_lsp_completion then return vim.api.nvim_win_get_cursor(0)[2] end
+  elseif skip_lsp_completion then
+    return {}
+  end
   return vim.lsp.omnifunc(findstart, base)
 end
 
 local lsp_completion_get = vim.lsp.completion.get
 vim.lsp.completion.get = function(opts)
-  if not blank_before_cursor() then lsp_completion_get(opts) end
+  if completion_prefix_present() then lsp_completion_get(opts) end
 end
 
 local function lsp_setup_per_buffer(client, bufnr)

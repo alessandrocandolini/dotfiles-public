@@ -18,10 +18,9 @@ end
 -- A local 'completefunc' source; no server, cache, or asynchronous work.
 function M.complete_snippets(findstart, base, snippets)
   if findstart == 1 then
-    local word = word_before_cursor()
-    if word == "" then return -2 end
-    return vim.api.nvim_win_get_cursor(0)[2] - #word
+    return vim.api.nvim_win_get_cursor(0)[2] - #word_before_cursor()
   end
+  if (base == "" or not M.typing) and not M.manual then return {} end
   local items = {}
   for _, snippet in ipairs(snippets) do
     items[#items + 1] = {
@@ -40,23 +39,43 @@ function M.setup()
   vim.opt.complete = { "F", "o" } -- local snippets, then LSP omnifunc
   vim.opt.autocomplete = true
   vim.opt.autocompletedelay = 60
+  vim.g.completion_esc_discards = true
 
+  local group = vim.api.nvim_create_augroup("LocalSnippets", { clear = true })
   vim.api.nvim_create_autocmd("CompleteDone", {
-    group = vim.api.nvim_create_augroup("LocalSnippets", { clear = true }),
+    group = group,
     callback = function()
       if vim.v.event.reason == "accept" then expand(vim.v.completed_item) end
     end,
   })
+  vim.api.nvim_create_autocmd("InsertEnter", {
+    group = group,
+    callback = function() M.typing = false end,
+  })
+  vim.api.nvim_create_autocmd("InsertCharPre", {
+    group = group,
+    callback = function() M.typing = true end,
+  })
 
   vim.keymap.set("i", "<CR>", function()
     if vim.fn.pumvisible() == 1 then
-      return vim.keycode(vim.fn.complete_info({ "selected" }).selected == -1 and "<C-n><C-y>" or "<C-y>")
+      if vim.fn.complete_info({ "selected" }).selected ~= -1 then return vim.keycode("<C-y>") end
+      return vim.keycode("<C-e>") .. require("nvim-autopairs").autopairs_cr()
     end
     return require("nvim-autopairs").autopairs_cr()
-  end, { expr = true, replace_keycodes = false, silent = true, desc = "Accept completion or insert newline" })
-  vim.keymap.set("i", "<C-Space>", function()
-    return vim.fn.pumvisible() == 1 and "<C-e><C-n>" or "<C-n>"
-  end, { expr = true, desc = "Complete snippets and LSP" })
+  end, { expr = true, replace_keycodes = false, silent = true, desc = "Accept selected completion or insert newline" })
+  local function complete_manually()
+    if vim.fn.pumvisible() == 1 then return "<C-n>" end
+    M.manual = true
+    vim.schedule(function() M.manual = false end)
+    return vim.fn.complete_info({ "mode" }).mode ~= "" and "<C-e><C-n>" or "<C-n>"
+  end
+  vim.keymap.set("i", "<Esc>", function()
+    if vim.fn.pumvisible() == 1 and vim.g.completion_esc_discards then return "<C-e><Esc>" end
+    return "<Esc>"
+  end, { expr = true, desc = "Leave insert mode, discarding the highlighted completion unless g:completion_esc_discards is false" })
+  vim.keymap.set("i", "<C-Space>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
+  vim.keymap.set("i", "<Nul>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
   vim.keymap.set("i", "<Tab>", function()
     return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
   end, { expr = true, desc = "Next completion or indent" })
