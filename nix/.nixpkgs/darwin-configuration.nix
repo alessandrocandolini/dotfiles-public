@@ -32,7 +32,7 @@ let
     llmAgents = fetchGitHubTarball {
       owner = "numtide";
       repo = "llm-agents.nix";
-      rev = "9d41351cd41c70c69f9a4ba635d95d5921ceed33";
+      rev = "e85b99217baf13a38fc887b31338b1833f1159c0";
     };
     agentop = fetchGitHubTarball {
       owner = "leboiko";
