@@ -40,7 +40,8 @@ end
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  local handle = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
+  local handle
+  handle = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
       if inflight[bufnr] == handle then
         inflight[bufnr] = nil
@@ -99,7 +100,8 @@ local function line_history()
       return
     end
 
-    local handle = vim.system({
+    local handle
+    handle = vim.system({
       "git", "-C", root,
       "log", "--color=never", "--date=iso-strict", "--decorate=full",
       "--pretty=format:================================================================================%ncommit %H%nparents %P%nauthor %an <%ae>%nauthor-date %aI%ncommitter %cn <%ce>%ncommitter-date %cI%ndecorations %D%n%nsubject:%n%s%n%nbody:%n%B",
