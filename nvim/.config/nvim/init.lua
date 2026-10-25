@@ -10,20 +10,6 @@ vim.cmd("filetype plugin indent on")
 -- Switch syntax highlighting on
 vim.cmd("syntax on")
 
--- Built-in spelling for plain text; LaTeX and Markdown use LTeX+.
--- 'spell' is window-local, so refresh it when switching buffers.
-vim.opt.spell = false
-vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
-  group = vim.api.nvim_create_augroup("UserPlainTextSpelling", { clear = true }),
-  callback = function()
-    local plain_text = vim.bo.filetype == "text" and vim.bo.buftype == ""
-    vim.opt_local.spell = plain_text
-    if plain_text then
-      vim.opt_local.spelllang = "en_gb"
-    end
-  end,
-})
-
 -- Encoding
 vim.opt.encoding = "utf-8"
 vim.opt.bomb = false
@@ -166,6 +152,20 @@ require("oil").setup({
     timeout_ms = 10000,
     autosave_changes = false -- use :wa
   }
+})
+
+-- Built-in spelling for plain text; LaTeX and Markdown use LTeX+.
+-- 'spell' is window-local, so refresh it when switching buffers.
+vim.opt.spell = false
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+  group = vim.api.nvim_create_augroup("UserPlainTextSpelling", { clear = true }),
+  callback = function()
+    local plain_text = vim.bo.filetype == "text" and vim.bo.buftype == ""
+    vim.opt_local.spell = plain_text
+    if plain_text then
+      vim.opt_local.spelllang = "en_gb"
+    end
+  end,
 })
 
 -- Colorscheme (must be after vimpack installation)
