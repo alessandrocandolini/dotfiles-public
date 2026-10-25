@@ -46,7 +46,8 @@ end
 local function git_root_async(bufnr, file, cb)
   local dir = vim.fs.dirname(file)
 
-  local handle = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
+  local handle
+  handle = vim.system({ "git", "-C", dir, "rev-parse", "--show-toplevel" }, { text = true }, function(res)
     vim.schedule(function()
       -- Only clear if this is still the current inflight operation
       if inflight_root[bufnr] == handle then
@@ -97,7 +98,8 @@ local function blame()
     if vim.api.nvim_get_current_buf() ~= bufnr then return end
     if vim.api.nvim_win_get_cursor(0)[1] ~= line1 then return end
 
-    local handle = vim.system({
+    local handle
+    handle = vim.system({
       "git", "-C", root,
       "blame", "--porcelain",
       "-L", string.format("%d,+1", line1),
