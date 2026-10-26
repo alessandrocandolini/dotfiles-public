@@ -77,24 +77,15 @@ function M.setup()
   vim.keymap.set("i", "<C-Space>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
   vim.keymap.set("i", "<Nul>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
   vim.keymap.set("i", "<Tab>", function()
-    return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
-  end, { expr = true, desc = "Next completion or indent" })
+    if vim.fn.pumvisible() == 1 then return "<C-n>" end
+    if vim.snippet.active({ direction = 1 }) then return "<Cmd>lua vim.snippet.jump(1)<CR>" end
+    return "<Tab>"
+  end, { expr = true, desc = "Next completion, snippet placeholder, or indent" })
   vim.keymap.set("i", "<S-Tab>", function()
-    return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
-  end, { expr = true, desc = "Previous completion" })
-  vim.keymap.set({ "i", "s" }, "<C-k>", function()
-    if vim.snippet.active({ direction = 1 }) then
-      vim.snippet.jump(1)
-    elseif type(vim.bo.completefunc) == "function" then
-      local word = word_before_cursor()
-      for _, item in ipairs(vim.bo.completefunc(0, word)) do
-        if item.word == word then expand(item); break end
-      end
-    end
-  end, { silent = true, desc = "Expand snippet or next placeholder" })
-  vim.keymap.set({ "i", "s" }, "<C-j>", function()
-    if vim.snippet.active({ direction = -1 }) then vim.snippet.jump(-1) end
-  end, { silent = true, desc = "Previous snippet placeholder" })
+    if vim.fn.pumvisible() == 1 then return "<C-p>" end
+    if vim.snippet.active({ direction = -1 }) then return "<Cmd>lua vim.snippet.jump(-1)<CR>" end
+    return "<S-Tab>"
+  end, { expr = true, desc = "Previous completion or snippet placeholder" })
 end
 
 return M
