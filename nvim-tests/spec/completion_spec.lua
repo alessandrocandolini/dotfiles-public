@@ -251,6 +251,37 @@ describe('native completion and snippets', function()
     assert.equals('spec = do', e.exec('return vim.fn.getline(8)'))
   end)
 
+  it('keeps module snippets independent of directories above the project', function()
+    local cases = {
+      { project = 'src/project', marker = 'cabal.project', file = 'test/App/MainSpec.hs', kind = 'test', name = 'App.MainSpec' },
+      { project = 'test/project', marker = 'package.yaml', file = 'src/App/Main.hs', kind = 'src', name = 'App.Main' },
+      { project = 'src/project', marker = 'cabal.project', file = 'Main.hs' },
+      { project = 'src/workspace/pkg', marker = 'pkg.cabal', file = 'test/App/MainSpec.hs', kind = 'test', name = 'App.MainSpec' },
+      { project = 'src/unmarked', file = 'test/App/MainSpec.hs', kind = 'test', name = 'App.MainSpec' },
+    }
+    for _, case in ipairs(cases) do
+      if case.marker then fs.write_file(root .. '/' .. case.project .. '/' .. case.marker, {}) end
+      local file = case.project .. '/' .. case.file
+      fs.write_file(root .. '/' .. file, { '' })
+      open(file)
+      local items = e.exec([=[
+        local completion = require('config.completion')
+        completion.manual = true
+        local items = vim.bo.completefunc(0, 'module')
+        completion.manual = false
+        return items
+      ]=])
+      if case.kind then
+        assert.equals(1, #items)
+        local body = items[1].user_data.local_snippet
+        assert.equals('module ' .. case.name .. ' where', vim.split(body, '\n')[1])
+        assert.equals(case.kind == 'test', body:find('import Test.Hspec', 1, true) ~= nil)
+      else
+        assert.equals(0, #items)
+      end
+    end
+  end)
+
   it('keeps local results while a late-attaching LSP completes asynchronously', function()
     e.keys('iit')
     assert.same({ 'it' }, menu())
