@@ -48,6 +48,28 @@ describe('projectionist', function()
     end)
   end)
 
+  for _, marker in ipairs({ 'cabal.project', 'example.cabal' }) do
+    it('jumps between Haskell source and test with only ' .. marker, function()
+      fs.with_temp_project({
+        [marker] = marker == 'cabal.project' and { 'packages: .' } or {
+          'cabal-version: 2.4', 'name: example', 'version: 0.1.0.0',
+        },
+        ['src/App/User.hs'] = { 'module App.User where' },
+        ['test/App/UserSpec.hs'] = { 'module App.UserSpec where' },
+      }, function(root)
+        local src = root .. '/src/App/User.hs'
+        local spec = root .. '/test/App/UserSpec.hs'
+        vim.cmd('edit ' .. vim.fn.fnameescape(src))
+
+        keys.press(leader_lhs('gt'))
+        wait_for_buffer(spec)
+
+        keys.press(leader_lhs('gt'))
+        wait_for_buffer(src)
+      end)
+    end)
+  end
+
   it('jumps between play app and test files', function()
     fs.with_temp_project({
       ['build.sbt'] = { 'ThisBuild / scalaVersion := "2.13.16"' },
