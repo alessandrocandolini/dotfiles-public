@@ -23,7 +23,26 @@ describe('Haskell attachment', function()
         end)
         assert.equals(1, #server.connections)
       end
-      assert.equals(vim.uv.fs_realpath(root), vim.lsp.get_clients({ name = 'haskell-tools.nvim' })[1].root_dir)
+      local client = vim.lsp.get_clients({ name = 'haskell-tools.nvim' })[1]
+      assert.equals(vim.uv.fs_realpath(root), client.root_dir)
+      assert.equals('fourmolu', client.settings.haskell.formattingProvider)
+
+      -- Project settings must preserve unspecified defaults and accept explicit overrides.
+      local settings = vim.g.haskell_tools.hls.settings
+      fs.write_file(root .. '/hls.json', { vim.json.encode({
+        haskell = { componentsLoading = 'multi: whole-project', checkProject = false },
+      }) })
+      local merged = settings(root)
+      assert.equals('fourmolu', merged.haskell.formattingProvider)
+      assert.equals('multi: whole-project', merged.haskell.componentsLoading)
+      assert.is_false(merged.haskell.checkProject)
+
+      fs.write_file(root .. '/hls.json', { vim.json.encode({
+        haskell = { formattingProvider = 'ormolu' },
+      }) })
+      assert.equals('ormolu', settings(root).haskell.formattingProvider)
+      assert.equals('fourmolu', settings(nil).haskell.formattingProvider)
+      assert.is_true(settings(nil).haskell.checkProject)
     end)
   end)
 end)
