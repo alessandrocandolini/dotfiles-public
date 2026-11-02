@@ -27,16 +27,5 @@ function M.setup()
       border = 'rounded'
     },
   })
-
-  -- same as Ctrl-W d , but with autofocus on the floating box
-  vim.keymap.set("n", "<leader>df", function()
-    local _, winid = vim.diagnostic.open_float(nil, {
-      focusable = true,
-      border = "rounded",
-    })
-    if winid and vim.api.nvim_win_is_valid(winid) then
-      vim.api.nvim_set_current_win(winid)
-    end
-  end, { silent = true, desc = "Diagnostics float (focused)" })
 end
 return M
