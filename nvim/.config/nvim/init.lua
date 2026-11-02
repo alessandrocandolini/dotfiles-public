@@ -45,6 +45,10 @@ vim.opt.eol = false
 -- Recursive file search in path
 vim.opt.path:append("**")
 
+-- Ignore case in searches unless the pattern contains uppercase letters
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 -- Display end of buffer lines as blank
 vim.opt.fillchars:append({ eob = " " })
 
