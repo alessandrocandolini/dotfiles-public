@@ -34,6 +34,10 @@
             pkgs.ripgrep
             pkgs.proximity-sort
             pkgs.cargo
+            pkgs.tree-sitter
+            pkgs.curl
+            pkgs.gnutar
+            pkgs.stdenv.cc
           ];
 
           shellHook = ''

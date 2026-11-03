@@ -1,4 +1,4 @@
--- Packages are prepared by make nvim-sync in the isolated test shell.
+-- Packages and Tree-sitter parsers are prepared by make nvim-sync in the isolated test shell.
 -- Validate the real config path and load init.lua unchanged.
 
 local function absolute_path(path)

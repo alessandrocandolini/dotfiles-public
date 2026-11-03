@@ -14,6 +14,8 @@ M.specs = {
   gh("j-hui/fidget.nvim"),
   gh("stevearc/oil.nvim"),
   gh("LnL7/vim-nix"),
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "nvim-treesitter", version = "main" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", name = "nvim-treesitter-textobjects", version = "main" },
   gh("scalameta/nvim-metals", true),
   gh("Mrcjkb/haskell-tools.nvim", true),
   gh("kana/vim-textobj-user", true), -- required by cornelis
@@ -21,7 +23,13 @@ M.specs = {
   gh("agda/cornelis", true),
 }
 
-M.build_hooks = { cornelis = { "stack", "build" } }
+M.build_hooks = {
+  cornelis = { "stack", "build" },
+  ["nvim-treesitter"] = {
+    "nvim", "--headless", "-u", "NONE", "-i", "NONE", "-l",
+    vim.fs.dirname(assert(vim.uv.fs_realpath(debug.getinfo(1, "S").source:sub(2)))) .. "/treesitter_install.lua",
+  },
+}
 
 local excluded = vim.split(vim.env.NVIM_PACK_EXCLUDE or "", ",", { trimempty = true })
 M.specs = vim.tbl_filter(function(spec)

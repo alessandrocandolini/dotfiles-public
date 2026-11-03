@@ -138,6 +138,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
 
 -- Load Lua setup
 require("config.vimpack").setup()
+require("config.treesitter").setup()
 require("config.diagnostics").setup()
 require("config.fzf").setup()
 require("config.completion").setup()
@@ -178,6 +179,10 @@ local ok, err = pcall(vim.cmd, "colorscheme jellybeans")
 if not ok then
   vim.notify("Failed to load colorscheme 'jellybeans': " .. tostring(err), vim.log.levels.WARN)
 end
+-- Temporary colour trial: functions use the same foreground as values in every language.
+vim.api.nvim_set_hl(0, "Function", { link = "@variable" })
+-- Temporary colour trial: Haskell types also use the value foreground.
+vim.api.nvim_set_hl(0, "@type.haskell", { link = "@variable" })
 vim.cmd([[
   highlight SignColumn guibg=NONE
 ]])

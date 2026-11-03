@@ -85,6 +85,7 @@ let
 
   vimStuff = with unstablePkgs; [
     neovimPkgs.neovim
+    tree-sitter
     proximity-sort
   ];
 

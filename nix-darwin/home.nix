@@ -115,6 +115,7 @@ in
 
   home.packages = [
     nvimNightly
+    pkgs.tree-sitter
   ]
   ++ dockerStuff
   ++ scalaStuff

@@ -37,6 +37,31 @@ Other plugins that I use include: fzf (for fuzzy search), cmp (for autocompletio
 
 ## Quick guide
 
+### Tree-sitter function text objects
+
+Scala, Haskell, Lua, Rust and Nix support `af` (around a function) and `if`
+(inside its body), in visual and operator-pending mode. Try `vaf` to inspect
+the selection, `daf` to delete a function, `yaf` to copy it, or `cif` to
+change its body. Unlike `dap`, these follow syntax boundaries across blank
+lines, including braceless Scala 3 bodies. Captures follow each language's
+queries; check the selection for unfamiliar constructs. Haskell's `af` includes
+the adjacent signature, all equations with the same name, and their `where`
+definitions. It also handles bindings without explicit arguments. Inside a
+local helper, `af` selects that helper and its signature.
+
+Tree-sitter highlighting is disabled: the existing syntax colours remain.
+LSP semantic highlighting stays disabled, and folding and indentation keep
+their existing settings. Text objects request parsing when used.
+Set `M.highlight = true` in
+[`config/treesitter.lua`](nvim/.config/nvim/lua/config/treesitter.lua) and restart
+to opt into Tree-sitter highlighting for the five configured languages.
+
+Run `make nvim` and `make nvim-sync` after pulling this configuration.
+Sync installs or updates the five parsers to the revisions specified by the
+locked Tree-sitter plugin; startup never downloads or compiles parsers.
+Both Nix setups include the `tree-sitter` CLI. Parser builds also require a
+C compiler, `curl`, and `tar` on PATH.
+
 ### Grammar and spelling (LaTeX and Markdown)
 
 LaTeX (`tex`), plain TeX (`plaintex`), and Markdown (`markdown`) use
@@ -98,7 +123,7 @@ above for LTeX+. Use `:help spell` for the full reference.
 
 From the repo root, run `make nvim-update` to generate a lockfile change without changing installed plugins, then review, test, and commit it. CI can use the same command.
 After pulling changes (or first running `make nvim`), run `make nvim-sync` to apply the locked revisions and wait for build hooks. It preserves the lockfile and fails on errors; fix the cause and rerun to retry builds.
-Both require Neovim and Git; sync also needs Stack for Cornelis. Restart Neovim afterward; normal startup only loads prepared plugins.
+Both require Neovim and Git; sync also needs Stack for Cornelis, plus the Tree-sitter CLI, a C compiler, curl and tar for parsers. Restart Neovim afterward; normal startup only loads prepared plugins.
 
 ### Cornelis and the global Stack config
 
