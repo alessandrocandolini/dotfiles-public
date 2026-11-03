@@ -53,6 +53,9 @@ alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
 alias ls='/bin/ls -GFh'
 
+# https://github.com/openai/codex/issues/14601
+alias codex='codex --profile local'
+
 # Rg config
 export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
 # =============================================================================
