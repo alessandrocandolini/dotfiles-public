@@ -45,6 +45,7 @@ function M.setup()
   vim.api.nvim_create_autocmd("CompleteDone", {
     group = group,
     callback = function()
+      M.manual = false
       if vim.v.event.reason == "accept" then expand(vim.v.completed_item) end
     end,
   })
@@ -72,8 +73,8 @@ function M.setup()
   end, { expr = true, replace_keycodes = false, silent = true, desc = "Accept selected completion or insert newline" })
   local function complete_manually()
     if vim.fn.pumvisible() == 1 then return "<C-n>" end
-    M.manual = true
-    return vim.fn.complete_info({ "mode" }).mode ~= "" and "<C-e><C-n>" or "<C-n>"
+    local restart = vim.fn.complete_info({ "mode" }).mode ~= "" and "<C-e>" or ""
+    return restart .. "<Cmd>lua require('config.completion').manual = true<CR><C-n>"
   end
   vim.keymap.set("i", "<Esc>", function()
     if vim.fn.pumvisible() == 1 and vim.g.completion_esc_discards then return "<C-e><Esc>" end
