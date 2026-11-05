@@ -48,12 +48,15 @@ describe('projectionist', function()
     end)
   end)
 
-  for _, marker in ipairs({ 'cabal.project', 'example.cabal' }) do
+  local haskell_markers = {
+    ['cabal.project'] = { 'packages: .' },
+    ['example.cabal'] = { 'cabal-version: 2.4', 'name: example', 'version: 0.1.0.0' },
+    ['package.yaml'] = { 'name: example' },
+  }
+  for marker, contents in pairs(haskell_markers) do
     it('jumps between Haskell source and test with only ' .. marker, function()
       fs.with_temp_project({
-        [marker] = marker == 'cabal.project' and { 'packages: .' } or {
-          'cabal-version: 2.4', 'name: example', 'version: 0.1.0.0',
-        },
+        [marker] = contents,
         ['src/App/User.hs'] = { 'module App.User where' },
         ['test/App/UserSpec.hs'] = { 'module App.UserSpec where' },
       }, function(root)

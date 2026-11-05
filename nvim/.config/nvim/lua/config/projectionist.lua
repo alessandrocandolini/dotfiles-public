@@ -4,7 +4,7 @@ function M.setup()
 
   local heuristics = vim.g.projectionist_heuristics or {}
 
-  heuristics["stack.yaml|cabal.project|*.cabal"] = {
+  heuristics["stack.yaml|package.yaml|cabal.project|*.cabal"] = {
     -- from src/Foo.hs -> test/FooSpec.hs
     ["src/*.hs"] = {
       alternate = "test/{}Spec.hs",
