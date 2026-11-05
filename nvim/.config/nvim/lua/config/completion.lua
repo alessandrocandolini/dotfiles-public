@@ -16,13 +16,13 @@ local function expand(item)
 end
 
 -- A local 'completefunc' source; no server, cache, or asynchronous work.
-function M.complete_snippets(findstart, base, snippets)
+function M.complete_snippets(findstart, base, get_snippets)
   if findstart == 1 then
     return vim.api.nvim_win_get_cursor(0)[2] - #word_before_cursor()
   end
   if (base == "" or not M.typing) and not M.manual then return {} end
   local items = {}
-  for _, snippet in ipairs(snippets) do
+  for _, snippet in ipairs(get_snippets()) do
     items[#items + 1] = {
       word = snippet.trigger,
       menu = snippet.description,
