@@ -39,6 +39,7 @@ function M.setup()
   vim.opt.complete = { "F", "o" } -- local snippets, then LSP omnifunc
   vim.opt.autocomplete = true
   vim.opt.autocompletedelay = 60
+  -- TODO: deprecate g:completion_esc_discards once accepting with Enter is muscle memory
   vim.g.completion_esc_discards = true
 
   local group = vim.api.nvim_create_augroup("LocalSnippets", { clear = true })
