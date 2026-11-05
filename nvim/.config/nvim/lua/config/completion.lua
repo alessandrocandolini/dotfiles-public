@@ -50,11 +50,17 @@ function M.setup()
   })
   vim.api.nvim_create_autocmd("InsertEnter", {
     group = group,
-    callback = function() M.typing = false end,
+    callback = function()
+      M.typing = false
+      M.manual = false
+    end,
   })
   vim.api.nvim_create_autocmd("InsertCharPre", {
     group = group,
-    callback = function() M.typing = true end,
+    callback = function()
+      M.typing = true
+      M.manual = false
+    end,
   })
 
   vim.keymap.set("i", "<CR>", function()
@@ -67,7 +73,6 @@ function M.setup()
   local function complete_manually()
     if vim.fn.pumvisible() == 1 then return "<C-n>" end
     M.manual = true
-    vim.schedule(function() M.manual = false end)
     return vim.fn.complete_info({ "mode" }).mode ~= "" and "<C-e><C-n>" or "<C-n>"
   end
   vim.keymap.set("i", "<Esc>", function()
