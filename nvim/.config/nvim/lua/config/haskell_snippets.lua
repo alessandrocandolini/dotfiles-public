@@ -53,7 +53,7 @@ end
 
 function M.setup()
   vim.bo.completefunc = function(findstart, base)
-    return require("config.completion").complete_snippets(findstart, base, snippets())
+    return require("config.completion").complete_snippets(findstart, base, snippets)
   end
   vim.b.undo_ftplugin = (vim.b.undo_ftplugin or "") .. " | setlocal completefunc<"
 end
