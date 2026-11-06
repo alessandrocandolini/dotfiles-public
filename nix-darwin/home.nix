@@ -22,6 +22,21 @@ let
     async-profiler
   ];
 
+  haskellStuff = with pkgs; [
+    haskellPackages.fast-tags
+    (haskellPackages.hoogleWithPackages (p: [
+      p.base
+      p.containers
+      p.text
+      p.mtl
+      p.megaparsec
+      p.witherable
+      p.optparse-applicative
+      p.hspec
+      p.QuickCheck
+    ]))
+  ];
+
   nvimNightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   cliStuff = with pkgs; [
@@ -118,6 +133,7 @@ in
   ]
   ++ dockerStuff
   ++ scalaStuff
+  ++ haskellStuff
   ++ cliStuff
   ++ fastMovingStuff
   ++ lspStuff
