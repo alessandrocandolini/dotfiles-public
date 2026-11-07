@@ -149,6 +149,8 @@ require("config.git_line_history").setup()
 -- other plugins
 require("nvim-autopairs").setup({ map_cr = false }) -- completion owns Enter
 require("oil").setup({
+  buf_options = { buflisted = true },
+  cleanup_delay_ms = false, -- Keep directory buffers available for navigation.
   view_options = {
     show_hidden = true
   },
