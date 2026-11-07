@@ -51,7 +51,7 @@ for TeX and Markdown files when `ltex-ls-plus` is on `PATH`, including files out
 | --- | --- |
 | `]c` / `[c` | Next / previous diagnostic, with an explanation. |
 | `<leader>a` | Code actions, including suggested spelling and grammar corrections. |
-| `<leader>dl` | List diagnostics for the current buffer. |
+| `<leader>dQ` | List all diagnostics (errors, warnings, hints) in the quickfix list. |
 | `<leader>ls` | List attached servers; look for `ltex_plus`. |
 
 The default leader is `\`. Language and parser settings live in
