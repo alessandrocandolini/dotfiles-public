@@ -12,7 +12,7 @@ let
     nixpkgsDarwin = fetchGitHubTarball {
       owner = "NixOS";
       repo = "nixpkgs";
-      rev = "4ad2eda5f89410d94c57449a70d08935d9bbb4f6";
+      rev = "d70a468dc082082bedc027275b3b49ac7007c938";
     };
     nixpkgsFast = fetchGitHubTarball {
       owner = "NixOS";
@@ -22,17 +22,17 @@ let
     neovimNightlyOverlay = fetchGitHubTarball {
       owner = "nix-community";
       repo = "neovim-nightly-overlay";
-      rev = "79bc7f43b343fadd4f6f42a4e7f3c3942ae1378b";
+      rev = "60eb4aa73b9aba4d92a7ee09919a0a579536b6ad";
     };
     rustOverlay = fetchGitHubTarball {
       owner = "oxalica";
       repo = "rust-overlay";
-      rev = "7fcafdf6f0761462d68012aba6a627be3f008d68";
+      rev = "19e0e6c951a7a8a7d3232c64e58d26b89df44c60";
     };
     llmAgents = fetchGitHubTarball {
       owner = "numtide";
       repo = "llm-agents.nix";
-      rev = "499fb79f92064e92cdb968d12ffeb92d36243b50";
+      rev = "fb975ebe2da5ba2ce754d3a43306a21fefa032d5";
     };
     agentop = fetchGitHubTarball {
       owner = "leboiko";
