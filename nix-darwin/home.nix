@@ -25,15 +25,33 @@ let
   haskellStuff = with pkgs; [
     haskellPackages.fast-tags
     (haskellPackages.hoogleWithPackages (p: [
+      p.adjunctions
+      p.aeson
+      p.algebraic-graphs
+      p.ansi-terminal
+      p.array
       p.base
+      p.bytestring
+      p.comonad
       p.containers
-      p.text
-      p.mtl
+      p.data-fix
+      p.distributive
+      p.either
+      p.envparse
+      p.hashable
       p.megaparsec
-      p.witherable
+      p.mtl
       p.optparse-applicative
-      p.hspec
-      p.QuickCheck
+      p.parser-combinators
+      p.recursion-schemes
+      p.req
+      p.safe
+      p.split
+      p.tardis
+      p.text
+      p.unordered-containers
+      p.vector
+      p.witherable
     ]))
   ];
 
