@@ -9,7 +9,7 @@
       "src": "https://github.com/j-hui/fidget.nvim"
     },
     "fzf-lua": {
-      "rev": "6ab6a29d56888dcf66edfeb082ad4a46e7f075bb",
+      "rev": "bea6a134d2228a7766debd61dedb301c69b57e16",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
