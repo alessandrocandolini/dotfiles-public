@@ -51,7 +51,6 @@ local function lsp_setup_per_buffer(client, bufnr)
 
   -- Code actions and lenses
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
-  vim.keymap.set('n', '<leader>ws', vim.lsp.buf.workspace_symbol, buf_opts)
 
   -- Formatting
   vim.keymap.set('n', '<leader>F', function()
