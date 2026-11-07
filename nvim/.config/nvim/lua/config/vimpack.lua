@@ -12,6 +12,7 @@ M.specs = {
   gh("windwp/nvim-autopairs"),
   gh("tpope/vim-projectionist"),
   gh("j-hui/fidget.nvim"),
+  gh("ray-x/lsp_signature.nvim"),
   gh("stevearc/oil.nvim"),
   gh("LnL7/vim-nix"),
   gh("scalameta/nvim-metals", true),

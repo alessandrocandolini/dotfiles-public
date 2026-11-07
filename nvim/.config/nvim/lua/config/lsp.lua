@@ -120,6 +120,13 @@ end
 
 function M.setup()
   require("fidget").setup()
+  require("lsp_signature").setup({
+    always_trigger = true,
+    timer_interval = 200,
+    floating_window = false,
+    hint_enable = true,
+    hint_prefix = "",
+  })
 
   -- Set the default once; buffer toggles survive later attachments and restarts.
   vim.lsp.inlay_hint.enable(true)
