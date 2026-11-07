@@ -47,7 +47,7 @@ local function lsp_setup_per_buffer(client, bufnr)
   -- Standard LSP keybindings (buffer-local)
   vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, buf_opts)
   vim.keymap.set('n', 'grd', vim.lsp.buf.definition, buf_opts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, buf_opts)
+  vim.keymap.set('n', '<C-s>', vim.lsp.buf.signature_help, buf_opts)
 
   -- Code actions and lenses
   vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, buf_opts)
