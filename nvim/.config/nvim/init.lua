@@ -50,7 +50,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Display end of buffer lines as blank
-vim.opt.fillchars:append({ eob = " " })
+vim.opt.fillchars:append("eob: ")
 
 -- Disable unsafe commands and ruler
 vim.opt.secure = true
@@ -174,7 +174,7 @@ vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 
 -- Colorscheme (must be after vimpack installation)
 vim.opt.termguicolors = true
-local ok, err = pcall(vim.cmd, "colorscheme jellybeans")
+local ok, err = pcall(vim.cmd.colorscheme, "jellybeans")
 if not ok then
   vim.notify("Failed to load colorscheme 'jellybeans': " .. tostring(err), vim.log.levels.WARN)
 end

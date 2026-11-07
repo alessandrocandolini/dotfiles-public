@@ -10,8 +10,9 @@ local function module_path()
   for dir in vim.fs.parents(path) do
     if dir == root then break end
     local kind = vim.fs.basename(dir)
-    if kind == 'src' or kind == 'test' then
-      local name = vim.fn.fnamemodify(vim.fs.relpath(dir, path), ':r'):gsub('/', '.')
+    local relative = vim.fs.relpath(dir, path)
+    if relative and (kind == 'src' or kind == 'test') then
+      local name = vim.fn.fnamemodify(relative, ':r'):gsub('/', '.')
       return kind, name
     end
   end
