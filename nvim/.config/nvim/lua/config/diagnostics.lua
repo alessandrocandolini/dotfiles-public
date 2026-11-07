@@ -15,11 +15,13 @@ function M.setup()
     vim.diagnostic.jump({ count = 1, on_jump = show_jump_diagnostic })
   end, { silent = true, desc = "Diagnostics: next (float)" })
 
-  vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { silent = true, desc = "Diagnostics: buffer (loclist)" })
-
   vim.keymap.set('n', '<leader>dq', function()
+    vim.diagnostic.setqflist({ open = true, severity = vim.diagnostic.severity.ERROR })
+  end, { silent = true, desc = "Diagnostics: workspace errors (quickfix)" })
+
+  vim.keymap.set('n', '<leader>dQ', function()
     vim.diagnostic.setqflist({ open = true })
-  end, { silent = true, desc = "Diagnostics: workspace (quickfix)" })
+  end, { silent = true, desc = "Diagnostics: workspace errors + warnings (quickfix)" })
 
   vim.diagnostic.config({
     virtual_text = false,
