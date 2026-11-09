@@ -124,6 +124,19 @@ function M.manage(mode, lock_path)
     vim.o.packlockfile = scratch_lock
     vim.pack.add(specs, { load = false, confirm = false })
 
+    if mode == "sync" then
+      local unlisted = {}
+      for _, plugin in ipairs(vim.pack.get(nil, { offline = true })) do
+        local name = plugin.spec.name
+        if not vim.tbl_contains(names, name) and not vim.tbl_contains(excluded, name) then
+          unlisted[#unlisted + 1] = name
+        end
+      end
+      if #unlisted > 0 then
+        vim.pack.del(unlisted)
+      end
+    end
+
     local targets = seed.plugins
     if mode == "update" then
       -- A failed fetch leaves rev_to unset. Check it explicitly instead of parsing logs.

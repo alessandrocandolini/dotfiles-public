@@ -29,7 +29,7 @@ local function commit(version)
   return git({ 'rev-parse', 'HEAD' })
 end
 
-local function invoke(mode, success)
+local function invoke(mode, success, extra_env)
   local result = vim.system({ vim.v.progpath, '--headless', '-u', 'NONE', '-i', 'NONE', '-l',
     repo .. '/scripts/nvim-pack.lua', mode, config }, {
     cwd = root, text = true,
@@ -38,6 +38,7 @@ local function invoke(mode, success)
       XDG_STATE_HOME = root .. '/state', XDG_CACHE_HOME = root .. '/cache', NVIM_APPNAME = 'nvim',
       NVIM_LOG_FILE = root .. '/nvim.log', PATH = root .. '/bin',
       HOOK_FAIL = root .. '/fail', HOOK_MARKER = root .. '/hooks',
+      NVIM_PACK_EXCLUDE = (extra_env or {}).NVIM_PACK_EXCLUDE,
     },
   }):wait(30000)
   assert(result.code ~= 124 and (result.code == 0) == success,
@@ -87,6 +88,16 @@ return M
   invoke('sync', true)
   assert(#vim.fn.readfile(root .. '/hooks') == 5, 'failed builds were not retried')
   print('PASS: failed builds fail sync and retry on unchanged checkouts')
+
+  local opt = vim.fs.dirname(installed)
+  git({ 'clone', '-q', source, opt .. '/unlisted-fixture' }, root)
+  git({ 'clone', '-q', source, opt .. '/excluded-fixture' }, root)
+  invoke('sync', true, { NVIM_PACK_EXCLUDE = 'excluded-fixture' })
+  assert(not vim.uv.fs_stat(opt .. '/unlisted-fixture'), 'unlisted plugin was not deleted')
+  assert(vim.uv.fs_stat(opt .. '/excluded-fixture'), 'excluded plugin was deleted')
+  assert(vim.uv.fs_stat(installed), 'listed plugin was deleted')
+  assert(read(lock_path) == updated, 'deleting unlisted plugins rewrote the lockfile')
+  print('PASS: sync deletes unlisted plugins, keeps excluded ones, and preserves the lockfile')
 
   lock.plugins['build-fixture'].rev = string.rep('0', 40)
   local invalid = vim.json.encode(lock) .. '\n'
