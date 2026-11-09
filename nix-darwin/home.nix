@@ -104,6 +104,7 @@ let
       "rust-src"
       "clippy"
       "rustfmt"
+      "llvm-tools-preview"
     ];
   };
   rustStuff = [
