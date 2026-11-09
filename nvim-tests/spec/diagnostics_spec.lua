@@ -30,7 +30,7 @@ local function press_and_wait_for_diagnostic(lhs, expected_line, expected_messag
 end
 
 describe('diagnostics', function()
-  it(']c and [c show diagnostic floats without taking focus and close them on movement', function()
+  it('built-in and custom diagnostic jumps show floats without taking focus and close them on movement', function()
     vim.cmd('enew')
     vim.api.nvim_buf_set_lines(0, 0, -1, false, {
       'line 1',
@@ -54,12 +54,23 @@ describe('diagnostics', function()
         severity = vim.diagnostic.severity.WARN,
         message = 'diag two',
       },
+      {
+        lnum = 4,
+        col = 0,
+        severity = vim.diagnostic.severity.INFO,
+        message = 'diag three',
+      },
     })
 
     vim.api.nvim_win_set_cursor(0, { 2, 0 })
 
     press_and_wait_for_diagnostic(']c', 4, 'diag two')
     press_and_wait_for_diagnostic('[c', 1, 'diag one')
+
+    press_and_wait_for_diagnostic(']d', 4, 'diag two')
+    press_and_wait_for_diagnostic('[d', 1, 'diag one')
+    press_and_wait_for_diagnostic('2]d', 5, 'diag three')
+    press_and_wait_for_diagnostic('2[d', 1, 'diag one')
 
     keys.press('j')
     assert(vim.api.nvim_win_get_cursor(0)[1] == 2, 'expected j to move off the diagnostic')

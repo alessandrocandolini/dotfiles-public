@@ -25,6 +25,9 @@ function M.setup()
 
   vim.diagnostic.config({
     virtual_text = false,
+    jump = {
+      on_jump = show_jump_diagnostic,
+    },
     float = {
       border = 'rounded'
     },
