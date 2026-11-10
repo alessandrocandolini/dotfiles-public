@@ -57,7 +57,7 @@
       mkMac =
         {
           username,
-          certificatePath ? "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt",
+          certificatePath,
         }:
         darwin.lib.darwinSystem {
           inherit system;
@@ -79,7 +79,10 @@
         };
     in
     {
-      darwinConfigurations.this-mac = mkMac { username = "alessandrocandolini"; };
+      darwinConfigurations.this-mac = mkMac {
+        username = "alessandrocandolini";
+        certificatePath = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+      };
 
       darwinConfigurations.alternative-mac = mkMac {
         username = "acandolini";
