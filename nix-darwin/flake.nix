@@ -53,26 +53,37 @@
     }:
     let
       system = "aarch64-darwin";
-      username = "alessandrocandolini";
-      homeDirectory = "/Users/alessandrocandolini";
+
+      mkMac =
+        {
+          username,
+          certificatePath ? "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt",
+        }:
+        darwin.lib.darwinSystem {
+          inherit system;
+          specialArgs = { inherit username certificatePath; };
+          modules = [
+            ./darwin-configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${username} = {
+                imports = [ ./home.nix ];
+                home.username = username;
+                home.homeDirectory = "/Users/${username}";
+                _module.args = { inherit inputs; };
+              };
+            }
+          ];
+        };
     in
     {
-      darwinConfigurations.this-mac = darwin.lib.darwinSystem {
-        inherit system;
-        modules = [
-          ./darwin-configuration.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${username} = {
-              imports = [ ./home.nix ];
-              home.username = username;
-              home.homeDirectory = homeDirectory;
-              _module.args = { inherit inputs; };
-            };
-          }
-        ];
+      darwinConfigurations.this-mac = mkMac { username = "alessandrocandolini"; };
+
+      darwinConfigurations.alternative-mac = mkMac {
+        username = "acandolini";
+        certificatePath = "/etc/nix/ca-bundle.pem";
       };
     };
 }
