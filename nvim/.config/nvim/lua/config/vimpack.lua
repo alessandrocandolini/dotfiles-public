@@ -21,7 +21,7 @@ M.specs = {
   gh("agda/cornelis", true),
 }
 
-M.build_hooks = { cornelis = { "stack", "build" } }
+M.build_hooks = { cornelis = { "sh", "-c", "stack build || true" } }
 
 local excluded = vim.split(vim.env.NVIM_PACK_EXCLUDE or "", ",", { trimempty = true })
 M.specs = vim.tbl_filter(function(spec)
