@@ -21,6 +21,10 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
+if [ -f /etc/nix/ca-bundle.pem ]; then
+  export NIX_SSL_CERT_FILE=/etc/nix/ca-bundle.pem
+fi
+
 # Allow more open files, sockets, and watchers for Neovim and language servers.
 ulimit -Sn 8192
 
@@ -231,7 +235,7 @@ if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
 fi
 # End Nix
 #
-export PATH="$PATH:/Users/alessandrocandolini/Library/Application Support/Coursier/bin"
+export PATH="$PATH:$HOME/Library/Application Support/Coursier/bin"
 # =============================================================================
 # Colima
 # =============================================================================
