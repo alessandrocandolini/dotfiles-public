@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  username,
+  certificatePath,
+  ...
+}:
 
 {
   nix = {
@@ -14,13 +19,14 @@
       trusted-public-keys = [
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       ];
+      ssl-cert-file = certificatePath;
     };
 
     optimise.automatic = true;
 
     envVars = {
       OBJC_DISABLE_INITIALIZE_FORK_SAFETY = "YES";
-      NIX_SSL_CERT_FILE = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+      NIX_SSL_CERT_FILE = certificatePath;
     };
   };
 
@@ -31,8 +37,8 @@
     vim = "nvim";
   };
 
-  users.users.alessandrocandolini = {
-    home = "/Users/alessandrocandolini";
+  users.users.${username} = {
+    home = "/Users/${username}";
   };
 
   system.stateVersion = 6;
