@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -162,6 +163,8 @@ in
   programs.bash.enable = false;
   programs.starship.enable = true;
   programs.git.enable = true;
+  home.file.".git-completion.bash".source =
+    "${config.programs.git.package}/share/bash-completion/completions/git";
   home.sessionVariables = {
     JAVA_HOME = "${pkgs.jdk25}/";
     PKG_CONFIG_PATH = "${
