@@ -7,14 +7,6 @@ local function show_jump_diagnostic(diagnostic, bufnr)
 end
 
 function M.setup()
-  vim.keymap.set("n", "[c", function()
-    vim.diagnostic.jump({ count = -1, on_jump = show_jump_diagnostic })
-  end, { silent = true, desc = "Diagnostics: previous (float)" })
-
-  vim.keymap.set("n", "]c", function()
-    vim.diagnostic.jump({ count = 1, on_jump = show_jump_diagnostic })
-  end, { silent = true, desc = "Diagnostics: next (float)" })
-
   vim.keymap.set('n', '<leader>dq', function()
     vim.diagnostic.setqflist({ open = true, severity = vim.diagnostic.severity.ERROR })
   end, { silent = true, desc = "Diagnostics: workspace errors (quickfix)" })
