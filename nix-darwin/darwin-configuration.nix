@@ -22,6 +22,11 @@
       ssl-cert-file = certificatePath;
     };
 
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 120d";
+    };
+
     optimise.automatic = true;
 
     envVars = {
