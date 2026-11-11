@@ -209,3 +209,13 @@ export PATH="$PATH:/Applications/IntelliJ IDEA CE.app/Contents/MacOS"
 # Colima
 # =============================================================================
 export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
+
+# Homebrew (if installed, i use nix primarily)
+if command -v brew >/dev/null; then
+  eval "$(brew shellenv)"
+fi
+
+# Allow local-only env variables
+if [ -f "$HOME/.bashrc.local" ]; then
+  source "$HOME/.bashrc.local"
+fi
