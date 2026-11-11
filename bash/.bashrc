@@ -7,12 +7,12 @@
 # INIT
 # =============================================================================
 # Set home variable if not already defined
-if [ -z $HOME ]; then
+if [ -z "$HOME" ]; then
   export HOME=~
 fi
 
 # Set UTF-8 support
-if [ -z $LC_ALL ]; then
+if [ -z "$LC_ALL" ]; then
   export LC_ALL="en_US.UTF-8"
 fi
 
@@ -44,7 +44,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # Set default editor to nvim for both shell (EDITOR) and Git (GIT_EDITOR)
 # https://git-scm.com/docs/git-var#Documentation/git-var.txt-GITEDITOR
-export EDITOR="nvim -u NONE"
+export EDITOR="nvim -u NONE -i NONE"
 export GIT_EDITOR="$EDITOR"
 
 # =============================================================================
@@ -62,14 +62,6 @@ alias codex='codex --profile local'
 
 # Rg config
 export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
-# =============================================================================
-# NODE/NPM (local installation)
-# =============================================================================
-# TODO fix / move to nix?
-export NPM_PACKAGES=$HOME/.npm-packages
-export NODE_PATH=$NPM_PACKAGES/lib/node_modules:$NODE_PATH
-export NODE_MODULES=$HOME/node-modules
-export PATH=$NPM_PACKAGES/bin:$NODE_MODULES/.bin:$PATH
 
 # =============================================================================
 # LaTeX 2e (for legacy projects, now i use nix)
@@ -116,8 +108,8 @@ fi
 # git autocompletion
 # Source: wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -O .git-completion.bash
 # curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o .git-completion.bash
-if [ -f $HOME/.git-completion.bash ]; then
-   source $HOME/.git-completion.bash
+if [ -f "$HOME/.git-completion.bash" ]; then
+   source "$HOME/.git-completion.bash"
 fi
 
 if command -v gh &>/dev/null; then
@@ -185,8 +177,8 @@ function sourceFirstThatExists {
 sourceAllIfExist "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
 sourceFirstThatExists \
-  "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" \
   "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" \
+  "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" \
   "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 # =============================================================================
@@ -201,10 +193,6 @@ if command -v fzf >/dev/null; then
   if command -v rg > /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
   fi
-  # git diff using fzf with preview
-  gd() {
-    git diff $@ --name-only | fzf -m --ansi --preview 'git diff $@ --color=always -- {-1}'
-  }
 fi
 
 
@@ -216,11 +204,15 @@ if command -v starship >/dev/null; then
   eval "$(starship init bash)"
 fi
 
+# =============================================================================
+# Haskell
+# =============================================================================
 export C_INCLUDE_PATH="$(xcrun --show-sdk-path)/usr/include"
 export CPPFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 
-[ -f ~/.ghcup/env ] && source ~/.ghcup/env
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+if [ -f "$HOME/.ghcup/env" ]; then
+   source "$HOME/.ghcup/env"
+fi
 
 if command -v delta >/dev/null; then
   eval "$(delta --generate-completion bash)"
@@ -228,8 +220,8 @@ fi
 
 export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
 
-
 # Nix
+# TODO possibly needed by an older installation, otherwise redundant
 if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 fi
