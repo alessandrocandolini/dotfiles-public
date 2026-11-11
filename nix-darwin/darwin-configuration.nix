@@ -51,7 +51,7 @@ in
     home = "/Users/${username}";
   };
 
-  environment.extraInit = ''
+  environment.interactiveShellInit = ''
     if [ -f ${javaTruststore} ]; then
       export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=${javaTruststore}"
     fi
