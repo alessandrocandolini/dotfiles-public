@@ -7,6 +7,8 @@
 }:
 
 let
+  fast = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+
   cli = with pkgs; [
     jq
     fzf
@@ -34,7 +36,7 @@ let
     docker-compose
   ];
 
-  fastMovingCli = with inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
+  fastMovingCli = with fast; [
     colima
     mactop
     gh
@@ -50,7 +52,12 @@ let
   scala = [
     jdk25
     (pkgs.sbt.override { jre = jdk25; })
-    (pkgs.coursier.override { jre = jdk25; })
+    (fast.metals.override {
+      jre = jdk25;
+      extraJavaOpts = "-XX:+UseG1GC -XX:+UseStringDeduplication -Xss4m -Xms512m";
+    })
+    (pkgs.scalafmt.override { jre = jdk25; })
+    (pkgs.giter8.override { jre = jdk25; })
     pkgs.async-profiler
   ];
 
