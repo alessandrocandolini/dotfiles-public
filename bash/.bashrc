@@ -152,14 +152,11 @@ shopt -s histappend
 # PATH
 # =============================================================================
 
-# add /usr/local/bin to path (used by brew system-wise installation)
-export PATH=/usr/local/bin:$PATH
-
 # add $HOME/bin to path (for local-wise installation purposes)
-export PATH=$HOME/bin:$PATH
+export PATH="$PATH:$HOME/bin"
 
 # haskell stack install installs under $HOME/.local
-export PATH=$HOME/.local/bin:$PATH
+export PATH="$PATH:$HOME/.local/bin"
 
 # =============================================================================
 # NIX added by Nix installer
@@ -206,7 +203,7 @@ fi
 
 # More paths
 export PATH="$PATH:$HOME/Library/Application Support/Coursier/bin"
-export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
+export PATH="$PATH:/Applications/IntelliJ IDEA CE.app/Contents/MacOS"
 
 # =============================================================================
 # Colima
