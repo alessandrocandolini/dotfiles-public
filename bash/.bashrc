@@ -158,43 +158,23 @@ export PATH=/usr/local/bin:$PATH
 # add $HOME/bin to path (for local-wise installation purposes)
 export PATH=$HOME/bin:$PATH
 
-# haskell stack local (TODO cleanup)
+# haskell stack install installs under $HOME/.local
 export PATH=$HOME/.local/bin:$PATH
 
 # =============================================================================
 # NIX added by Nix installer
 # =============================================================================
-function sourceAllIfExist {
-  local file
-  for file in "$@"; do
-    if [ -f "$file" ]; then
-      source "$file"
-    fi
-  done
-}
-
-function sourceFirstThatExists {
-  local file
-  for file in "$@"; do
-    if [ -f "$file" ]; then
-      source "$file"
-      return $?
-    fi
-  done
-  return 1
-}
-
-sourceAllIfExist "$HOME/.nix-profile/etc/profile.d/nix.sh"
-
-sourceFirstThatExists \
-  "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" \
-  "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" \
-  "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+if [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; then
+  source "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
+elif [ -f "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" ]; then
+  source "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh"
+elif [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
 
 # =============================================================================
 # FZF (fuzzy search in history)
 # =============================================================================
-
 if command -v fzf >/dev/null; then
   if command -v fzf-share >/dev/null; then
     source "$(fzf-share)/key-bindings.bash"
@@ -208,7 +188,6 @@ fi
 # =============================================================================
 # Starship
 # =============================================================================
-
 if command -v starship >/dev/null; then
   eval "$(starship init bash)"
 fi
