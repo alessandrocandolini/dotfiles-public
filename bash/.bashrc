@@ -202,7 +202,6 @@ if [ -f "$HOME/.ghcup/env" ]; then
 fi
 
 # More paths
-export PATH="$PATH:$HOME/Library/Application Support/Coursier/bin"
 export PATH="$PATH:/Applications/IntelliJ IDEA CE.app/Contents/MacOS"
 
 # =============================================================================

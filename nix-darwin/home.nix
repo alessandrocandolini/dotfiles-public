@@ -19,7 +19,9 @@ let
   scalaStuff = with pkgs; [
     jdk25
     (pkgs.sbt.override { jre = pkgs.jdk25; })
-    (pkgs.coursier.override { jre = pkgs.jdk25; })
+    (fastPkgs.metals.override { jre = pkgs.jdk25; })
+    (pkgs.scalafmt.override { jre = pkgs.jdk25; })
+    (pkgs.giter8.override { jre = pkgs.jdk25; })
     async-profiler
   ];
 
