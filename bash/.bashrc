@@ -185,8 +185,8 @@ function sourceFirstThatExists {
 sourceAllIfExist "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
 sourceFirstThatExists \
-  "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" \
   "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" \
+  "$HOME/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh" \
   "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 # =============================================================================
@@ -201,10 +201,6 @@ if command -v fzf >/dev/null; then
   if command -v rg > /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
   fi
-  # git diff using fzf with preview
-  gd() {
-    git diff $@ --name-only | fzf -m --ansi --preview 'git diff $@ --color=always -- {-1}'
-  }
 fi
 
 
@@ -220,7 +216,6 @@ export C_INCLUDE_PATH="$(xcrun --show-sdk-path)/usr/include"
 export CPPFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 
 [ -f ~/.ghcup/env ] && source ~/.ghcup/env
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 if command -v delta >/dev/null; then
   eval "$(delta --generate-completion bash)"
