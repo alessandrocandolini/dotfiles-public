@@ -21,6 +21,11 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
+# macOS updates can replace /etc/bashrc and drop nix-darwin's setup; load nix-darwin's copy directly when that happens
+if [ -z "$__NIX_DARWIN_SET_ENVIRONMENT_DONE" ] && [ -e /etc/static/bashrc ]; then
+  . /etc/static/bashrc
+fi
+
 if [ -f /etc/nix/ca-bundle.pem ]; then
   export NIX_SSL_CERT_FILE=/etc/nix/ca-bundle.pem
 fi
@@ -219,13 +224,6 @@ unset macos_sdk_path
 if [ -f "$HOME/.ghcup/env" ]; then
    source "$HOME/.ghcup/env"
 fi
-
-# Nix
-# TODO possibly needed by an older installation, otherwise redundant
-if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-fi
-# End Nix
 
 # More paths
 export PATH="$PATH:$HOME/Library/Application Support/Coursier/bin"
