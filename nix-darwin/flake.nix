@@ -58,6 +58,7 @@
         {
           username,
           certificatePath,
+          homeModule,
         }:
         darwin.lib.darwinSystem {
           inherit system;
@@ -69,7 +70,10 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.${username} = {
-                imports = [ ./home.nix ];
+                imports = [
+                  ./home.nix
+                  homeModule
+                ];
                 home.username = username;
                 home.homeDirectory = "/Users/${username}";
                 _module.args = { inherit inputs; };
@@ -82,11 +86,13 @@
       darwinConfigurations.this-mac = mkMac {
         username = "alessandrocandolini";
         certificatePath = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+        homeModule = ./home-this-mac.nix;
       };
 
       darwinConfigurations.alternative-mac = mkMac {
         username = "acandolini";
         certificatePath = "/etc/nix/ca-bundle.pem";
+        homeModule = ./home-alternative-mac.nix;
       };
     };
 }
