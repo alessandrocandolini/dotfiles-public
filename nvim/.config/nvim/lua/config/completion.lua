@@ -37,7 +37,7 @@ end
 function M.setup()
   vim.opt.completeopt = { "menu", "menuone", "noselect", "popup", "fuzzy", "preselect" }
   vim.opt.complete = { "F", "o" } -- local snippets, then LSP omnifunc
-  vim.opt.autocomplete = true
+  vim.opt.autocomplete = false
   vim.opt.autocompletedelay = 60
   -- TODO: deprecate g:completion_esc_discards once accepting with Enter is muscle memory
   vim.g.completion_esc_discards = true

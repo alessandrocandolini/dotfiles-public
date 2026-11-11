@@ -40,6 +40,14 @@ local function lsp_setup_per_buffer(client, bufnr)
   local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
   if client:supports_method('textDocument/completion', bufnr) then
+    local provider = client.server_capabilities.completionProvider
+    provider.triggerCharacters = provider.triggerCharacters or {}
+    -- Trigger LSP suggestions while typing identifiers, including Haskell's apostrophe.
+    for char in ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'"):gmatch(".") do
+      if not vim.tbl_contains(provider.triggerCharacters, char) then
+        table.insert(provider.triggerCharacters, char)
+      end
+    end
     vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
     vim.bo[bufnr].omnifunc = "v:lua.require'config.lsp'.omnifunc"
   end
