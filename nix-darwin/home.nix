@@ -19,7 +19,7 @@ let
   scalaStuff = with pkgs; [
     jdk25
     (pkgs.sbt.override { jre = pkgs.jdk25; })
-    coursier
+    (pkgs.coursier.override { jre = pkgs.jdk25; })
     async-profiler
   ];
 
