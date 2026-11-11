@@ -211,7 +211,7 @@ fi
 # =============================================================================
 # Haskell
 # =============================================================================
-macos_sdk_path=$(xcrun --show-sdk-path)
+macos_sdk_path=$(/usr/bin/xcrun --show-sdk-path)
 export C_INCLUDE_PATH="$macos_sdk_path/usr/include"
 export CPPFLAGS="-I$macos_sdk_path/usr/include"
 unset macos_sdk_path
