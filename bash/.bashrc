@@ -115,6 +115,11 @@ fi
 if command -v gh &>/dev/null; then
   eval "$(gh completion -s bash)"
 fi
+
+if command -v delta >/dev/null; then
+  eval "$(delta --generate-completion bash)"
+fi
+
 # =============================================================================
 # ETERNAL BASH HISTORY
 # =============================================================================
@@ -195,7 +200,6 @@ if command -v fzf >/dev/null; then
   fi
 fi
 
-
 # =============================================================================
 # Starship
 # =============================================================================
@@ -207,18 +211,14 @@ fi
 # =============================================================================
 # Haskell
 # =============================================================================
-export C_INCLUDE_PATH="$(xcrun --show-sdk-path)/usr/include"
-export CPPFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+macos_sdk_path=$(xcrun --show-sdk-path)
+export C_INCLUDE_PATH="$macos_sdk_path/usr/include"
+export CPPFLAGS="-I$macos_sdk_path/usr/include"
+unset macos_sdk_path
 
 if [ -f "$HOME/.ghcup/env" ]; then
    source "$HOME/.ghcup/env"
 fi
-
-if command -v delta >/dev/null; then
-  eval "$(delta --generate-completion bash)"
-fi
-
-export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
 
 # Nix
 # TODO possibly needed by an older installation, otherwise redundant
@@ -226,10 +226,12 @@ if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 fi
 # End Nix
-#
+
+# More paths
 export PATH="$PATH:$HOME/Library/Application Support/Coursier/bin"
+export PATH=/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS:$PATH
+
 # =============================================================================
 # Colima
 # =============================================================================
-
 export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
