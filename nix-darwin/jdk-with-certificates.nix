@@ -88,14 +88,12 @@ baseJdk.overrideAttrs (
         exit 1
       fi
       "$out/bin/java" -XX:-UsePerfData \
-        -Dkeystore.pkcs12.certProtectionAlgorithm=NONE \
-        -Dkeystore.pkcs12.macAlgorithm=NONE \
         ${merger} "$store" ${javaTruststore} "$out"
     '';
     # The vendor passthru closes over the ORIGINAL derivation.
     passthru = (old.passthru or { }) // {
       home = finalAttrs.finalPackage;
-      bundle = "${finalAttrs.finalPackage}/Library/Java/JavaVirtualMachines/zulu-${major}.jdk";
+      bundle = lib.replaceStrings [ "${baseJdk.home}/" ] [ "${finalAttrs.finalPackage}/" ] baseJdk.bundle;
       tests = (old.passthru.tests or { }) // {
         version = pkgs.testers.testVersion {
           package = finalAttrs.finalPackage;

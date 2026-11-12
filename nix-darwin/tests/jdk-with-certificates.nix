@@ -179,5 +179,7 @@ pkgs.runCommandLocal "jdk-with-certificates-tests"
       grep -q 'MAC is absent' info
       ! grep -Eq 'Encrypted|Shrouded|Key bag' info
     done
+    test "$(readlink -f "${jdk21.bundle}/Contents/Home/bin/java")" = "$(readlink -f "${jdk21}/bin/java")"
+    test "$(readlink -f "${jdk25.bundle}/Contents/Home/bin/java")" = "$(readlink -f "${jdk25}/bin/java")"
     touch "$out"
   ''
