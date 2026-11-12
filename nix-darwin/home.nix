@@ -68,7 +68,6 @@ let
     git
     delta
     awscli2
-    tmux
     unzip
     pigz # multicore gz
     curl
@@ -141,6 +140,7 @@ let
     mactopNoTests
     gh
     ghorg
+    tmux
   ];
 in
 {
