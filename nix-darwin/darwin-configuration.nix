@@ -2,13 +2,34 @@
   lib,
   pkgs,
   username,
-  certificatePath,
+  certificatePath ? null,
   ...
 }:
 
 let
-  localCertificateBundle = "/etc/nix/ca-bundle.pem";
-  javaTruststore = "/etc/nix/java-truststore.p12";
+  javaTruststore =
+    pkgs.runCommandLocal "java-truststore.p12"
+      {
+        nativeBuildInputs = [ pkgs.openssl ];
+        certificateBundle = pkgs.writeText "java-ca-bundle.pem" (builtins.readFile certificatePath);
+      }
+      ''
+        begins=$(grep -Ec '^-----BEGIN (TRUSTED )?CERTIFICATE-----[[:space:]]*$' "$certificateBundle")
+        ends=$(grep -Ec '^-----END (TRUSTED )?CERTIFICATE-----[[:space:]]*$' "$certificateBundle")
+        test "$begins" -gt 0
+        test "$begins" -eq "$ends"
+        if grep -Eq '^-----BEGIN .*PRIVATE KEY-----' "$certificateBundle"; then
+          echo "The certificate bundle contains a private key" >&2
+          exit 1
+        fi
+
+        openssl pkcs12 -export -nokeys -jdktrust anyExtendedKeyUsage \
+          -certpbe NONE -nomac -passout pass: \
+          -in "$certificateBundle" -out "$out"
+
+        openssl pkcs12 -in "$out" -nokeys -passin pass: -out exported.pem
+        test "$(grep -c '^-----BEGIN CERTIFICATE-----' exported.pem)" -eq "$begins"
+      '';
 in
 {
   nix = {
@@ -24,6 +45,8 @@ in
       trusted-public-keys = [
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       ];
+    }
+    // lib.optionalAttrs (certificatePath != null) {
       ssl-cert-file = certificatePath;
     };
 
@@ -36,6 +59,8 @@ in
 
     envVars = {
       OBJC_DISABLE_INITIALIZE_FORK_SAFETY = "YES";
+    }
+    // lib.optionalAttrs (certificatePath != null) {
       NIX_SSL_CERT_FILE = certificatePath;
     };
   };
@@ -51,32 +76,18 @@ in
     home = "/Users/${username}";
   };
 
-  environment.interactiveShellInit = ''
-    if [ -f ${javaTruststore} ]; then
-      export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=${javaTruststore}"
-    fi
+  environment.interactiveShellInit = lib.optionalString (certificatePath != null) ''
+    case " ''${JAVA_TOOL_OPTIONS-} " in
+      *" -Djavax.net.ssl.trustStore=${javaTruststore} "*) ;;
+      *)
+        export JAVA_TOOL_OPTIONS="''${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }-Djavax.net.ssl.trustStore=${javaTruststore}"
+        ;;
+    esac
   '';
 
-  system.activationScripts.postActivation.text = ''
-    bundle=${localCertificateBundle}
-    truststore=${javaTruststore}
-
-    if [ -f "$bundle" ]; then
-      if [ "$(grep -c 'BEGIN CERTIFICATE' "$bundle")" -gt 100 ] \
-         && ${lib.getExe pkgs.openssl} pkcs12 -export -nokeys -jdktrust anyExtendedKeyUsage \
-              -certpbe NONE -nomac -passout pass: \
-              -in "$bundle" -out "$truststore.new"; then
-        chmod 644 "$truststore.new"
-        if [ -f "$truststore" ]; then
-          cp -p "$truststore" "$truststore.previous"
-        fi
-        mv "$truststore.new" "$truststore"
-      else
-        rm -f "$truststore.new"
-        echo "warning: Java truststore build failed, keeping the existing $truststore" >&2
-      fi
-    fi
-  '';
+  system.build = lib.optionalAttrs (certificatePath != null) {
+    inherit javaTruststore;
+  };
 
   system.stateVersion = 6;
 }

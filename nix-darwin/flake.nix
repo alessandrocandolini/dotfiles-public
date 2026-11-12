@@ -57,7 +57,7 @@
       mkMac =
         {
           username,
-          certificatePath,
+          certificatePath ? null,
           homeModule,
         }:
         darwin.lib.darwinSystem {
@@ -85,7 +85,6 @@
     {
       darwinConfigurations.this-mac = mkMac {
         username = "alessandrocandolini";
-        certificatePath = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
         homeModule = ./home-this-mac.nix;
       };
 
