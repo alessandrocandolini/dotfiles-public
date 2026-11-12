@@ -23,7 +23,7 @@ let
                 throw new IllegalStateException("JVM and cacerts must belong to the new JDK output");
             var store = KeyStore.getInstance(path.toFile(), (char[]) null);
             if (!store.getType().equalsIgnoreCase("PKCS12"))
-                throw new IllegalStateException("Expected the Zulu passwordless PKCS12 store");
+                throw new IllegalStateException("Expected a passwordless PKCS12 cacerts");
             var extra = KeyStore.getInstance(new java.io.File(args[1]), (char[]) null);
             var known = new HashSet<String>();
             for (var alias : Collections.list(store.aliases())) {
@@ -54,25 +54,31 @@ let
   '';
 in
 baseJdk:
-let
-  major = lib.versions.major baseJdk.version;
-in
-assert lib.assertMsg (
-  pkgs.stdenv.hostPlatform.isDarwin
-  && baseJdk.pname == "zulu-ca-jdk"
-  && builtins.elem major [
-    "21"
-    "25"
-  ]
-) "mkJdkWithCertificates currently supports Darwin Zulu JDK 21 and 25 only";
 baseJdk.overrideAttrs (
-  finalAttrs: old: {
+  finalAttrs: old:
+  let
+    rebase =
+      value:
+      let
+        insideStorePath = builtins.match "${builtins.storeDir}/[^/]+(.*)" (
+          builtins.unsafeDiscardStringContext (toString value)
+        );
+      in
+      if insideStorePath == null then
+        value
+      else
+        "${finalAttrs.finalPackage}${builtins.head insideStorePath}";
+  in
+  {
     pname = "${old.pname}-with-extra-certificates";
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.openssl ];
-    installPhase = old.installPhase + ''
+    postFixup = (old.postFixup or "") + ''
       unset JAVA_TOOL_OPTIONS JDK_JAVA_OPTIONS _JAVA_OPTIONS JAVAX_NET_SSL_TRUSTSTORE
-      store="$out/lib/security/cacerts"
-      test ! -e "$out/lib/security/jssecacerts"
+      home=$("$out/bin/java" -XX:-UsePerfData -XshowSettings:properties -version 2>&1 \
+        | sed -n 's/^ *java\.home = //p')
+      test -n "$home"
+      store="$home/lib/security/cacerts"
+      test ! -e "$home/lib/security/jssecacerts"
       case "$(readlink -f "$store")" in
         "$out"/*) ;;
         *) echo "cacerts must belong to the new JDK output" >&2; exit 1 ;;
@@ -80,22 +86,28 @@ baseJdk.overrideAttrs (
       openssl pkcs12 -in "$store" -passin pass: -info -noout 2> store-info
       grep -q 'MAC is absent' store-info
       if grep -Eq 'Encrypted|Shrouded|Key bag' store-info; then
-        echo "Expected an unencrypted, certificate-only Zulu store" >&2
+        echo "Expected an unencrypted, certificate-only cacerts" >&2
         exit 1
       fi
       "$out/bin/java" -XX:-UsePerfData \
         ${merger} "$store" ${javaTruststore} "$out"
     '';
-    passthru = (old.passthru or { }) // {
-      home = finalAttrs.finalPackage;
-      bundle = lib.replaceStrings [ "${baseJdk.home}/" ] [ "${finalAttrs.finalPackage}/" ] baseJdk.bundle;
-      tests = (old.passthru.tests or { }) // {
-        version = pkgs.testers.testVersion {
-          package = finalAttrs.finalPackage;
-          command = "java -version";
-          version = baseJdk.version;
+    passthru =
+      (old.passthru or { })
+      // lib.mapAttrs (_: rebase) (
+        builtins.intersectAttrs {
+          home = null;
+          bundle = null;
+        } (old.passthru or { })
+      )
+      // {
+        tests = (old.passthru.tests or { }) // {
+          version = pkgs.testers.testVersion {
+            package = finalAttrs.finalPackage;
+            command = "java -version";
+            version = baseJdk.version;
+          };
         };
       };
-    };
   }
 )

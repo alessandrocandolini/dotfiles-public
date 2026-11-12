@@ -45,6 +45,8 @@ let
   seed25 = seed pkgs.jdk25;
   jdk21 = mkJdk seed21;
   jdk25 = mkJdk seed25;
+  seedTemurin21 = seed pkgs.temurin-bin-21;
+  temurin21 = mkJdk seedTemurin21;
   overlayPkgs =
     (import ../java-certificate-overlay.nix {
       certificatePath = "${fixtures}/valid.pem";
@@ -138,6 +140,7 @@ assert
 assert jdk21.drvPath != jdk25.drvPath;
 assert toString jdk21.home == toString jdk21;
 assert toString jdk25.home == toString jdk25;
+assert toString temurin21.home == toString temurin21;
 pkgs.runCommandLocal "jdk-with-certificates-tests"
   {
     nativeBuildInputs = [ pkgs.openssl ];
@@ -159,10 +162,12 @@ pkgs.runCommandLocal "jdk-with-certificates-tests"
     ${jdk21}/bin/javac -J-XX:-UsePerfData -d . TrustCheck.java
     ${seed21}/bin/java -XX:-UsePerfData TrustCheck ${seed21} ${fixtures} false
     ${seed25}/bin/java -XX:-UsePerfData TrustCheck ${seed25} ${fixtures} false
+    ${seedTemurin21}/bin/java -XX:-UsePerfData TrustCheck ${seedTemurin21} ${fixtures} false
+    ${temurin21}/bin/java -XX:-UsePerfData TrustCheck ${temurin21} ${fixtures} true
     ${jdk21}/bin/java -XX:-UsePerfData TrustCheck ${jdk21} ${fixtures} true
     ${jdk25}/bin/javac -J-XX:-UsePerfData -d . TrustCheck.java
     ${jdk25}/bin/java -XX:-UsePerfData TrustCheck ${jdk25} ${fixtures} true
-    for jdk in ${jdk21} ${jdk25}; do
+    for jdk in ${jdk21} ${jdk25} ${temurin21}; do
       unset JAVA_HOME
       . "$jdk/nix-support/setup-hook"
       test "$JAVA_HOME" = "$jdk"
@@ -172,5 +177,6 @@ pkgs.runCommandLocal "jdk-with-certificates-tests"
     done
     test "$(readlink -f "${jdk21.bundle}/Contents/Home/bin/java")" = "$(readlink -f "${jdk21}/bin/java")"
     test "$(readlink -f "${jdk25.bundle}/Contents/Home/bin/java")" = "$(readlink -f "${jdk25}/bin/java")"
+    test "$(readlink -f "${temurin21.bundle}/Contents/Home/bin/java")" = "$(readlink -f "${temurin21}/bin/java")"
     touch "$out"
   ''
