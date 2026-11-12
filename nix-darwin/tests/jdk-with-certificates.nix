@@ -25,14 +25,11 @@ let
         ln -s valid.pem "$out/symlink.pem"
 
       '';
-  # Keep the existing converter tests and input contract unchanged.
   converterTests = import ./java-truststore.nix { inherit pkgs; };
   mkJdk = import ../jdk-with-certificates.nix {
     inherit pkgs;
     certificatePath = "${fixtures}/valid.pem";
   };
-  # Only synthetic CA A is trusted by each seed. No vendor or machine CAs are fixtures.
-  # Keep upstream metadata so the factory must correct .home itself.
   seed =
     jdk:
     jdk.overrideAttrs (
@@ -53,13 +50,7 @@ let
       certificatePath = "${fixtures}/valid.pem";
     })
       pkgs
-      (
-        pkgs
-        // {
-          jdk21 = seed21;
-          jdk25 = seed25;
-        }
-      );
+      pkgs;
   probe = pkgs.writeText "TrustCheck.java" ''
     import java.nio.file.*;
     import java.security.*;
@@ -132,8 +123,8 @@ let
     }
   '';
 in
-assert jdk21.drvPath == overlayPkgs.jdk21WithExtraCertificates.drvPath;
-assert jdk25.drvPath == overlayPkgs.jdk25WithExtraCertificates.drvPath;
+assert jdk21.drvPath == (overlayPkgs.mkJdkWithCertificates seed21).drvPath;
+assert jdk25.drvPath == (overlayPkgs.mkJdkWithCertificates seed25).drvPath;
 assert
   jdk21.drvPath == (import ../jdk-with-certificates.nix {
     inherit pkgs;

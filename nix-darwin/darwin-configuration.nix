@@ -59,7 +59,6 @@ in
     inherit javaTruststore;
     javaTruststoreTests = import ./tests/java-truststore.nix { inherit pkgs; };
     jdkWithCertificatesTests = import ./tests/jdk-with-certificates.nix { inherit pkgs; };
-    javaToolTests = import ./tests/java-tools.nix { inherit pkgs; };
   };
 
   system.stateVersion = 6;

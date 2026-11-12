@@ -46,8 +46,6 @@ let
                     store.setCertificateEntry(alias, entry.getValue());
                 }
             }
-            // Preserve the seed's passwordless/no-MAC semantics, checked by OpenSSL below.
-            // New entry creation dates mean byte-for-byte reproducibility is not promised.
             try (var output = Files.newOutputStream(path)) {
                 store.store(output, null);
             }
@@ -71,7 +69,6 @@ baseJdk.overrideAttrs (
   finalAttrs: old: {
     pname = "${old.pname}-with-extra-certificates";
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.openssl ];
-    # Zulu's installPhase does not run postInstall. Append after the vendor install.
     installPhase = old.installPhase + ''
       unset JAVA_TOOL_OPTIONS JDK_JAVA_OPTIONS _JAVA_OPTIONS JAVAX_NET_SSL_TRUSTSTORE
       store="$out/lib/security/cacerts"
@@ -80,7 +77,6 @@ baseJdk.overrideAttrs (
         "$out"/*) ;;
         *) echo "cacerts must belong to the new JDK output" >&2; exit 1 ;;
       esac
-      # Refuse to weaken a future seed store with different protection settings.
       openssl pkcs12 -in "$store" -passin pass: -info -noout 2> store-info
       grep -q 'MAC is absent' store-info
       if grep -Eq 'Encrypted|Shrouded|Key bag' store-info; then
@@ -90,7 +86,6 @@ baseJdk.overrideAttrs (
       "$out/bin/java" -XX:-UsePerfData \
         ${merger} "$store" ${javaTruststore} "$out"
     '';
-    # The vendor passthru closes over the ORIGINAL derivation.
     passthru = (old.passthru or { }) // {
       home = finalAttrs.finalPackage;
       bundle = lib.replaceStrings [ "${baseJdk.home}/" ] [ "${finalAttrs.finalPackage}/" ] baseJdk.bundle;
