@@ -84,6 +84,9 @@
         };
     in
     {
+      lib.mkJdkWithCertificates = import ./jdk-with-certificates.nix;
+      lib.mkJavaCertificateOverlay = import ./java-certificate-overlay.nix;
+
       darwinConfigurations.this-mac = mkMac {
         username = "alessandrocandolini";
         certificatePath = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
