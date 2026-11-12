@@ -218,8 +218,3 @@ export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
 if command -v brew >/dev/null; then
   eval "$(brew shellenv)"
 fi
-
-# Allow local-only env variables
-if [ -f "$HOME/.bashrc.local" ]; then
-  source "$HOME/.bashrc.local"
-fi
