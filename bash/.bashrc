@@ -121,6 +121,10 @@ if command -v gh &>/dev/null; then
   eval "$(gh completion -s bash)"
 fi
 
+if command -v ghorg &>/dev/null; then
+  eval "$(ghorg completion bash)"
+fi
+
 if command -v delta >/dev/null; then
   eval "$(delta --generate-completion bash)"
 fi
