@@ -3,12 +3,12 @@
   pkgs,
   username,
   certificatePath,
+  enableJavaTruststore,
   ...
 }:
 
 let
-  localCertificateBundle = "/etc/nix/ca-bundle.pem";
-  javaTruststore = "/etc/nix/java-truststore.p12";
+  javaTruststore = import ./java-truststore.nix { inherit pkgs certificatePath; };
 in
 {
   nix = {
@@ -51,32 +51,19 @@ in
     home = "/Users/${username}";
   };
 
-  environment.interactiveShellInit = ''
-    if [ -f ${javaTruststore} ]; then
-      export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=${javaTruststore}"
-    fi
+  environment.interactiveShellInit = lib.optionalString enableJavaTruststore ''
+    case " ''${JAVA_TOOL_OPTIONS-} " in
+      *" -Djavax.net.ssl.trustStore=${javaTruststore} "*) ;;
+      *)
+        export JAVA_TOOL_OPTIONS="''${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }-Djavax.net.ssl.trustStore=${javaTruststore}"
+        ;;
+    esac
   '';
 
-  system.activationScripts.postActivation.text = ''
-    bundle=${localCertificateBundle}
-    truststore=${javaTruststore}
-
-    if [ -f "$bundle" ]; then
-      if [ "$(grep -c 'BEGIN CERTIFICATE' "$bundle")" -gt 100 ] \
-         && ${lib.getExe pkgs.openssl} pkcs12 -export -nokeys -jdktrust anyExtendedKeyUsage \
-              -certpbe NONE -nomac -passout pass: \
-              -in "$bundle" -out "$truststore.new"; then
-        chmod 644 "$truststore.new"
-        if [ -f "$truststore" ]; then
-          cp -p "$truststore" "$truststore.previous"
-        fi
-        mv "$truststore.new" "$truststore"
-      else
-        rm -f "$truststore.new"
-        echo "warning: Java truststore build failed, keeping the existing $truststore" >&2
-      fi
-    fi
-  '';
+  system.build = lib.optionalAttrs enableJavaTruststore {
+    inherit javaTruststore;
+    javaTruststoreTests = import ./tests/java-truststore.nix { inherit pkgs; };
+  };
 
   system.stateVersion = 6;
 }

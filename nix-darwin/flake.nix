@@ -58,11 +58,12 @@
         {
           username,
           certificatePath,
+          enableJavaTruststore,
           homeModule,
         }:
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit username certificatePath; };
+          specialArgs = { inherit username certificatePath enableJavaTruststore; };
           modules = [
             ./darwin-configuration.nix
             home-manager.darwinModules.home-manager
@@ -86,12 +87,14 @@
       darwinConfigurations.this-mac = mkMac {
         username = "alessandrocandolini";
         certificatePath = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+        enableJavaTruststore = false;
         homeModule = ./home-this-mac.nix;
       };
 
       darwinConfigurations.alternative-mac = mkMac {
         username = "acandolini";
         certificatePath = "/etc/nix/ca-bundle.pem";
+        enableJavaTruststore = true;
         homeModule = ./home-alternative-mac.nix;
       };
     };
