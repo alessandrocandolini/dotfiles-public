@@ -83,6 +83,7 @@ let
     tflint
     proximity-sort
     tree
+    nerd-fonts.meslo-lg
   ];
 
   lspStuff = with pkgs; [
