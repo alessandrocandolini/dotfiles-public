@@ -68,9 +68,8 @@ let
     awscli2
     tmux
     unzip
-    pigz
+    pigz # multicore gz
     curl
-    # nodejs_latest
     starship
     coreutils
     zlib
@@ -136,11 +135,10 @@ let
     doCheck = false;
   });
   fastMovingStuff = with fastPkgs; [
-    # ollama
-    # llama-cpp
     colima
     mactopNoTests
     gh
+    ghorg
   ];
 in
 {
