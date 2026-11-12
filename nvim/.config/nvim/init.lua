@@ -82,6 +82,9 @@ vim.opt.writebackup = false
 -- Show incomplete commands
 vim.opt.showcmd = true
 
+vim.opt.showmode = false
+vim.opt.shortmess:append("c")
+
 -- Do not change cursor shape in insert mode
 vim.opt.guicursor = ""
 
