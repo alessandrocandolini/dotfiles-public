@@ -52,11 +52,24 @@ local function snippets()
   return items
 end
 
-function M.setup()
-  vim.bo.completefunc = function(findstart, base)
-    return require("config.completion").complete_snippets(findstart, base, snippets)
+function M.new()
+  return setmetatable({}, { __index = M })
+end
+
+function M:get_completions(_, callback)
+  local items = {}
+  for index, snippet in ipairs(snippets()) do
+    items[#items + 1] = {
+      label = snippet.trigger,
+      kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+      insertText = snippet.body,
+      insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
+      labelDetails = { description = snippet.description },
+      documentation = { kind = 'markdown', value = snippet.body },
+      sortText = string.format('%03d', index),
+    }
   end
-  vim.b.undo_ftplugin = (vim.b.undo_ftplugin or "") .. " | setlocal completefunc<"
+  callback({ is_incomplete_forward = false, is_incomplete_backward = false, items = items })
 end
 
 return M

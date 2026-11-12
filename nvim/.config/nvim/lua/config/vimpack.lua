@@ -5,6 +5,8 @@ local function gh(repo, optional)
 end
 
 M.specs = {
+  gh("saghen/blink.lib", true),
+  gh("saghen/blink.cmp", true),
   gh("wtfox/jellybeans.nvim"),
   gh("ibhagwan/fzf-lua"),
   gh("nvim-lua/plenary.nvim"),

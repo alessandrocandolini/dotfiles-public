@@ -36,6 +36,7 @@ function M.setup()
 
   local metals = require("metals")
   local cfg = metals.bare_config()
+  cfg.capabilities = vim.deepcopy(vim.lsp.config['*'].capabilities)
 
   cfg.settings = {
     showImplicitArguments = true,
