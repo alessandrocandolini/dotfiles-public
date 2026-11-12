@@ -20,8 +20,6 @@ vim.g.haskell_tools = vim.tbl_deep_extend("force", vim.g.haskell_tools or {}, {
 })
 vim.cmd.packadd("haskell-tools.nvim")
 
-require("config.haskell_snippets").setup()
-
 local ok, ht = pcall(require, "haskell-tools")
 if not ok then
   vim.notify(

@@ -25,6 +25,11 @@ describe('Haskell attachment', function()
       end
       local client = vim.lsp.get_clients({ name = 'haskell-tools.nvim' })[1]
       assert.equals(vim.uv.fs_realpath(root), client.root_dir)
+      local completion = client.capabilities.textDocument.completion.completionItem
+      assert.is_true(completion.snippetSupport)
+      assert.is_false(completion.commitCharactersSupport)
+      assert.is_false(completion.preselectSupport)
+      assert.is_true(vim.tbl_contains(completion.resolveSupport.properties, 'data'))
       assert.equals('fourmolu', client.settings.haskell.formattingProvider)
 
       -- Project settings must preserve unspecified defaults and accept explicit overrides.

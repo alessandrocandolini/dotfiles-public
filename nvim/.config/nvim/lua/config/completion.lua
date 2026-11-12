@@ -1,98 +1,83 @@
 local M = {}
+local sources = { 'haskell_snippets', 'lsp' }
 
-local function word_before_cursor()
-  local col = vim.api.nvim_win_get_cursor(0)[2]
-  return vim.fn.matchstr(vim.api.nvim_get_current_line():sub(1, col), [[\k*$]])
-end
-
-local function expand(item)
-  local body = type(item.user_data) == "table" and item.user_data.local_snippet
-  if not body then return end
-  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-  -- Only replace the accepted trigger, never adjacent text.
-  if vim.api.nvim_get_current_line():sub(col - #item.word + 1, col) ~= item.word then return end
-  vim.api.nvim_buf_set_text(0, row - 1, col - #item.word, row - 1, col, { "" })
-  vim.snippet.expand(body)
-end
-
--- A local 'completefunc' source; no server, cache, or asynchronous work.
-function M.complete_snippets(findstart, base, get_snippets)
-  if findstart == 1 then
-    return vim.api.nvim_win_get_cursor(0)[2] - #word_before_cursor()
-  end
-  if (base == "" or not M.typing) and not M.manual then return {} end
-  local items = {}
-  for _, snippet in ipairs(get_snippets()) do
-    items[#items + 1] = {
-      word = snippet.trigger,
-      menu = snippet.description,
-      kind = "Snippet",
-      info = snippet.body,
-      user_data = { local_snippet = snippet.body },
-    }
-  end
-  return base == "" and items or vim.fn.matchfuzzy(items, base, { key = "word" })
+local function complete_manually(cmp)
+  cmp.hide()
+  return cmp.show({ providers = sources })
 end
 
 function M.setup()
-  vim.opt.completeopt = { "menu", "menuone", "noselect", "popup", "fuzzy", "preselect" }
-  vim.opt.complete = { "F", "o" } -- local snippets, then LSP omnifunc
-  vim.opt.autocomplete = true
-  vim.opt.autocompletedelay = 60
-  -- TODO: deprecate g:completion_esc_discards once accepting with Enter is muscle memory
-  vim.g.completion_esc_discards = true
+  vim.opt.autocomplete = false
+  vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities() })
 
-  local group = vim.api.nvim_create_augroup("LocalSnippets", { clear = true })
-  vim.api.nvim_create_autocmd("CompleteDone", {
-    group = group,
-    callback = function()
-      M.manual = false
-      if vim.v.event.reason == "accept" then expand(vim.v.completed_item) end
-    end,
-  })
-  vim.api.nvim_create_autocmd("InsertEnter", {
-    group = group,
-    callback = function()
-      M.typing = false
-      M.manual = false
-    end,
-  })
-  vim.api.nvim_create_autocmd("InsertCharPre", {
-    group = group,
-    callback = function()
-      M.typing = true
-      M.manual = false
-    end,
-  })
-
-  vim.keymap.set("i", "<CR>", function()
-    if vim.fn.pumvisible() == 1 then
-      if vim.fn.complete_info({ "selected" }).selected ~= -1 then return vim.keycode("<C-y>") end
-      return vim.keycode("<C-e>") .. require("nvim-autopairs").autopairs_cr()
+  vim.keymap.set('i', '<CR>', function()
+    local cmp = require('blink.cmp')
+    if cmp.is_menu_visible() and cmp.get_selected_item() then
+      return vim.keycode("<Cmd>lua require('blink.cmp').accept()<CR>")
     end
-    return require("nvim-autopairs").autopairs_cr()
-  end, { expr = true, replace_keycodes = false, silent = true, desc = "Accept selected completion or insert newline" })
-  local function complete_manually()
-    if vim.fn.pumvisible() == 1 then return "<C-n>" end
-    local restart = vim.fn.complete_info({ "mode" }).mode ~= "" and "<C-e>" or ""
-    return restart .. "<Cmd>lua require('config.completion').manual = true<CR><C-n>"
-  end
-  vim.keymap.set("i", "<Esc>", function()
-    if vim.fn.pumvisible() == 1 and vim.g.completion_esc_discards then return "<C-e><Esc>" end
-    return "<Esc>"
-  end, { expr = true, desc = "Leave insert mode, discarding the highlighted completion unless g:completion_esc_discards is false" })
-  vim.keymap.set("i", "<C-Space>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
-  vim.keymap.set("i", "<Nul>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
-  vim.keymap.set("i", "<Tab>", function()
-    if vim.fn.pumvisible() == 1 then return "<C-n>" end
-    if vim.snippet.active({ direction = 1 }) then return "<Cmd>lua vim.snippet.jump(1)<CR>" end
-    return "<Tab>"
-  end, { expr = true, desc = "Next completion, snippet placeholder, or indent" })
-  vim.keymap.set("i", "<S-Tab>", function()
-    if vim.fn.pumvisible() == 1 then return "<C-p>" end
-    if vim.snippet.active({ direction = -1 }) then return "<Cmd>lua vim.snippet.jump(-1)<CR>" end
-    return "<S-Tab>"
-  end, { expr = true, desc = "Previous completion or snippet placeholder" })
+    return require('nvim-autopairs').autopairs_cr()
+  end, { expr = true, replace_keycodes = false, silent = true, desc = 'Accept selected completion or insert newline' })
+
+  vim.api.nvim_create_autocmd('InsertEnter', {
+    group = vim.api.nvim_create_augroup('CompletionSetup', { clear = true }),
+    once = true,
+    callback = function()
+      require('blink.cmp').setup({
+        keymap = {
+          preset = 'none',
+          ['<CR>'] = false,
+          ['<C-e>'] = { 'cancel', 'fallback' },
+          ['<C-y>'] = { 'accept', 'fallback' },
+          ['<C-n>'] = { 'select_next', 'fallback' },
+          ['<C-p>'] = { 'select_prev', 'fallback' },
+          ['<Up>'] = { 'select_prev', 'fallback' },
+          ['<Down>'] = { 'select_next', 'fallback' },
+          ['<C-Space>'] = { complete_manually },
+          ['<Nul>'] = { complete_manually },
+          ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+          ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+          ['<Esc>'] = {
+            function(cmp)
+              local keep_insert = vim.snippet.active() and cmp.is_menu_visible()
+              cmp.cancel()
+              return keep_insert
+            end,
+            'fallback',
+          },
+        },
+        completion = {
+          menu = { draw = { columns = { { 'label', 'label_description', gap = 1 }, { 'kind' } } } },
+          trigger = {
+            prefetch_on_insert = false,
+            show_on_insert = false,
+            show_on_insert_on_trigger_character = false,
+            show_on_backspace_after_insert_enter = false,
+            show_on_accept_on_trigger_character = false,
+          },
+          list = { selection = { preselect = false, auto_insert = false } },
+          accept = { auto_brackets = { enabled = false } },
+          documentation = { auto_show = true },
+        },
+        sources = {
+          default = sources,
+          providers = {
+            haskell_snippets = {
+              name = 'Haskell snippets',
+              module = 'config.haskell_snippets',
+              enabled = function() return vim.bo.filetype == 'haskell' end,
+              score_offset = 3,
+            },
+            lsp = { async = true, fallbacks = {} },
+          },
+        },
+        fuzzy = { implementation = 'lua' },
+        snippets = { preset = 'default' },
+        signature = { enabled = true },
+        cmdline = { enabled = false },
+        term = { enabled = false },
+      })
+    end,
+  })
 end
 
 return M

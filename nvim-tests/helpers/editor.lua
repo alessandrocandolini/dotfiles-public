@@ -20,11 +20,11 @@ function M.start()
     vim.rpcrequest(job, 'nvim_input', keys)
   end
   function editor.wait(code)
-    local ok = vim.wait(2000, function() return editor.exec(code) end, 10)
+    local ok = vim.wait(2000, function() return editor.exec(code) == true end, 10)
     if not ok then
       error('timed out: ' .. code .. '\n' .. vim.inspect(editor.exec([[
         return { lines = vim.api.nvim_buf_get_lines(0, 0, -1, false),
-          mode = vim.api.nvim_get_mode(), completion = vim.fn.complete_info(), error = vim.v.errmsg }
+          mode = vim.api.nvim_get_mode(), completion = require('helpers.completion').info(), error = vim.v.errmsg }
       ]])) .. '\n' .. table.concat(stderr, '\n'))
     end
   end

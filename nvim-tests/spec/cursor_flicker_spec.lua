@@ -78,8 +78,9 @@ describe('automatic completion cursor redraw', function()
     if e then e.close(); e = nil end
   end)
 
-  it('keeps the cursor on the editing row at every flush of a 60x8 screen', function()
+  local function keeps_cursor(showmode)
     e = editor.start()
+    if showmode then e.exec('vim.o.showmode = true') end
     screen = observe_cursor(e)
     e.exec([[
       completion_calls = 0
@@ -88,10 +89,27 @@ describe('automatic completion cursor redraw', function()
         completion_calls = completion_calls + 1
         return {}
       end
-      vim.bo.completefunc = 'v:lua.cursor_completion_probe'
     ]])
     e.keys('i')
     e.wait('return vim.api.nvim_get_mode().mode == "i"')
+    e.exec([[
+      if package.loaded['blink.cmp'] then
+        package.preload.cursor_probe = function()
+          return { new = function()
+            return { get_completions = function(_, _, callback)
+              completion_calls = completion_calls + 1
+              callback({ is_incomplete_forward = true, is_incomplete_backward = true, items = {} })
+            end }
+          end }
+        end
+        require('blink.cmp.config').set({ sources = {
+          default = { 'cursor_probe' },
+          providers = { cursor_probe = { module = 'cursor_probe' } },
+        } })
+      else
+        vim.bo.completefunc = 'v:lua.cursor_completion_probe'
+      end
+    ]])
     screen.sync()
     screen.frames = {}
 
@@ -112,5 +130,13 @@ describe('automatic completion cursor redraw', function()
       end
     end
     assert.same({}, misplaced, 'the UI cursor jumped away from the editing row')
+  end
+
+  it('keeps the cursor on the editing row at every flush of a 60x8 screen', function()
+    keeps_cursor(false)
+  end)
+
+  it('keeps the cursor on the editing row with the mode label visible', function()
+    keeps_cursor(true)
   end)
 end)
