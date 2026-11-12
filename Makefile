@@ -1,4 +1,4 @@
-TASKS=bash stow alacritty gitconfig nvim nix starship tmux stack cabal agda rg cargo codex gh
+TASKS=bash stow alacritty gitconfig nvim nix starship tmux stack cabal agda rg cargo codex gh ghorg
 VERBOSITY=1
 FLAGS=--restow --no-folding --verbose $(VERBOSITY) --target ~
 NIX_UPDATE_INPUTS=nixpkgs nixpkgs-fast darwin home-manager neovim-nightly-overlay rust-overlay llm-agents
