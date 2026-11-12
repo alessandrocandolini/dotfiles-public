@@ -7,6 +7,8 @@
 }:
 
 let
+  jdkWithCertificates = pkgs.mkJdkWithCertificates or (jdk: jdk);
+  jdk25 = jdkWithCertificates pkgs.jdk25;
 
   dockerStuff = with pkgs; [
     docker_29
@@ -16,11 +18,11 @@ let
     docker-credential-helpers
   ];
 
-  scalaStuff = with pkgs; [
+  scalaStuff = [
     jdk25
-    (pkgs.sbt.override { jre = pkgs.jdk25; })
-    (pkgs.coursier.override { jre = pkgs.jdk25; })
-    async-profiler
+    (pkgs.sbt.override { jre = jdk25; })
+    (pkgs.coursier.override { jre = jdk25; })
+    pkgs.async-profiler
   ];
 
   haskellStuff = with pkgs; [
@@ -162,7 +164,7 @@ in
   home.file.".git-completion.bash".source =
     "${config.programs.git.package}/share/bash-completion/completions/git";
   home.sessionVariables = {
-    JAVA_HOME = "${pkgs.jdk25}/";
+    JAVA_HOME = "${jdk25}/";
     PKG_CONFIG_PATH = "${
       lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.zlib ]
     }:$PKG_CONFIG_PATH";

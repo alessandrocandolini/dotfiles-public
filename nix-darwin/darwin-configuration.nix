@@ -51,18 +51,14 @@ in
     home = "/Users/${username}";
   };
 
-  environment.interactiveShellInit = lib.optionalString enableJavaTruststore ''
-    case " ''${JAVA_TOOL_OPTIONS-} " in
-      *" -Djavax.net.ssl.trustStore=${javaTruststore} "*) ;;
-      *)
-        export JAVA_TOOL_OPTIONS="''${JAVA_TOOL_OPTIONS:+$JAVA_TOOL_OPTIONS }-Djavax.net.ssl.trustStore=${javaTruststore}"
-        ;;
-    esac
-  '';
+  nixpkgs.overlays = lib.optional enableJavaTruststore (
+    import ./java-certificate-overlay.nix { inherit certificatePath; }
+  );
 
   system.build = lib.optionalAttrs enableJavaTruststore {
     inherit javaTruststore;
     javaTruststoreTests = import ./tests/java-truststore.nix { inherit pkgs; };
+    jdkWithCertificatesTests = import ./tests/jdk-with-certificates.nix { inherit pkgs; };
   };
 
   system.stateVersion = 6;
