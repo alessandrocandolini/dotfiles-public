@@ -37,7 +37,11 @@ function M.setup()
           ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
           ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
           ['<Esc>'] = {
-            function(cmp) cmp.cancel() end,
+            function(cmp)
+              local keep_insert = vim.snippet.active() and cmp.is_menu_visible()
+              cmp.cancel()
+              return keep_insert
+            end,
             'fallback',
           },
         },
