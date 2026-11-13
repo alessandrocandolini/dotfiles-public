@@ -25,3 +25,6 @@ build:
 
 ghc-options:
   "$everything": -haddock
+
+system-ghc: true
+install-ghc: false
