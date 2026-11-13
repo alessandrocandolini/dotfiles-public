@@ -60,7 +60,8 @@ alias rm='/bin/rm -i -v'
 alias cp='/bin/cp -i -v'
 alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
-alias ls='/bin/ls -GFh'
+# alias ls='/bin/ls -GFh'
+alias ls='eza -F'
 
 # https://github.com/openai/codex/issues/14601
 alias codex='codex --profile local'
