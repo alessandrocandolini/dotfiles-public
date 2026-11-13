@@ -2,7 +2,8 @@
 size = 15.0
 
 [font.normal]
-family = "Menlo"
+family = "MesloLGS Nerd Font"
+style = "Regular"
 
 [scrolling]
 history = 10000
