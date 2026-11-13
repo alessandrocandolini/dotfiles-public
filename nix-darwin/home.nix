@@ -7,25 +7,54 @@
 }:
 
 let
+  cli = with pkgs; [
+    jq
+    fzf
+    ripgrep
+    fd
+    git
+    delta
+    awscli2
+    unzip
+    pigz # multicore gz
+    curl
+    starship
+    coreutils
+    zlib
+    pkg-config
+    universal-ctags
+    # aerc
+    opentofu
+    tflint
+    proximity-sort
+    tree
+    nerd-fonts.meslo-lg
+    eza
+    docker_29
+    docker-compose
+  ];
+
+  fastMovingCli = with inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
+    colima
+    mactop
+    gh
+    ghorg
+    tmux
+  ];
+
+  nvim = [ inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+
   jdkWithCertificates = pkgs.mkJdkWithCertificates or (jdk: jdk);
   jdk25 = jdkWithCertificates pkgs.jdk25;
 
-  dockerStuff = with pkgs; [
-    docker_29
-    docker-compose
-    aws-iam-authenticator
-    amazon-ecr-credential-helper
-    docker-credential-helpers
-  ];
-
-  scalaStuff = [
+  scala = [
     jdk25
     (pkgs.sbt.override { jre = jdk25; })
     (pkgs.coursier.override { jre = jdk25; })
     pkgs.async-profiler
   ];
 
-  haskellStuff = with pkgs; [
+  haskell = with pkgs; [
     haskellPackages.fast-tags
     (haskellPackages.hoogleWithPackages (p: [
       p.adjunctions
@@ -58,34 +87,7 @@ let
     ]))
   ];
 
-  nvimNightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
-
-  cliStuff = with pkgs; [
-    jq
-    fzf
-    ripgrep
-    fd
-    git
-    delta
-    awscli2
-    unzip
-    pigz # multicore gz
-    curl
-    starship
-    coreutils
-    zlib
-    pkg-config
-    universal-ctags
-    # aerc
-    opentofu
-    tflint
-    proximity-sort
-    tree
-    nerd-fonts.meslo-lg
-    eza
-  ];
-
-  lspStuff = with pkgs; [
+  lsp = with pkgs; [
     bash-language-server
     shellcheck
     nil
@@ -108,7 +110,7 @@ let
       "llvm-tools-preview"
     ];
   };
-  rustStuff = [
+  rust = [
     rustToolchain
     pkgs.cargo-generate
     pkgs.cargo-expand
@@ -125,35 +127,16 @@ let
     ];
   };
 
-  llmStuff = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+  llm = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
     ccusage
     agentop
   ];
 
-  fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-
-  fastMovingStuff = with fastPkgs; [
-    colima
-    mactop
-    gh
-    ghorg
-    tmux
-  ];
 in
 {
   home.stateVersion = "25.05";
 
-  home.packages = [
-    nvimNightly
-  ]
-  ++ dockerStuff
-  ++ scalaStuff
-  ++ haskellStuff
-  ++ cliStuff
-  ++ fastMovingStuff
-  ++ lspStuff
-  ++ rustStuff
-  ++ llmStuff;
+  home.packages = cli ++ fastMovingCli ++ nvim ++ scala ++ haskell ++ lsp ++ rust ++ llm;
 
   programs.bash.enable = false;
   programs.starship.enable = true;

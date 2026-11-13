@@ -6,5 +6,10 @@
     kubectl
     k9s
     spacectl
+    argo-rollouts
+    kubectx
+    aws-iam-authenticator
+    amazon-ecr-credential-helper
+    docker-credential-helpers
   ];
 }
