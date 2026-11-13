@@ -75,8 +75,6 @@ let
     coreutils
     zlib
     pkg-config
-    btop
-    macmon
     universal-ctags
     # aerc
     opentofu
@@ -84,6 +82,7 @@ let
     proximity-sort
     tree
     nerd-fonts.meslo-lg
+    eza
   ];
 
   lspStuff = with pkgs; [
@@ -132,13 +131,10 @@ let
   ];
 
   fastPkgs = inputs.nixpkgs-fast.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  # Upstream mactop 2.0.5 currently fails tests in the Nix sandbox by writing under $HOME.
-  mactopNoTests = fastPkgs.mactop.overrideAttrs (_: {
-    doCheck = false;
-  });
+
   fastMovingStuff = with fastPkgs; [
     colima
-    mactopNoTests
+    mactop
     gh
     ghorg
     tmux
