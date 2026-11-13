@@ -60,8 +60,9 @@ alias rm='/bin/rm -i -v'
 alias cp='/bin/cp -i -v'
 alias mv='/bin/mv -i -v'
 alias mkdir='/bin/mkdir -v'
+# export LSCOLORS='Exfxcxdxbxegedabagacadah'
 # alias ls='/bin/ls -GFh'
-alias ls='eza -F'
+alias ls='eza --classify=always'
 
 # https://github.com/openai/codex/issues/14601
 alias codex='codex --profile local'
