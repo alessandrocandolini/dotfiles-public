@@ -78,18 +78,21 @@ describe('automatic completion cursor redraw', function()
     if e then e.close(); e = nil end
   end)
 
-  it('keeps the cursor on the editing row at every flush of a 60x8 screen', function()
+  local function keeps_cursor(showmode)
     e = editor.start()
-    screen = observe_cursor(e)
+    if showmode then e.exec('vim.o.showmode = true') end
     e.exec([[
       completion_calls = 0
-      function _G.cursor_completion_probe(findstart)
-        if findstart == 1 then return 0 end
-        completion_calls = completion_calls + 1
-        return {}
-      end
-      vim.bo.completefunc = 'v:lua.cursor_completion_probe'
+      local server = require('helpers.lsp').server({ completionProvider = {}, textDocumentSync = 1 }, {
+        ['textDocument/completion'] = function(_, reply)
+          completion_calls = completion_calls + 1
+          reply({ isIncomplete = true, items = {} })
+        end,
+      })
+      client_id = vim.lsp.start({ name = 'cursor-completion-probe', cmd = server.cmd })
     ]])
+    e.wait('return vim.lsp.get_client_by_id(client_id).initialized')
+    screen = observe_cursor(e)
     e.keys('i')
     e.wait('return vim.api.nvim_get_mode().mode == "i"')
     screen.sync()
@@ -112,5 +115,15 @@ describe('automatic completion cursor redraw', function()
       end
     end
     assert.same({}, misplaced, 'the UI cursor jumped away from the editing row')
+  end
+
+  it('keeps the cursor on the editing row at every flush of a 60x8 screen', function()
+    keeps_cursor(false)
   end)
+
+  if vim.env.NVIM_COMPLETION_DIAGNOSTICS == '1' then
+    it('keeps the cursor on the editing row with the mode label visible', function()
+      keeps_cursor(true)
+    end)
+  end
 end)

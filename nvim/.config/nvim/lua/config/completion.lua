@@ -39,8 +39,6 @@ function M.setup()
   vim.opt.complete = { "F", "o" } -- local snippets, then LSP omnifunc
   vim.opt.autocomplete = true
   vim.opt.autocompletedelay = 60
-  -- TODO: deprecate g:completion_esc_discards once accepting with Enter is muscle memory
-  vim.g.completion_esc_discards = true
 
   local group = vim.api.nvim_create_augroup("LocalSnippets", { clear = true })
   vim.api.nvim_create_autocmd("CompleteDone", {
@@ -78,9 +76,11 @@ function M.setup()
     return restart .. "<Cmd>lua require('config.completion').manual = true<CR><C-n>"
   end
   vim.keymap.set("i", "<Esc>", function()
-    if vim.fn.pumvisible() == 1 and vim.g.completion_esc_discards then return "<C-e><Esc>" end
+    if vim.fn.pumvisible() == 1 then
+      return vim.snippet.active() and "<C-e>" or "<C-e><Esc>"
+    end
     return "<Esc>"
-  end, { expr = true, desc = "Leave insert mode, discarding the highlighted completion unless g:completion_esc_discards is false" })
+  end, { expr = true, desc = "Dismiss completion inside snippets, otherwise leave insert mode" })
   vim.keymap.set("i", "<C-Space>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
   vim.keymap.set("i", "<Nul>", complete_manually, { expr = true, desc = "Complete snippets and LSP, or next item" })
   vim.keymap.set("i", "<Tab>", function()
