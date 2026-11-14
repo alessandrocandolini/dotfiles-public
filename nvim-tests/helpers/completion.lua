@@ -9,7 +9,8 @@ function M.info()
   local selected = view:get_selected_entry()
   local info = { selected = -1, items = {} }
   for index, entry in ipairs(view:get_entries()) do
-    info.items[index] = { word = entry:get_completion_item().label }
+    local item = entry:get_completion_item()
+    info.items[index] = { word = item.label, text_edit = item.textEdit }
     if entry == selected then info.selected = index - 1 end
   end
   return info

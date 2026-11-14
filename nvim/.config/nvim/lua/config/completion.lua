@@ -1,10 +1,14 @@
 local M = {}
 
 local function config(cmp)
+  local function select(direction)
+    local move = direction == 1 and cmp.select_next_item or cmp.select_prev_item
+    return move({ behavior = cmp.SelectBehavior.Select })
+  end
+
   local function jump(direction, fallback)
     if cmp.visible() then
-      local select = direction == 1 and cmp.select_next_item or cmp.select_prev_item
-      select({ behavior = cmp.SelectBehavior.Select })
+      select(direction)
     elseif vim.snippet.active({ direction = direction }) then
       vim.snippet.jump(direction)
     else
@@ -16,9 +20,12 @@ local function config(cmp)
     -- Keep Enter as a newline until a completion is explicitly selected.
     preselect = cmp.PreselectMode.None,
     snippet = { expand = function(args) vim.snippet.expand(args.body) end },
+    window = { completion = { border = 'none' } },
     mapping = cmp.mapping.preset.insert({
       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-n>'] = cmp.mapping(function() if not select(1) then cmp.complete() end end),
+      ['<C-p>'] = cmp.mapping(function() if not select(-1) then cmp.complete() end end),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<Nul>'] = cmp.mapping.complete(),
       ['<CR>'] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }),
@@ -26,10 +33,8 @@ local function config(cmp)
       ['<S-Tab>'] = cmp.mapping(function(fallback) jump(-1, fallback) end, { 'i', 's' }),
       ['<Esc>'] = cmp.mapping(function(fallback)
         local keep_insert = cmp.visible() and vim.snippet.active()
-        cmp.abort()
-        if not keep_insert then
-          require('cmp.utils.feedkeys').call('', 'n', fallback)
-        end
+        cmp.close()
+        if not keep_insert then fallback() end
       end),
     }),
     sources = {

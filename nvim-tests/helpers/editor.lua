@@ -16,6 +16,9 @@ function M.start()
   function editor.exec(code, ...)
     return vim.rpcrequest(job, 'nvim_exec_lua', code, { ... })
   end
+  function editor.resize(width, height)
+    vim.rpcrequest(job, 'nvim_ui_try_resize', width, height)
+  end
   function editor.keys(keys)
     while keys ~= '' do
       local key = keys:match('^<[^>]+>') or vim.fn.strcharpart(keys, 0, 1)
