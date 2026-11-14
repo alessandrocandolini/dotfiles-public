@@ -12,6 +12,7 @@ return {
     ltex = {
       enabled = { "latex", "markdown" },
       language = "en-GB",
+      checkFrequency = "save",
       -- Ignored breqn equations leave whitespace before their trailing comma,
       -- causing false positives spanning the whole equation. This also disables
       -- genuine comma-spacing warnings; grammar and spelling rules stay active.
