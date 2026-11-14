@@ -5,6 +5,8 @@ local function gh(repo, optional)
 end
 
 M.specs = {
+  gh("hrsh7th/nvim-cmp"),
+  gh("hrsh7th/cmp-nvim-lsp"),
   gh("wtfox/jellybeans.nvim"),
   gh("ibhagwan/fzf-lua"),
   gh("nvim-lua/plenary.nvim"),

@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "cmp-nvim-lsp": {
+      "rev": "cd4ee08a988deb47ac3726f418fb27fe1a95729d",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
+    },
     "cornelis": {
       "rev": "cddeac119a2fb3ecb093a28e35426b014c0963dd",
       "src": "https://github.com/agda/cornelis"
@@ -23,6 +27,10 @@
     "nvim-autopairs": {
       "rev": "3172f40c16563db871a58f20d205c710ad782311",
       "src": "https://github.com/windwp/nvim-autopairs"
+    },
+    "nvim-cmp": {
+      "rev": "fe29aba4117227a6df637bc41e4b4fb4e98864a0",
+      "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-hs.vim": {
       "rev": "d4a6b7278ae6a1fdc64e300c3ebc1e24719af342",

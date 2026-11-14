@@ -52,11 +52,24 @@ local function snippets()
   return items
 end
 
-function M.setup()
-  vim.bo.completefunc = function(findstart, base)
-    return require("config.completion").complete_snippets(findstart, base, snippets)
+function M:is_available()
+  return vim.bo.filetype == 'haskell'
+end
+
+function M:complete(_, callback)
+  local items = {}
+  for index, snippet in ipairs(snippets()) do
+    items[#items + 1] = {
+      label = snippet.trigger,
+      kind = vim.lsp.protocol.CompletionItemKind.Snippet,
+      insertText = snippet.body,
+      insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
+      labelDetails = { description = snippet.description },
+      documentation = { kind = 'markdown', value = snippet.body },
+      sortText = string.format('%03d', index),
+    }
   end
-  vim.b.undo_ftplugin = (vim.b.undo_ftplugin or "") .. " | setlocal completefunc<"
+  callback({ items = items, isIncomplete = false })
 end
 
 return M
