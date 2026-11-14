@@ -101,7 +101,7 @@ let
 
   rustPkgs = pkgs.extend inputs.rust-overlay.overlays.default;
 
-  rustToolchain = rustPkgs.rust-bin.stable."1.93.0".default.override {
+  rustToolchain = rustPkgs.rust-bin.stable."1.100.0".default.override {
     extensions = [
       "rust-analyzer"
       "rust-src"
