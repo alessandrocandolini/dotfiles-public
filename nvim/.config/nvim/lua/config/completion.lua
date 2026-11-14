@@ -27,7 +27,9 @@ local function config(cmp)
       ['<Esc>'] = cmp.mapping(function(fallback)
         local keep_insert = cmp.visible() and vim.snippet.active()
         cmp.abort()
-        if not keep_insert then fallback() end
+        if not keep_insert then
+          require('cmp.utils.feedkeys').call('', 'n', fallback)
+        end
       end),
     }),
     sources = {

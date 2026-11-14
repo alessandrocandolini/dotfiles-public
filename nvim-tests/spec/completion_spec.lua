@@ -155,8 +155,8 @@ describe('completion and snippets', function()
     assert.equals('  pr `shouldBe` replacement', e.exec('return vim.fn.getline(2)'))
   end)
 
-  for _, selected in ipairs({ false, true }) do
-    it('keeps snippet jumps after Esc dismisses an ' .. (selected and 'explicitly selected' or 'unselected') .. ' completion', function()
+  for _, selection in ipairs({ '', '<Tab>', '<C-n>', '<C-p>' }) do
+    it('keeps snippet jumps after Esc dismisses completion selected with ' .. (selection == '' and 'no key' or selection), function()
       e.keys('iit')
       menu()
       e.keys('<Tab><CR>')
@@ -165,9 +165,12 @@ describe('completion and snippets', function()
       e.wait('return vim.api.nvim_win_get_cursor(0)[1] == 2')
       e.keys('pr')
       assert.same({ 'prop' }, menu())
-      if selected then
-        e.keys('<Tab>')
+      if selection ~= '' then
+        e.keys(selection)
         e.wait('return completion.info().selected == 0')
+      end
+      if selection == '<C-n>' or selection == '<C-p>' then
+        e.wait([[return vim.fn.getline(2) == '  prop `shouldBe` expected']])
       end
       e.keys('<Esc>')
       e.wait([[return completion.visible() == 0 and vim.api.nvim_get_mode().mode == 'i' and vim.snippet.active()]])
@@ -279,17 +282,27 @@ describe('completion and snippets', function()
     assert.is_false(e.exec('return vim.snippet.active()'))
   end)
 
-  it('discards a highlighted candidate on Esc and keeps the typed text', function()
-    e.keys('ipr')
-    assert.same({ 'prop' }, menu())
-    e.keys('<Tab>')
-    e.wait('return completion.info().selected == 0')
-    e.keys('<Esc>')
-    e.wait([[return vim.api.nvim_get_mode().mode == 'n']])
-    assert.equals('pr', e.exec('return vim.fn.getline(1)'))
-    assert.is_false(e.exec('return vim.snippet.active()'))
-    assert.equals(0, e.exec('return completion.visible()'))
-  end)
+  for _, selection in ipairs({ '', '<Tab>', '<C-n>', '<C-p>' }) do
+    it('restores typed text on Esc after completion selected with ' .. (selection == '' and 'no key' or selection), function()
+      e.exec([[vim.v.errmsg = ''; vim.fn.setreg('"', 'sentinel')]])
+      e.keys('ipr')
+      assert.same({ 'prop' }, menu())
+      if selection ~= '' then
+        e.keys(selection)
+        e.wait('return completion.info().selected == 0')
+      end
+      if selection == '<C-n>' or selection == '<C-p>' then
+        e.wait([[return vim.fn.getline(1) == 'prop']])
+      end
+      e.keys('<Esc>')
+      e.wait([[return vim.api.nvim_get_mode().mode == 'n' and completion.visible() == 0]])
+      assert.equals('pr', e.exec('return vim.fn.getline(1)'))
+      assert.same({ 1, 1 }, e.exec('return vim.api.nvim_win_get_cursor(0)'))
+      assert.is_false(e.exec('return vim.snippet.active()'))
+      assert.equals('', e.exec('return vim.v.errmsg'))
+      assert.equals('sentinel', e.exec([[return vim.fn.getreg('"')]]))
+    end)
+  end
 
   it('autocompletes module headers without LSP, including in a new unsaved source file', function()
     fs.write_file(root .. '/cabal.project', {})
@@ -568,11 +581,10 @@ describe('completion and snippets', function()
     assert.equals('it "description" $', e.exec('return vim.fn.getline(1)'))
   end)
 
-  it('navigates a settled manual menu with Tab and Shift-Tab without editing until Enter', function()
+  it('navigates a newly opened manual menu with Tab and Shift-Tab without editing until Enter', function()
     type_then_idle('ifoo ')
     e.keys('<C-Space>')
     assert.same({ 'it', 'prop', 'module' }, menu())
-    vim.wait(200)
     e.keys('<Tab>')
     e.wait('return completion.info().selected == 0')
     assert.equals('foo ', e.exec('return vim.fn.getline(1)'))
