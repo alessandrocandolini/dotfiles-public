@@ -4,10 +4,10 @@
 This repository contains the configuration for my laptop and the tools I use regularly. It includes:
 
 * nix-darwin configuration
-  - a legacy setup
+  - a legacy setup in `nix/.nixpkgs/`, retained for older installations
   - a newer setup based on *flakes* and *home-manager*
 * Neovim configuration
-* Dotfiles for tools such as Alacritty, Git, LLM tooling, etc
+* Dotfiles 
 
 Dotfiles and nvim configuration are managed using [stow](https://www.gnu.org/software/stow/). 
 This is a deliberate choice: I currently prefer not to manage them with Nix, though they live in this repository in case I decide to migrate them later.
@@ -74,6 +74,10 @@ Normal startup loads prepared plugins. See [requirements and usage](vimrc.md#man
 
 ## Update the flake-based nix-darwin setup
 
+The flake-based setup lives in `nix-darwin/`. Its host definitions in
+[`flake.nix`](nix-darwin/flake.nix) specify machine-specific usernames; adjust
+these before using the configuration on another machine.
+
 From the repository root, update the lockfiles and rebuild:
 
 ```bash
@@ -88,9 +92,6 @@ package, before activating the system; a separate `nix build` is optional.
 Use `--option accept-flake-config true` with `darwin-rebuild` to accept the
 flake's binary-cache settings. The shorthand `--accept-flake-config` works with
 `nix build`, but this version of `darwin-rebuild` rejects it as an unknown option.
-
-See the [nix-darwin guide](nix-darwin/nix-darwin.md) for the temporary Codex fix
-and instructions for returning to upstream.
 
 ## Keep Makefile up to date
 

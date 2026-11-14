@@ -4,7 +4,7 @@
 
 - This repository contains personal laptop and developer-environment configuration, including macOS/Nix setup, Neovim, and shell/tool dotfiles.
 - Dotfiles are managed with GNU `stow`. Treat that as the default model unless a directory clearly uses a different mechanism.
-- The main user-facing entrypoints are `make all`, individual `make <target>` stow targets, and `make nvim-test`.
+- The main user-facing entrypoints are `make all`, individual `make <target>` stow targets, `make nvim-update`, `make nvim-sync`, `make nvim-test`, and `make nix-update`.
 
 ## Stow conventions
 
@@ -15,6 +15,7 @@
 
 ## Nix layout
 
+- Keep user-facing nix-darwin setup and update instructions in the root `README.md`; update that guide instead of creating a duplicate guide under `nix-darwin/`.
 - There are two macOS Nix setups and both matter:
   - `nix-darwin/`: the newer flake-based setup with `flake.lock`
   - `nix/.nixpkgs/darwin-configuration.nix`: the legacy setup used on older multi-user Nix installations
@@ -33,6 +34,7 @@
   - `neovim-nightly-overlay`
   - `rust-overlay`
   - `llm-agents`
+  - `agentop`
 - Common task mapping: if the user says "port the flake update", "sync the legacy config", "update legacy pins", or similar, do only a `pinnedSources` revision sync. The expected diff for that task must only change `rev = "...";` lines.
 - Any change outside `pinnedSources` for a legacy pin-sync task requires explicit user approval first.
 - For `llm-agents` pin updates intended to update Codex, do not rely on commit dates, PR titles, or "latest main" alone. Before recommending or running a rebuild, verify the pinned source's packaged Codex version directly, for example by reading `packages/codex/hashes.json` from the candidate `llm-agents.nix` revision and confirming `version` is the expected Codex version.
@@ -43,16 +45,20 @@
 
 - The real config lives in `nvim/.config/nvim`.
 - Plugin versions are locked in `nvim/.config/nvim/nvim-pack-lock.json`. Treat lockfile changes as intentional.
-- The Scala Metals LSP server is installed by Nix: `fast.metals` in `nix-darwin/home.nix`, running on `jdk25`. `nvim/.config/nvim/lua/config/metals.lua` sets `cfg.settings.useGlobalExecutable = true`, so nvim-metals uses the `metals` on PATH and never downloads its own. To update Metals, update the `nixpkgs-fast` input in `nix-darwin/flake.lock` and run `darwin-rebuild switch`; do not use `:MetalsUpdate`.
+- `make nvim-update` resolves plugin revisions into the lockfile in isolation; `make nvim-sync` applies locked revisions and build hooks. Startup only validates and loads prepared plugins; it does not install or update them. The CLI entrypoint is `scripts/nvim-pack.lua`, backed by `lua/config/vimpack.lua`.
+- On the flake-based hosts, the Scala Metals LSP server is installed by Nix: `fast.metals` in `nix-darwin/home.nix`, running on `jdk25`. `nvim/.config/nvim/lua/config/metals.lua` sets `cfg.settings.useGlobalExecutable = true`, so nvim-metals uses the `metals` on PATH and never downloads its own. To update Metals, update the `nixpkgs-fast` input in `nix-darwin/flake.lock` and run `darwin-rebuild switch`; do not use `:MetalsUpdate`.
+- The legacy Nix setup still provides Coursier rather than a Metals package. Because the shared Neovim config uses `useGlobalExecutable`, those machines need a `metals` executable on PATH too; do not assume the flake Scala package migration has been ported.
 - Neovim tests live in `nvim-tests/` and are part of the normal maintenance path for this repo.
 - `make nvim-test` is the canonical test command. It enters `./nvim-tests#default` and then runs the internal test suite.
-- The test shell sets isolated `HOME` and `XDG_*` directories. Tests are expected to load the real repo config from `nvim/.config/nvim` while keeping plugin installs and runtime state outside the repo.
+- The test shell isolates `HOME`, `XDG_DATA_HOME`, `XDG_STATE_HOME`, and `XDG_CACHE_HOME`. `XDG_CONFIG_HOME` deliberately points to the repo’s `nvim/.config`, so tests load the real config while keeping plugin installs and runtime state outside the repo.
+- The full test command runs package-management tests using temporary Git repositories and then syncs plugins. It performs Git writes even though the test environment is isolated; account for any active restrictions on Git operations.
+- Editor tests exclude Cornelis. The test shell supplies its own external tools, including Metals and Scalafmt; packages in `nix-darwin/home.nix` are not automatically available in CI.
 - If you change Neovim startup, plugin bootstrapping, or test harness paths, keep `nvim-tests/init_test.lua` and `nvim-tests/flake.nix` in sync.
 
 ## CI
 
 - Neovim CI is defined in `.github/workflows/nvim-tests.yml`.
-- Changes under `nvim/**`, `nvim-tests/**`, the Neovim workflow, or `Makefile` should be assumed to affect CI.
+- Changes under `nvim/**`, `nvim-tests/**`, `scripts/nvim-pack.lua`, the Neovim workflow, or `Makefile` should be assumed to affect CI.
 
 ## Codex-specific notes
 

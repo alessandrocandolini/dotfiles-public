@@ -5,7 +5,6 @@ local function config(cmp)
     local move = direction == 1 and cmp.select_next_item or cmp.select_prev_item
     return move({ behavior = cmp.SelectBehavior.Select })
   end
-
   local function jump(direction, fallback)
     if cmp.visible() then
       select(direction)
@@ -45,6 +44,7 @@ local function config(cmp)
 end
 
 function M.setup()
+
   local cmp = require('cmp')
   vim.lsp.config('*', { capabilities = require('cmp_nvim_lsp').default_capabilities({
     preselectSupport = false,
@@ -54,10 +54,13 @@ function M.setup()
 
   cmp.setup(config(cmp))
 
+  -- use private _on_insert_enter to register the completion engine on LspAttach.
+  -- if the API gets removed, we can always remove this callback and just wait the LSP load before going in insert mode
   vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('CompletionSources', { clear = true }),
     callback = require('cmp_nvim_lsp')._on_insert_enter,
   })
+
 end
 
 return M
