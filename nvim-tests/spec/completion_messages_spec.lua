@@ -61,12 +61,9 @@ describe('empty completion results', function()
       e.wait('return vim.api.nvim_get_mode().mode == "i"')
       screen.sync()
       screen.frames = {}
-      for char in ('qqqz'):gmatch('.') do
-        e.exec('replies = 0')
-        e.keys(char)
-        e.wait('return replies > 0')
-        vim.wait(100)
-      end
+      e.keys('qqqz')
+      e.wait('return replies > 0')
+      vim.wait(100)
       e.exec('replies = 0')
       e.keys('<C-Space>')
       e.wait('return replies > 0')

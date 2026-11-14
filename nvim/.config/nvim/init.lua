@@ -70,6 +70,7 @@ vim.opt.belloff = "all"
 vim.opt.visualbell = false
 
 -- Responsiveness
+vim.opt.autocomplete = false
 vim.opt.updatetime = 300
 vim.opt.scrolloff = 3
 vim.opt.sidescrolloff = 5
@@ -150,7 +151,7 @@ require("config.git_blame").setup()
 require("config.git_line_history").setup()
 
 -- other plugins
-require("nvim-autopairs").setup({ map_cr = false }) -- completion owns Enter
+require("nvim-autopairs").setup({})
 require("oil").setup({
   view_options = {
     show_hidden = true

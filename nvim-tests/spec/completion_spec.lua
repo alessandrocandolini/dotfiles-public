@@ -13,8 +13,9 @@ describe('completion and snippets', function()
     return e.exec([[return vim.tbl_map(function(item) return item.word end, completion.info().items)]])
   end
 
-  local function start_server()
+  local function start_server(documentation)
     e.exec([[
+      local documentation = ...
       pending = {}
       server = require('helpers.lsp').server({
         textDocumentSync = 1,
@@ -25,6 +26,7 @@ describe('completion and snippets', function()
             reply({ isIncomplete = false, items = {
               {
                 label = 'iterate', kind = 3, insertTextFormat = 2, data = true,
+                documentation = documentation,
                 textEdit = {
                   range = { start = { line = params.position.line, character = 0 }, ['end'] = params.position },
                   newText = 'iterate($' .. '{1:value})$0',
@@ -42,7 +44,7 @@ describe('completion and snippets', function()
         end,
       })
       client_id = vim.lsp.start({ name = 'completion-fixture', cmd = server.cmd })
-    ]])
+    ]], documentation)
     e.wait('return vim.lsp.get_client_by_id(client_id).initialized')
   end
 
@@ -263,7 +265,7 @@ describe('completion and snippets', function()
     vim.wait(400)
     assert.equals(0, e.exec('return #pending'))
     assert.equals(0, e.exec('return completion.visible()'))
-    type_then_idle('2')
+    type_then_idle('23')
     e.wait('return #pending > 0')
   end)
 
@@ -447,7 +449,7 @@ describe('completion and snippets', function()
     type_then_idle('A')
     assert.equals(0, e.exec('return #pending'))
     assert.equals(0, e.exec('return completion.visible()'))
-    e.keys('m')
+    e.keys('ma')
     e.wait('return #pending > 0')
   end)
 
@@ -503,10 +505,10 @@ describe('completion and snippets', function()
     assert.equals(0, e.exec('return completion.visible()'))
   end)
 
-  it('preserves Neovim digraph, signature and non-completion control keys', function()
+  it('preserves Neovim digraph and signature keys', function()
     local query = [[
       local maps = {}
-      for _, key in ipairs({ '<C-k>', '<C-s>', '<C-b>', '<C-f>' }) do
+      for _, key in ipairs({ '<C-k>', '<C-s>' }) do
         local map = vim.fn.maparg(key, 'i', false, true)
         maps[key] = { rhs = map.rhs, expr = map.expr, desc = map.desc, callback = tostring(map.callback) }
       end
@@ -528,5 +530,84 @@ describe('completion and snippets', function()
     e.keys('ihello<C-Space>')
     e.wait([[return vim.fn.getline(1) == 'hello']])
     assert.equals('', e.exec('return vim.v.errmsg'))
+  end)
+
+  it('ignores a delayed LSP reply after switching to a different buffer', function()
+    start_server()
+    e.keys('iit')
+    assert.same({ 'it' }, menu())
+    e.wait('return #pending > 0')
+    e.keys('<Esc>')
+    e.wait([[return vim.api.nvim_get_mode().mode == 'n']])
+    e.exec('vim.bo.modified = false')
+    open('test/App/MainSpec.hs')
+    assert.equals(0, e.exec('return #vim.lsp.get_clients({ bufnr = 0 })'))
+    e.keys('iit')
+    assert.same({ 'it' }, menu())
+
+    deliver_replies()
+    vim.wait(200)
+    assert.same({ 'it' }, menu())
+  end)
+
+  it('preserves the selected local item when a delayed LSP reply arrives', function()
+    start_server()
+    e.keys('iit')
+    assert.same({ 'it' }, menu())
+    e.wait('return #pending > 0')
+    e.keys('<Tab>')
+    e.wait('return completion.info().selected == 0')
+    deliver_replies()
+    vim.wait(200)
+    assert.equals('it', e.exec([[
+      local info = completion.info()
+      return info.items[info.selected + 1] and info.items[info.selected + 1].word
+    ]]))
+    e.keys('<CR>')
+    e.wait('return vim.snippet.active()')
+    assert.equals('it "description" $', e.exec('return vim.fn.getline(1)'))
+  end)
+
+  it('navigates a settled manual menu with Tab and Shift-Tab without editing until Enter', function()
+    type_then_idle('ifoo ')
+    e.keys('<C-Space>')
+    assert.same({ 'it', 'prop', 'module' }, menu())
+    vim.wait(200)
+    e.keys('<Tab>')
+    e.wait('return completion.info().selected == 0')
+    assert.equals('foo ', e.exec('return vim.fn.getline(1)'))
+    e.keys('<Tab>')
+    e.wait('return completion.info().selected == 1')
+    assert.equals('foo ', e.exec('return vim.fn.getline(1)'))
+    e.keys('<S-Tab>')
+    e.wait('return completion.info().selected == 0')
+    e.keys('<CR>')
+    e.wait('return vim.snippet.active()')
+    assert.equals('foo it "description" $', e.exec('return vim.fn.getline(1)'))
+  end)
+
+  it('scrolls completion documentation with Ctrl-F and Ctrl-B without editing text', function()
+    local lines = {}
+    for index = 1, 100 do lines[index] = 'Documentation line ' .. index end
+    start_server({ kind = 'markdown', value = table.concat(lines, '\n') })
+    e.exec([[
+      function docs_window()
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == 'cmp_docs' then return win end
+        end
+      end
+    ]])
+    e.keys('iitera')
+    reply()
+    select_item('iterate')
+    e.wait('return docs_window() ~= nil')
+    local initial = e.exec('return vim.fn.getwininfo(docs_window())[1].topline')
+    e.keys('<C-f>')
+    e.wait('return vim.fn.getwininfo(docs_window())[1].topline > ' .. initial)
+    e.keys('<C-b>')
+    e.wait('return vim.fn.getwininfo(docs_window())[1].topline == ' .. initial)
+    assert.equals('itera', e.exec('return vim.fn.getline(1)'))
+    assert.equals(1, e.exec('return vim.api.nvim_buf_line_count(0)'))
+    assert.equals(0, e.exec('return completion.info().selected'))
   end)
 end)

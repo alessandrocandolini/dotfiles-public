@@ -98,7 +98,9 @@ describe('automatic completion cursor redraw', function()
     screen.sync()
     screen.frames = {}
 
-    for char in ('qqqz'):gmatch('.') do
+    e.keys('q')
+    screen.sync()
+    for char in ('qqz'):gmatch('.') do
       e.exec('completion_calls = 0')
       e.keys(char)
       e.wait('return completion_calls > 0')

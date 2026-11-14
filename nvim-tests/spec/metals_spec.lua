@@ -35,7 +35,8 @@ describe('metals attachment', function()
         initial_autocmds[autocmd.id] = true
       end
     end
-    metals.initialize_or_attach = function()
+    metals.initialize_or_attach = function(config)
+      assert.same(vim.lsp.config['*'].capabilities, config.capabilities)
       table.insert(calls, vim.api.nvim_get_current_buf())
     end
   end)

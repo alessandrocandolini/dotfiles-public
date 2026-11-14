@@ -17,7 +17,12 @@ function M.start()
     return vim.rpcrequest(job, 'nvim_exec_lua', code, { ... })
   end
   function editor.keys(keys)
-    vim.rpcrequest(job, 'nvim_input', keys)
+    while keys ~= '' do
+      local key = keys:match('^<[^>]+>') or vim.fn.strcharpart(keys, 0, 1)
+      keys = keys:sub(#key + 1)
+      vim.rpcrequest(job, 'nvim_input', key)
+      vim.wait(10)
+    end
   end
   function editor.wait(code)
     local ok = vim.wait(2000, function() return editor.exec(code) == true end, 10)
