@@ -104,6 +104,9 @@ function M.setup()
   if vim.fn.executable('rust-analyzer') == 1 then
     vim.lsp.enable('rust-analyzer')
   end
+  if vim.fn.executable('kotlin-lsp') == 1 then
+    vim.lsp.enable('kotlin_lsp')
+  end
   if vim.fn.executable('ltex-ls-plus') == 1 then
     vim.lsp.enable('ltex_plus')
   end
