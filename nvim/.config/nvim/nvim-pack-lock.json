@@ -48,6 +48,10 @@
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
+    "vim-gutentags": {
+      "rev": "aa47c5e29c37c52176c44e61c780032dfacef3dd",
+      "src": "https://github.com/ludovicchabant/vim-gutentags"
+    },
     "vim-nix": {
       "rev": "7235c7ce2cea530cb6b59bc3e46d4bfe917d15c8",
       "src": "https://github.com/LnL7/vim-nix"

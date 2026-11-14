@@ -141,6 +141,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
 })
 
 -- Load Lua setup
+require("config.tags").setup()
 require("config.vimpack").setup()
 require("config.diagnostics").setup()
 require("config.fzf").setup()
