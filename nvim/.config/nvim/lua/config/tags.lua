@@ -22,9 +22,10 @@ function M.setup()
   ]])
   vim.g.gutentags_init_user_func = 'GutentagsEnabled'
   vim.g.gutentags_modules = { 'ctags' }
+  vim.g.gutentags_ctags_tagfile = '.tags'
   vim.g.gutentags_project_root = { '.root' }
   vim.g.gutentags_resolve_symlinks = 1
-  vim.g.gutentags_file_list_command = 'rg --files --hidden -g !.git -g !tags'
+  vim.g.gutentags_file_list_command = 'rg --files --hidden -g !.git -g !/.tags'
 
   local languages = vim.fn.uniq(vim.fn.sort(vim.tbl_values(M.languages)))
   vim.g.gutentags_ctags_extra_args = {
