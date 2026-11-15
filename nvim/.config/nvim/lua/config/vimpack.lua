@@ -13,6 +13,7 @@ M.specs = {
   gh("axelf4/vim-strip-trailing-whitespace"),
   gh("windwp/nvim-autopairs"),
   gh("tpope/vim-projectionist"),
+  gh("ludovicchabant/vim-gutentags"),
   gh("j-hui/fidget.nvim"),
   gh("stevearc/oil.nvim"),
   gh("LnL7/vim-nix"),
