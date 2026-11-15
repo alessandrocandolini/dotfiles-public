@@ -34,6 +34,7 @@ let
     eza
     docker_29
     docker-compose
+    stow
   ];
 
   fastMovingCli = with fast; [
