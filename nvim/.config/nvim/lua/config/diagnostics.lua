@@ -16,6 +16,7 @@ function M.setup()
   end, { silent = true, desc = "Diagnostics: workspace errors + warnings (quickfix)" })
 
   vim.diagnostic.config({
+    severity_sort = true,
     virtual_text = false,
     jump = {
       on_jump = show_jump_diagnostic,
