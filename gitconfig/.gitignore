@@ -33,3 +33,4 @@ project/project/
 .ammonite/
 metals.sbt
 aws-rds*.pem*
+tags
