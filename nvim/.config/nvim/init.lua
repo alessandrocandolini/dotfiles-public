@@ -119,7 +119,6 @@ vim.keymap.set("n", "<leader>wl", function()
 end, { desc = "Toggle line wrap" })
 
 -- Persistent undo
-vim.opt.undodir = vim.fn.expand("~/.local/share/nvim/undo")
 vim.opt.undofile = true
 
 -- Highlight on yank for visual feedback
