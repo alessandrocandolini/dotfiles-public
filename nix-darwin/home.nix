@@ -41,7 +41,6 @@ let
     colima
     mactop
     gh
-    ghorg
     tmux
   ];
 
