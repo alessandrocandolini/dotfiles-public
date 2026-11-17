@@ -26,8 +26,6 @@ let
     pkg-config
     universal-ctags
     # aerc
-    opentofu
-    tflint
     proximity-sort
     tree
     nerd-fonts.meslo-lg
@@ -99,7 +97,6 @@ let
     shellcheck
     nil
     nixfmt
-    terraform-ls
     basedpyright
     ruff
     lua-language-server
