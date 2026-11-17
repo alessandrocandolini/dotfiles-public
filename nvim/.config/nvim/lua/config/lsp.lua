@@ -101,6 +101,9 @@ function M.setup()
   if vim.fn.executable('nil') == 1 then
     vim.lsp.enable('nil_ls')
   end
+  if vim.fn.executable('clangd') == 1 then
+    vim.lsp.enable('clangd')
+  end
   if vim.fn.executable('rust-analyzer') == 1 then
     vim.lsp.enable('rust-analyzer')
   end

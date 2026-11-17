@@ -2,6 +2,7 @@ local M = {}
 
 M.languages = {
   c = 'C',
+  cpp = 'C++',
   kotlin = 'Kotlin',
   python = 'Python',
   typescript = 'TypeScript',
@@ -9,8 +10,10 @@ M.languages = {
 }
 
 function M.enabled(path)
-  return M.languages[vim.bo.filetype] ~= nil and not vim.fs.root(path, function(name)
-    return name == 'cabal.project' or name == 'stack.yaml' or name:match('%.cabal$') ~= nil
+  return M.languages[vim.bo.filetype] ~= nil and not vim.fs.root(path, function(name, dir)
+    -- Only project files count; ~/.cabal is a directory, not a project marker.
+    return (name == 'cabal.project' or name == 'stack.yaml' or name:match('%.cabal$') ~= nil)
+      and vim.fn.filereadable(vim.fs.joinpath(dir, name)) == 1
   end)
 end
 
