@@ -117,6 +117,7 @@ let
     rustToolchain
     pkgs.cargo-generate
     pkgs.cargo-expand
+    pkgs.just
   ];
 
   agentop = rustPkgs.rustPlatform.buildRustPackage {
