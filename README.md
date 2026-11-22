@@ -67,7 +67,7 @@ stow --simulate --no-folding --verbose --target ~ <name of the folder>
 See the [Neovim quick guide](vimrc.md#quick-guide) for everyday commands, including spell checking.
 
 - `make nvim-update`: update the plugin lockfile in isolation; review and commit it (locally or in CI).
-- `make nvim-sync`: apply the locked revisions and build hooks after pulling; failures exit nonzero and can be retried.
+- `make nvim-sync`: apply the locked revisions and build hooks after pulling, then remove obsolete plugins (preserving those in `NVIM_PACK_EXCLUDE`); failures exit nonzero and can be retried.
 - `make nvim-test`: test the configuration in isolation.
 
 Normal startup loads prepared plugins. See [requirements and usage](vimrc.md#managing-plugin-versions).
