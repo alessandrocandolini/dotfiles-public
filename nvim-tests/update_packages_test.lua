@@ -3,6 +3,7 @@ local repo, root = vim.fn.getcwd(), vim.fn.tempname()
 local config, source = root .. '/config/nvim', root .. '/source'
 local lock_path = config .. '/nvim-pack-lock.json'
 local installed = root .. '/data/nvim/site/pack/core/opt/build-fixture'
+local obsolete = root .. '/data/nvim/site/pack/core/opt/obsolete-fixture'
 
 local function write(path, contents)
   vim.fn.mkdir(vim.fs.dirname(path), 'p')
@@ -42,6 +43,7 @@ local function invoke(mode, success)
   }):wait(30000)
   assert(result.code ~= 124 and (result.code == 0) == success,
     mode .. ': unexpected exit ' .. result.code .. '\n' .. result.stdout .. result.stderr)
+  return result.stdout .. result.stderr
 end
 
 local ok, err = xpcall(function()
@@ -67,7 +69,9 @@ return M
   invoke('sync', true)
   assert(git({ 'rev-parse', 'HEAD' }, installed) == old_rev)
   assert(read(lock_path) == original)
+  git({ 'clone', source, obsolete })
   invoke('update', true)
+  assert(vim.uv.fs_stat(obsolete), 'update removed an installed plugin')
   local updated = read(lock_path)
   assert(vim.json.decode(updated).plugins['build-fixture'].rev == new_rev)
   assert(git({ 'rev-parse', 'HEAD' }, installed) == old_rev)
@@ -76,17 +80,27 @@ return M
   invoke('sync', true)
   assert(git({ 'rev-parse', 'HEAD' }, installed) == new_rev)
   assert(read(lock_path) == updated)
-  print('PASS: update is isolated; sync applies locked revisions without rewriting the lockfile')
+  assert(not vim.uv.fs_stat(obsolete), 'sync left an obsolete plugin installed')
+  print('PASS: update is isolated; sync applies locked revisions and removes obsolete plugins without rewriting the lockfile')
 
+  git({ 'clone', source, obsolete })
   write(root .. '/fail', '')
   invoke('sync', false)
   invoke('sync', false)
   assert(read(lock_path) == updated)
   assert(not vim.uv.fs_stat(root .. '/state/nvim/nvim-pack-sync'))
+  assert(vim.uv.fs_stat(obsolete), 'failed build removed an obsolete plugin')
   vim.fn.delete(root .. '/fail')
   invoke('sync', true)
   assert(#vim.fn.readfile(root .. '/hooks') == 5, 'failed builds were not retried')
+  assert(not vim.uv.fs_stat(obsolete), 'successful retry left an obsolete plugin installed')
   print('PASS: failed builds fail sync and retry on unchanged checkouts')
+
+  local repeated = invoke('sync', true)
+  assert(not repeated:find('Repaired corrupted lock data', 1, true), 'sync repeated lock repair after cleanup')
+  assert(git({ 'rev-parse', 'HEAD' }, installed) == new_rev, 'cleanup removed a configured optional plugin')
+  assert(read(lock_path) == updated)
+  print('PASS: repeated sync preserves configured plugins without repeating lock repair')
 
   lock.plugins['build-fixture'].rev = string.rep('0', 40)
   local invalid = vim.json.encode(lock) .. '\n'

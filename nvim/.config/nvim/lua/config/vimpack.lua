@@ -153,6 +153,21 @@ function M.manage(mode, lock_path)
         end
       end
       assert(read(lock_path) == original, "Lockfile changed during sync; run make nvim-sync again")
+      -- Prune only after revisions and builds succeed. Excluded plugins are left alone.
+      local obsolete = {}
+      for _, plugin in ipairs(vim.pack.get(nil, { offline = true })) do
+        local name = plugin.spec.name
+        if not vim.tbl_contains(names, name) and not vim.tbl_contains(excluded, name) then
+          obsolete[#obsolete + 1] = name
+        end
+      end
+      if #obsolete > 0 then
+        table.sort(obsolete)
+        vim.pack.del(obsolete)
+        for _, name in ipairs(obsolete) do
+          assert(not vim.uv.fs_stat(plugin_path(name)), "Could not remove obsolete plugin " .. name)
+        end
+      end
       write(receipt_path(), fingerprint(original))
     else
       local resolved = vim.json.decode(read(scratch_lock))
