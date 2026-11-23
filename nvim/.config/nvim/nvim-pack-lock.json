@@ -17,7 +17,7 @@
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "haskell-tools.nvim": {
-      "rev": "8531b2bb93718a316691bea89525fd298a53f644",
+      "rev": "592a63da468271860ed1e98ba105854f36d82f92",
       "src": "https://github.com/Mrcjkb/haskell-tools.nvim"
     },
     "jellybeans.nvim": {
